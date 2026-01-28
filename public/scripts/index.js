@@ -90,12 +90,13 @@ var juiceteroids = function (p) {
 		}
 
 		//Test SoundObject switching on bullet sound with one alternate
-		if (p.key === 'i') {
-			gameSession.soundManager.changeBullet(1);
-		}
-		if (p.key === 'o') {
-			gameSession.soundManager.changeBullet(0);
-		}
+		// TODO: Re-enable when sound is implemented
+		// if (p.key === 'i') {
+		// 	gameSession.soundManager.changeBullet(1);
+		// }
+		// if (p.key === 'o') {
+		// 	gameSession.soundManager.changeBullet(0);
+		// }
 	}
 
 	p.windowResized = function () {

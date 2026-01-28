@@ -97,13 +97,14 @@ export default class Ship extends VectorGameObject {
                 this.velocity.add(accelerationVector);
 
                     // Play thruster sound if it's not already playing
-                    if (!this.__gameSession.soundManager.isThrusting){
-                        this.__gameSession.soundManager.playThruster();
-                    }
+                    // TODO: Re-enable when sound is implemented
+                    // if (!this.__gameSession.soundManager.isThrusting){
+                    //     this.__gameSession.soundManager.playThruster();
+                    // }
                 }
-                else if (this.__gameSession.soundManager.isThrusting){
-                    this.__gameSession.soundManager.stopThruster();
-                }
+                // else if (this.__gameSession.soundManager.isThrusting){
+                //     this.__gameSession.soundManager.stopThruster();
+                // }
 
             // apply speed clamp so that the speed doesn't get insane
             if (this.velocity.mag() > this.__speedClamp) {
@@ -213,9 +214,10 @@ export default class Ship extends VectorGameObject {
         }
 
         // shut off thrust sound if necessary
-        if (this.gameSession.soundManager.isThrusting) {
-            this.gameSession.soundManager.stopThruster();
-        }
+        // TODO: Re-enable when sound is implemented
+        // if (this.gameSession.soundManager.isThrusting) {
+        //     this.gameSession.soundManager.stopThruster();
+        // }
 
 
         // Pass name of event to Juice Event Manager

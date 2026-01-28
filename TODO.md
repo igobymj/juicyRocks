@@ -2,11 +2,11 @@
 
 ## Phase 1: Deployment Preparation
 
-- [ ] **Convert absolute paths to relative paths**
-  - [ ] `index.html` - CSS links (`/styles/...` → `./styles/...`)
-  - [ ] `index.html` - JS scripts (`/scripts/...` → `./scripts/...`)
-  - [ ] Audit JS files for any hardcoded absolute paths
-  - [ ] Test locally to confirm nothing breaks
+- [x] **Convert absolute paths to relative paths**
+  - [x] `index.html` - CSS links (`/styles/...` → `./styles/...`)
+  - [x] `index.html` - JS scripts (`/scripts/...` → `./scripts/...`)
+  - [x] Audit JS files for any hardcoded absolute paths
+  - [x] Test locally to confirm nothing breaks
 
 - [ ] **Deploy to GitHub Pages**
   - [ ] Push changes to main branch

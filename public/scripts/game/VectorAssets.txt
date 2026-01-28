@@ -1,0 +1,13 @@
+// vectorAssets.txt
+// vector assets are stored as a series of coordinates (sequence matters)
+// p5 renders polygon vectors using the x/y coordinates in turn
+// assets are stored here for easy reference
+
+export class 
+        let shipVertices = [
+            { x: 24, y: 0 },
+            { x: -24, y: -18 },
+            { x: -18, y: -4 },
+            { x: -18, y: 4 },
+            { x: -24, y: 18 },
+        ];

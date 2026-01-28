@@ -1,0 +1,22 @@
+{
+  "name": "juiceteroids",
+  "version": "1.0.0",
+  "description": "A game made to demonstrate GameFeel and Juice concepts.",
+  "main": "webserver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Avee217/Juiceteroids.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Avee217/Juiceteroids/issues"
+  },
+  "homepage": "https://github.com/Avee217/Juiceteroids#readme",
+  "dependencies": {
+    "express": "^4.18.0"
+  }
+}

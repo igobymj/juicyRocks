@@ -30,8 +30,7 @@ export default class bulletManager extends Manager {
 	fireBullet( position, rotation ) {
         if (this.bullets.length < this.__ammoLimit) {
             this.bullets.push(new Bullet(this.gameSession, position, rotation));
-            // TODO: Re-enable when sound is implemented
-            // this.gameSession.soundManager.playBullet();
+            this.gameSession.soundManager.playBullet();
         }
 	}
 

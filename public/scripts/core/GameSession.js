@@ -1,7 +1,7 @@
 
 import GameUpdate from "./GameUpdate.js"
 import InputManager from "./Managers/InputManager.js";
-// import SoundManager from "./Managers/SoundManager.js"; // TODO: Re-enable when sound is implemented
+import SoundManager from "./Managers/SoundManager.js";
 import TimeManager from "./Managers/TimeManager.js";
 import ShipManager from "./Managers/ShipManager.js";
 import AsteroidManager from "./Managers/AsteroidManager.js";
@@ -43,8 +43,8 @@ export default class GameSession {
 		//InputManager
 		this.__inputManager = new InputManager(this);
 
-		//SoundManager - disabled until sound is implemented
-		// this.__soundManager = new SoundManager(this);
+		//SoundManager
+		this.__soundManager = new SoundManager(this);
 
 		//TimeManager
 		this.__timeManager = new TimeManager(this);

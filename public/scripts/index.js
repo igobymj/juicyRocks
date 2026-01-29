@@ -11,6 +11,15 @@ Fix resize windows
 */
 
 
+// Resume Tone.js AudioContext on first user interaction (browser autoplay policy)
+function resumeAudioContext() {
+	Tone.start();
+	document.removeEventListener('click', resumeAudioContext);
+	document.removeEventListener('keydown', resumeAudioContext);
+}
+document.addEventListener('click', resumeAudioContext);
+document.addEventListener('keydown', resumeAudioContext);
+
 //Instantiate our Game Session - this will be our parent for all game data.
 let gameSession = new GameSession();
 

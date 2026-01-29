@@ -17,7 +17,7 @@ let gameSession = new GameSession();
 //Define how our P5 sketch will look. Treat this as the "Main".
 var juiceteroids = function (p) {
 
-	p.preload = function() {
+	p.preload = function () {
 		//Load any assets or libraries
 	}
 
@@ -25,7 +25,7 @@ var juiceteroids = function (p) {
 		//get width and height of div
 		let canvasDiv = document.getElementById('canvas');
 		//look for canvasDiv and get style to compute width
-		let canvasStyle = canvasDiv.currentStyle || window.getComputedStyle(canvasDiv); 
+		let canvasStyle = canvasDiv.currentStyle || window.getComputedStyle(canvasDiv);
 		let canvasWidth = parseFloat(canvasStyle.width);
 		let canvasPadding = parseFloat(canvasStyle.paddingLeft) + parseFloat(canvasStyle.paddingRight);
 		let canvasBorder = parseFloat(canvasStyle.borderLeftWidth) + parseFloat(canvasStyle.borderRightWidth);
@@ -55,29 +55,26 @@ var juiceteroids = function (p) {
 	}
 
 	//core update function of the game
-	p.draw = function(){
+	p.draw = function () {
 
 		//Call managers and states to update each frame. 
 		gameSession.timeManager.update();
 		gameSession.gameUpdate.update();
 
-		p.background(p.color(gameSession.backgroundColor)); 
+		p.background(p.color(gameSession.backgroundColor));
 		gameSession.gameUpdate.render();
 
-		if( gameSession.flashColor != 0 ) {
+		if (gameSession.flashColor != 0) {
 			p.fill(gameSession.flashColor);
-			p.rect(0,0, gameSession.canvasWidth, gameSession.canvasHeight);
+			p.rect(0, 0, gameSession.canvasWidth, gameSession.canvasHeight);
 		}
-		
-		// keyPressed must be captured here due to p5 architecture
-		p.keyPressed = function() {
-			gameSession.inputManager.keyInput(p.key);
-		}
+
+
 
 
 		// *** CHEAT CODES/DEBUG FEATURES *** //
 		// ****** ALL OF THESE SHOULD BE MOVED TO INPUTMANAGER, THIS IS A BROKEN IMPLEMENTATION ******* //
-		
+
 		// Test time scale effects on sounds
 		if (p.key === 'i') {
 			gameSession.timeManager.timeScale = 0.1;
@@ -99,11 +96,15 @@ var juiceteroids = function (p) {
 		// }
 	}
 
+	p.keyPressed = function () {
+		gameSession.inputManager.keyInput(p.key);
+	}
+
 	p.windowResized = function () {
 		let canvasDiv = document.getElementById('canvas');
 
 		//look for canvasDiv and get style to compute width
-		let canvasStyle = canvasDiv.currentStyle || window.getComputedStyle(canvasDiv); 
+		let canvasStyle = canvasDiv.currentStyle || window.getComputedStyle(canvasDiv);
 		let canvasWidth = parseFloat(canvasStyle.width);
 		let canvasPadding = parseFloat(canvasStyle.paddingLeft) + parseFloat(canvasStyle.paddingRight);
 		let canvasBorder = parseFloat(canvasStyle.borderLeftWidth) + parseFloat(canvasStyle.borderRightWidth);
@@ -113,7 +114,7 @@ var juiceteroids = function (p) {
 
 		//Rescale game to match window
 		p.resizeCanvas(gameSession.canvasWidth, gameSession.canvasHeight);
-		
+
 		//look for height of canvas div, make juice div same 
 		let juiceDiv = document.getElementById('juice-menu');
 		let canvasEl = document.getElementById('defaultCanvas0');
@@ -125,6 +126,7 @@ var juiceteroids = function (p) {
 //Instantiate P5 and attach it to our gameSession instance
 gameSession.p5 = new p5(juiceteroids, 'canvas');
 gameSession.shipManager.createShip();
-  
+
 gameSession.asteroidManager.levelStart();
+gameSession.juiceGuiManager.initialize();
 

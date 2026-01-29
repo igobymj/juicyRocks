@@ -7,16 +7,17 @@ import ShipManager from "./Managers/ShipManager.js";
 import AsteroidManager from "./Managers/AsteroidManager.js";
 import ParticleManager from "./Managers/ParticleManager.js";
 import SpriteManager from "./Managers/SpriteManager.js";
+import JuiceGuiManager from "./Managers/JuiceGuiManager.js";
 import JuiceManager from "./Managers/JuiceManager.js";
 import JuiceEventManager from "./Managers/JuiceEventManager.js";
 import BulletManager from "./Managers/BulletManager.js";
 import JuiceSettings from "./JuiceSettings.js";
 import ParticleSystemDefinitions from "./Effects/ParticleEffects/ParticleSystemDefinitions.js";
 
-export default class GameSession{
-	
+export default class GameSession {
+
 	constructor() {
-		if(GameSession.__instance){
+		if (GameSession.__instance) {
 			return GameSession.__instance;
 		}
 		GameSession.__instance = this;
@@ -70,7 +71,9 @@ export default class GameSession{
 		//Object to store all current juice settings
 		this.__juiceSettings = new JuiceSettings();
 
-		
+		//GUI Manager
+		this.__juiceGuiManager = new JuiceGuiManager();
+
 		// likely to be deprecated:
 
 		//Object stores particle system definitions
@@ -83,76 +86,76 @@ export default class GameSession{
 		this.__currentState = {};
 
 		//JuiceManager - Instantiate Last (not sure if necessary, but for now)
-		this.__juiceManager = new JuiceManager();
+		// this.__juiceManager = new JuiceManager();
 
-		if( this.verbose === true ) {
+		if (this.verbose === true) {
 			console.log("Session Created Successfully.");
 		}
 	}
 
 	//used to add states to game on game load or dynamically
-	addStateToGame(state){
+	addStateToGame(state) {
 		this.states.push(state);
 	}
 
 	//simplifies state setup. calls setup and then loads the state into currentState.
-	setCurrentState(state){
+	setCurrentState(state) {
 		//TODO: Make this safe to add non-pre-existing states
 		this.currentState = state;
 		this.currentState.setup();
 	}
 
-	setCurrentStateByName(stateName){
+	setCurrentStateByName(stateName) {
 		let state;
-		for(let i = 0; i < this.states.length; i++){
-			if(this.states[i].name == stateName){
+		for (let i = 0; i < this.states.length; i++) {
+			if (this.states[i].name == stateName) {
 				state = this.states[i];
 			}
 		}
 
-		if(state){
+		if (state) {
 			this.setCurrentState(state);
 		} else {
 			console.log(`ERROR: ${stateName} not loaded as current state in session.`);
 		}
 	}
 
-	get states(){
+	get states() {
 		return this.__states;
 	}
 
-	set states(states){
+	set states(states) {
 		this.__states = states;
 	}
 
-	get currentState(){
+	get currentState() {
 		return this.__currentState;
 	}
 
-	set currentState(currentState){
+	set currentState(currentState) {
 		this.__currentState = currentState;
 	}
 
-	get instance(){
+	get instance() {
 		return this.__instance;
 	}
 
-	set instance(instance){
+	set instance(instance) {
 		this.__instance = instance;
 	}
 
-	get p5(){
+	get p5() {
 		return this.__p5;
 	}
-	
-	set p5(p5){
+
+	set p5(p5) {
 		this.__p5 = p5;
 	}
 
-	get canvas(){
+	get canvas() {
 		return this.__canvas;
 	}
-	set canvas(canvas){
+	set canvas(canvas) {
 		this.__canvas = canvas;
 	}
 
@@ -168,7 +171,7 @@ export default class GameSession{
 		return this.__flashColor;
 	}
 
-	set flashColor( flashColor ) {
+	set flashColor(flashColor) {
 		this.__flashColor = flashColor;
 	}
 
@@ -176,7 +179,7 @@ export default class GameSession{
 		return this.__gameUpdate;
 	}
 
-	set gameUpdate( gameUpdate ) {
+	set gameUpdate(gameUpdate) {
 		this.__gameUpdate = gameUpdate;
 	}
 
@@ -192,11 +195,11 @@ export default class GameSession{
 		this.__inputManager = inputManager;
 	}
 
-	get soundManager(){
+	get soundManager() {
 		return this.__soundManager;
 	}
 
-	set soundManager(soundManager){
+	set soundManager(soundManager) {
 		this.__soundManager = soundManager;
 	}
 
@@ -248,22 +251,22 @@ export default class GameSession{
 		this.__bulletManager = bulletManager;
 	}
 
-	get canvasHeight(){
+	get canvasHeight() {
 		return this.__canvasHeight;
 	}
 
-	set canvasHeight(canvasHeight){
+	set canvasHeight(canvasHeight) {
 		this.__canvasHeight = canvasHeight;
 	}
 
-	get canvasWidth(){
+	get canvasWidth() {
 		return this.__canvasWidth;
 	}
 
-	set canvasWidth(canvasWidth){
+	set canvasWidth(canvasWidth) {
 		this.__canvasWidth = canvasWidth;
 	}
-		
+
 	get spriteManager() {
 		return this.__spriteManager;
 	}
@@ -292,12 +295,20 @@ export default class GameSession{
 		this.__juiceEventManager = juiceEventManager;
 	}
 
-	get juiceManager(){
+	get juiceManager() {
 		return this.__juiceManager;
 	}
 
-	set juiceManager(juiceManager){
+	set juiceManager(juiceManager) {
 		this.__juiceManager = juiceManager;
+	}
+
+	get juiceGuiManager() {
+		return this.__juiceGuiManager;
+	}
+
+	set juiceGuiManager(manager) {
+		this.__juiceGuiManager = manager;
 	}
 
 	get verbose() {

@@ -8,12 +8,12 @@
   - [x] Audit JS files for any hardcoded absolute paths
   - [x] Test locally to confirm nothing breaks
 
-- [ ] **Deploy to GitHub Pages**
-  - [ ] Push changes to main branch
-  - [ ] Enable GitHub Pages in repo settings (Settings → Pages → Source: main branch)
-  - [ ] Verify site loads at `https://[username].github.io/juiceCanvas/`
-  - [ ] Test all functionality works in deployed version
-  - [ ] Document the live URL
+- [x] **Deploy to GitHub Pages**
+  - [x] Push changes to main branch
+  - [x] Enable GitHub Pages in repo settings (Settings → Pages → Source: main branch)
+  - [x] Verify site loads at `https://igobymj.github.io/juicyRocks/`
+  - [x] Test all functionality works in deployed version
+  - [x] Document the live URL
 
 ---
 

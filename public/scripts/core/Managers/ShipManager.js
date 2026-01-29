@@ -15,13 +15,13 @@ import Ship from "../../game/Ship.js";
 
 export default class ShipManager extends Manager{
 	
-	constructor() {
+	constructor(gameSession) {
 
 		if(ShipManager.__instance) {
 			return ShipManager.__instance;
 		}
 
-		super();
+		super(gameSession);
 
 		ShipManager.__instance = this;
 
@@ -34,7 +34,7 @@ export default class ShipManager extends Manager{
 	}
 
 	createShip() {
-		this.ship = new Ship;
+		this.ship = new Ship(this.gameSession);
 	}
 
 	get ship() {

@@ -5,7 +5,6 @@
 // By MJ
 // last modified 6/15/22 by MJ
 
-import GameSession from "../core/GameSession.js";
 import GameState from "../game/states/GameState.js";
 import VectorGameObject from "../core/VectorGameObject.js";
 import SpriteParticle from "../core/Effects/ParticleEffects/SpriteParticle.js"; // TODO: Remove after testing
@@ -19,8 +18,8 @@ export default class Ship extends VectorGameObject {
     // constructor takes the following:
     // p5 object, x and y coordinates of the ship location (rendered from center point), stroke weight (float, default 1),
     // strokeColor (p5.color type object), rotatation (float, represents radians), scale (float) and alpha value (int)
-    constructor() {
-        
+    constructor(gameSession) {
+
         // ship vertices are hard coded in constructor
         let shipVertices = [
             { x: 24, y: 0 },
@@ -32,7 +31,7 @@ export default class Ship extends VectorGameObject {
 
         //creates VectorGameObject using above vertices, The remainder of arguments are the same
         //as described above for the constructor, note that coordinates are not set (0,0) as they will be set in spawnShip()
-        super(0,0, shipVertices, true, 1, false, 0, .5, 255);
+        super(gameSession, 0,0, shipVertices, true, 1, false, 0, .5, 255);
 
         // tweakable variables for gameplay
         // TODO: These should be abstracted into constants file. These are some crazy looking magic numbers
@@ -61,7 +60,7 @@ export default class Ship extends VectorGameObject {
         ];
 		
 		// Create a VectorGameObject to handle drawing the flame exhaust
-		this.__flame = new VectorGameObject(0, 0, this.__flameVertices, true, 1/this.scale, false, 0, 1, 255);
+		this.__flame = new VectorGameObject(gameSession, 0, 0, this.__flameVertices, true, 1/this.scale, false, 0, 1, 255);
 
     }
 
@@ -208,7 +207,7 @@ export default class Ship extends VectorGameObject {
                 var line=[2];
                 line[0]= particleVertices[i];
                 line[1]= particleVertices[i+1];
-                var newShipParticleSystem = new ShipParticleSystem(null, 5000, tmpPos, tmpRotation, 1, null, false,line);
+                var newShipParticleSystem = new ShipParticleSystem(this.gameSession, null, 5000, tmpPos, tmpRotation, 1, null, false,line);
 				this.__gameSession.particleManager.addParticleSystem(newShipParticleSystem);
                 i++;
         }

@@ -7,21 +7,20 @@
 */
 
 
-import GameSession from "../../GameSession.js";
 import EllipseGameObject from "../../EllipseGameObject.js";
 
 
 
 
 export default class Eyeballs {
-	
-	constructor( position, size ) {
 
-		this.__gameSession = new GameSession;
+	constructor( gameSession, position, size ) {
 
-		this.__eyeball = new EllipseGameObject( position, size, size, 0, 1, 255, "gray", true );	
+		this.__gameSession = gameSession;
 
-		this.__pupil = new EllipseGameObject( position, size/4, size/4, 0, 1, 255, "red", true );
+		this.__eyeball = new EllipseGameObject( gameSession, position, size, size, 0, 1, 255, "gray", true );
+
+		this.__pupil = new EllipseGameObject( gameSession, position, size/4, size/4, 0, 1, 255, "red", true );
 
 		this.__eyeballSize = size;
 

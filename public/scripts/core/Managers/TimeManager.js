@@ -16,12 +16,12 @@ import Manager from "./Manager.js";
 
 export default class TimeManager extends Manager {
 
-    constructor() {
+    constructor(gameSession) {
         if (TimeManager.__instance) {
             return TimeManager.__instance;
         }
-		
-		super();
+
+		super(gameSession);
 		
         TimeManager.__instance = this;
 

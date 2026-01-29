@@ -12,7 +12,7 @@ import Eyeballs from "../core/Effects/Other/Eyeballs.js";
 export default class Asteroid extends VectorGameObject {
 
     // // initializes an asteroid object, key factor is the 'type' parameter (large, medium, small).
-    constructor(type, x, y) {
+    constructor(gameSession, type, x, y) {
 
         let asteroidVertices;
 
@@ -57,7 +57,7 @@ export default class Asteroid extends VectorGameObject {
             ];
         }
 
-        super(x, y, asteroidVertices, true, 1, false, 0, 1, 255);
+        super(gameSession, x, y, asteroidVertices, true, 1, false, 0, 1, 255);
 
         this.__type = type;
         
@@ -89,13 +89,13 @@ export default class Asteroid extends VectorGameObject {
 
         // add EYEBALLS!
             if (type === "large") {
-                this.__eyes = new Eyeballs(this.position, 40);
+                this.__eyes = new Eyeballs(gameSession, this.position, 40);
             }
             else if (type == "medium") {
-                this.__eyes = new Eyeballs(this.position, 20);
+                this.__eyes = new Eyeballs(gameSession, this.position, 20);
             }
             else if (type === "small") {
-                this.__eyes = new Eyeballs(this.position, 10);
+                this.__eyes = new Eyeballs(gameSession, this.position, 10);
             }
             else {
                 console.log("asteroid type not set correctly");

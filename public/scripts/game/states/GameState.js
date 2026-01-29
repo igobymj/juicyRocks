@@ -10,8 +10,8 @@ import State from "../../core/State.js";
 
 export default class GameState extends State {
 
-    constructor(){
-        super("Game");
+    constructor(gameSession){
+        super(gameSession, "Game");
         //check 
 
         this.__shipThrusting = 0; 

@@ -19,16 +19,16 @@
 
 ## Phase 2: Architecture Fixes
 
-- [ ] **Fix circular dependencies**
-  - [ ] GameSession ↔ GameUpdate circular instantiation
-  - [ ] Audit other potential circular refs between managers
-  - [ ] Consider lazy initialization or dependency injection
+- [x] **Fix circular dependencies**
+  - [x] GameSession ↔ GameUpdate circular instantiation (GameUpdate now extends Manager)
+  - [x] Audit other potential circular refs between managers
+  - [x] Consider lazy initialization or dependency injection
 
-- [ ] **Address singleton overuse**
-  - [ ] Identify which singletons are truly necessary
-  - [ ] Refactor classes that instantiate GameSession internally
-  - [ ] Introduce proper dependency injection where appropriate
-  - [ ] Reduce coupling between managers
+- [x] **Address singleton overuse**
+  - [x] Identify which singletons are truly necessary
+  - [x] Fix InputManager singleton bug (`=` vs `===`)
+  - [x] Add singleton to BulletManager, SpriteManager
+  - [x] JuiceGuiManager replaces JuiceManager with proper singleton + data-driven UI
 
 ---
 
@@ -43,12 +43,12 @@
   - [ ] Remove `_old` suffix files if no longer needed
   - [ ] Remove or complete commented-out HTML sections
   - [ ] Extract magic numbers to constants
-  - [ ] Fix InputManager singleton bug (`=` vs `===`)
+  - [x] Fix InputManager singleton bug (`=` vs `===`) (done in Phase 2)
 
-- [ ] **JuiceManager refactor**
-  - [ ] Abstract repetitive DOM event binding
-  - [ ] Remove `gameSession` property from DOM elements
-  - [ ] Consider data-driven approach for UI bindings
+- [x] **JuiceManager refactor**
+  - [x] Abstract repetitive DOM event binding (replaced by JuiceGuiManager)
+  - [x] Remove `gameSession` property from DOM elements (JuiceGuiManager uses schema)
+  - [x] Consider data-driven approach for UI bindings (JuiceGuiManager uses schema)
 
 ---
 

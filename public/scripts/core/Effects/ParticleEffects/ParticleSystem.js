@@ -13,17 +13,16 @@ Particle systems will eventually include multiple objects, also data-driven
 */
 
 
-import GameSession from "../../GameSession.js";
 import VectorParticleEffect from "./VectorParticleEffect.js";
 
 
 export default class ParticleSystem {
 
 
-	// takes eventName (string), and triggerObject (location vector, size, rotation)
-	constructor( eventName, triggerObject ) {
+	// takes gameSession, eventName (string), and triggerObject (location vector, size, rotation)
+	constructor( gameSession, eventName, triggerObject ) {
 
-        this.__gameSession = new GameSession();
+        this.__gameSession = gameSession;
 
         // note that only the x and y location of the object are used for particle fx
 		this.__triggerObject = triggerObject;
@@ -89,7 +88,7 @@ export default class ParticleSystem {
 		let effectParameters = this.gameSession.juiceSettings.particleSystems[effectReference];
 
 		// pass a single object to the effect, it returns an array of vector particles 
-		return new VectorParticleEffect(effectParameters, this.triggerObject);
+		return new VectorParticleEffect(this.gameSession, effectParameters, this.triggerObject);
 
 	}
 

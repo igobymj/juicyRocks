@@ -13,12 +13,12 @@ import SpriteParticle from "../Effects/ParticleEffects/SpriteParticle.js";
 
 export default class ParticleManager extends Manager {
 
-    constructor(){
+    constructor(gameSession){
         if(ParticleManager.__instance){
             return ParticleManager.__instance;
         }
 
-        super();
+        super(gameSession);
 
         ParticleManager.__instance = this;
         this.__instance = {};

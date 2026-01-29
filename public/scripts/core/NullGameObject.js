@@ -12,9 +12,9 @@ import GameObject from "./GameObject.js";
 // takes only position (vector), width, height and rotation. The remainder are defaults.
 export default class NullGameOjbect extends GameObject {
 	
-	constructor(position, width, height, rotation ) {
+	constructor(gameSession, position, width, height, rotation ) {
 
-		super(position.x, position.y, 0, 0, 0, 0, 255);
+		super(gameSession, position.x, position.y, 0, 0, 0, 0, 255);
 
 	}
 

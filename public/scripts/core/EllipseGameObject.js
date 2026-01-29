@@ -10,9 +10,9 @@ import GameObject from "./GameObject.js";
 export default class EllipseGameObject extends GameObject {
 	
 	//vector2, float, float, float, float, 8-bit int, bool)
-	constructor(position, width, height, rotation, scale, alpha, color, fill ) {
+	constructor(gameSession, position, width, height, rotation, scale, alpha, color, fill ) {
 
-		super(position.x, position.y, 5, 5, 0, 1, 255);
+		super(gameSession, position.x, position.y, 5, 5, 0, 1, 255);
 
 		this.__horizontalSize = width;
 		this.__verticalSize = height;

@@ -13,12 +13,10 @@ ScreenShakeEffector
 
 */
 
-import GameSession from "../../GameSession.js";
-
 export default class ScreenShakeEffector {
 
-    constructor(eventName, triggerObject) {
-        this.__gameSession = new GameSession();
+    constructor(gameSession, eventName, triggerObject) {
+        this.__gameSession = gameSession;
 
         //construct this effector object using the juiceSettings object        
         this.__active = this.gameSession.juiceSettings.container[eventName].shake.active;

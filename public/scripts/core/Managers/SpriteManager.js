@@ -1,14 +1,24 @@
 // SpriteManager
 // Container class for images
 
+import Manager from "./Manager.js";
 
-export default class SpriteManager {
+export default class SpriteManager extends Manager {
 
-	constructor() {
-		// TODO: create singleton constructor here
+	constructor(gameSession) {
+		if(SpriteManager.__instance) {
+			return SpriteManager.__instance;
+		}
+
+		super(gameSession);
+
+		SpriteManager.__instance = this;
 
 		this.__sprites = [];
 
+		if(this.gameSession.verbose === true) {
+			console.log("sprite Manager created successfully");
+		}
 	}
 
 	// addSprite, takes parameters: string name, p5 image sprite

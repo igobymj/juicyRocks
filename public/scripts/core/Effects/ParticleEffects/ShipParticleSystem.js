@@ -4,9 +4,9 @@ import VectorParticle from "./VectorParticle.js";
 
 export default class ShipParticleSystem extends ParticleSystem {
 
-    constructor(tag, duration, position, rotation, rateOverTime, intervalTime, loop,vectors) {
-        
-        super(tag, duration, position, rotation, rateOverTime, intervalTime, loop);
+    constructor(gameSession, tag, duration, position, rotation, rateOverTime, intervalTime, loop,vectors) {
+
+        super(gameSession, tag, duration, position, rotation, rateOverTime, intervalTime, loop);
         this.__particleVertices = vectors;
         this.__rotation= rotation;
         this.__strokeWeight = 1;
@@ -23,7 +23,7 @@ export default class ShipParticleSystem extends ParticleSystem {
             startVelocity.normalize();
             //this.strokeWeight(1);
             startVelocity.mult(0.01);
-            var newVectorParticle = new ShipVectorParticle(duration, size,this.__particleVertices, position, this.__rotation, startVelocity, color);
+            var newVectorParticle = new ShipVectorParticle(this.gameSession, duration, size,this.__particleVertices, position, this.__rotation, startVelocity, color);
                 
             this.__particles.push(newVectorParticle); 
 

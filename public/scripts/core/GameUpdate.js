@@ -1,25 +1,25 @@
-import GameSession from "./GameSession.js";
+import Manager from "./Managers/Manager.js";
 
 /** GameUpdate
- * 
+ *
  *  Handles all updates from the main game logic
- * 
+ *
  */
 
-export default class GameUpdate {
+export default class GameUpdate extends Manager {
 
-    constructor(){
+    constructor(gameSession){
 
         //singleton
         if(GameUpdate.__instance){
             return GameUpdate.__instance;
         }
+
+        super(gameSession);
+
         GameUpdate.__instance = this;
         this.__instance = this;
 
-        //link to gameSession
-        this.__gameSession = new GameSession();
-        this.__p5 = this.__gameSession.p5;
         this.__delayFrames = 0;
 
     }
@@ -65,14 +65,6 @@ export default class GameUpdate {
         this.__instance = instance;
     }
 
-
-    get gameSession(){
-        return this.__gameSession;
-    }
-
-    set instance(gameSession){
-        this.__gameSession = gameSession;
-    }
 
     get delayFrames() {
         return this.__delayFrames;

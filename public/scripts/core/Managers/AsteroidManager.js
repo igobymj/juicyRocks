@@ -9,12 +9,12 @@ import Asteroid from "../../game/Asteroid.js";
 
 export default class AsteroidManager extends Manager{
 
-	constructor() {
+	constructor(gameSession) {
 		if(AsteroidManager.__instance){
 			return AsteroidManager.__instance;
 		}
-		
-		super();
+
+		super(gameSession);
 		
 		AsteroidManager.__instance = this;
 
@@ -115,7 +115,7 @@ export default class AsteroidManager extends Manager{
 		for( let i=0; i<asteroidCount; i++ ) {
 			// if ship is alive, go for it. If this is a reset, make sure it's a safe spawn
 			if( this.gameSession.shipManager.ship.shipAlive || this.safeToSpawn() ) {
-				this.asteroids.push(new Asteroid(type, x, y));
+				this.asteroids.push(new Asteroid(this.gameSession, type, x, y));
 			}
 		}
 	}

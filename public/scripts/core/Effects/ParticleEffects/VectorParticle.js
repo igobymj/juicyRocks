@@ -3,13 +3,12 @@
 // (we don't have a provision for bitmap particles)
 
 
-import GameSession from "../../GameSession.js";
 import VectorGameObject from "../../VectorGameObject.js";
 
 
 export default class VectorParticle extends VectorGameObject {
 
-    constructor(shape, duration, size, position, rotationSpeed, startVelocity, strokeWeight, fill, fade, particleVertices) {
+    constructor(gameSession, shape, duration, size, position, rotationSpeed, startVelocity, strokeWeight, fill, fade, particleVertices) {
 
         if (size === null) {
             size = 1;
@@ -23,9 +22,9 @@ export default class VectorParticle extends VectorGameObject {
             ];
         }
 
-        super(position.x, position.y, particleVertices, true, strokeWeight, fill, 0, 1, 255, shape);
+        super(gameSession, position.x, position.y, particleVertices, true, strokeWeight, fill, 0, 1, 255, shape);
 
-        this.__gameSession = new GameSession;
+        this.__gameSession = gameSession;
 
         // set up time manager, and record start time
         this.__timeManager = this.__gameSession.timeManager;

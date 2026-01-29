@@ -39,40 +39,40 @@ export default class GameSession {
 		this.__verbose = true;
 
 		//Game Update object
-		this.__gameUpdate = new GameUpdate();
+		this.__gameUpdate = new GameUpdate(this);
 
 		//InputManager
-		this.__inputManager = new InputManager();
+		this.__inputManager = new InputManager(this);
 
 		//SoundManager - disabled until sound is implemented
-		// this.__soundManager = new SoundManager();
+		// this.__soundManager = new SoundManager(this);
 
 		//TimeManager
-		this.__timeManager = new TimeManager();
+		this.__timeManager = new TimeManager(this);
 
 		//Particle Manager
-		this.__particleManager = new ParticleManager();
+		this.__particleManager = new ParticleManager(this);
 
 		//Ship Manager
-		this.__shipManager = new ShipManager();
+		this.__shipManager = new ShipManager(this);
 
 		//Asteroid Manager
-		this.__asteroidManager = new AsteroidManager();
+		this.__asteroidManager = new AsteroidManager(this);
 
 		//Bullet Manager
-		this.__bulletManager = new BulletManager();
+		this.__bulletManager = new BulletManager(this);
 
-		//Sprite Manager 
-		this.__spriteManager = new SpriteManager();
+		//Sprite Manager
+		this.__spriteManager = new SpriteManager(this);
 
 		//manages all juice effects through a single central object
-		this.__juiceEventManager = new JuiceEventManager();
+		this.__juiceEventManager = new JuiceEventManager(this);
 
 		//Object to store all current juice settings
 		this.__juiceSettings = new JuiceSettings();
 
 		//GUI Manager
-		this.__juiceGuiManager = new JuiceGuiManager();
+		this.__juiceGuiManager = new JuiceGuiManager(this);
 
 		// likely to be deprecated:
 

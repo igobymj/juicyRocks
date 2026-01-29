@@ -7,10 +7,14 @@ import Bullet from "../../game/Bullet.js";
 
 export default class bulletManager extends Manager {
 
-	// TODO: make singleton
-	constructor() {
-		
-		super();
+	constructor(gameSession) {
+		if(bulletManager.__instance) {
+			return bulletManager.__instance;
+		}
+
+		super(gameSession);
+
+		bulletManager.__instance = this;
 
 		//Instance Variables
 		this.__bullets= new Array(); //holds bullets
@@ -24,7 +28,7 @@ export default class bulletManager extends Manager {
 	//takes vector2 for position, rotation
 	fireBullet( position, rotation ) {
         if (this.bullets.length < this.__ammoLimit) {
-            this.bullets.push(new Bullet(position, rotation));
+            this.bullets.push(new Bullet(this.gameSession, position, rotation));
             // TODO: Re-enable when sound is implemented
             // this.gameSession.soundManager.playBullet();
         }

@@ -1,13 +1,10 @@
-
-import GameSession from "../GameSession.js";
-
 export default class JuiceGuiManager {
-    constructor() {
+    constructor(gameSession) {
         if (JuiceGuiManager.__instance) {
             return JuiceGuiManager.__instance;
         }
         JuiceGuiManager.__instance = this;
-        this.gameSession = new GameSession();
+        this.gameSession = gameSession;
 
         // This schema maps the UI structure to the JuiceSettings data paths
         this.schema = [

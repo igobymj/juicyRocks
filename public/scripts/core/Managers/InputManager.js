@@ -12,14 +12,14 @@ import NullGameObject from "../NullGameObject.js";
 
 export default class InputManager extends Manager {
 
-    constructor() {
-        super();
-
-        if(InputManager.__instance = this) {
-            this.__instance = {};
+    constructor(gameSession) {
+        if(InputManager.__instance) {
+            return InputManager.__instance;
         }
+
+        super(gameSession);
+
         InputManager.__instance = this;
-        this.__instance = {};
 
         //currently unused
         this.__inputObject = {};
@@ -62,12 +62,12 @@ export default class InputManager extends Manager {
 
         /**** CHEAT CODES AND DEBUG ****/
         if(keyInputValue === "p" ) {
-            let nullObject = new NullGameObject(this.gameSession.p5.createVector(250,250));
+            let nullObject = new NullGameObject(this.gameSession, this.gameSession.p5.createVector(250,250));
             this.gameSession.juiceEventManager.addNew("particleTester", nullObject);
         }
 
         if(keyInputValue === 'z') {
-            let nullObject = new NullGameObject(this.gameSession.p5.createVector(300,300));
+            let nullObject = new NullGameObject(this.gameSession, this.gameSession.p5.createVector(300,300));
             this.gameSession.juiceEventManager.addNew("asteroidHit", nullObject);
         }
 

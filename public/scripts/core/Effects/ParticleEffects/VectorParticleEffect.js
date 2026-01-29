@@ -8,19 +8,17 @@ TODO: should be extended into inherited class from "particle" (which currently d
 */
 
 
-import GameSession from "../../GameSession.js";
-import ParticleSystem2 from "./ParticleSystem.js";
 import VectorParticle from "./VectorParticle.js";
 
-/* takes two arguments: the first is an object that holds all the parameters from the juiceSettings.js JSON file. The second is the object indicating x/y position via "position" vector*/ 
+/* takes two arguments: gameSession, the effect parameters object, and the triggering object */
 export default class VectorParticleEffect {
 
-    constructor(effectParameters, triggerObject) {
+    constructor(gameSession, effectParameters, triggerObject) {
 
         //a particle effect gets an X/Y; its duration is based on
         //the lifespan of the actual particles
 
-        this.__gameSession = new GameSession();
+        this.__gameSession = gameSession;
 
         this.__particles = new Array();
 
@@ -148,7 +146,7 @@ export default class VectorParticleEffect {
 
         //  constructor(shape, duration, size, position, rotationSpeed, startVelocity, strokeWeight, fill, fade, particleVertices )
 
-        return new VectorParticle(shape,lifeSpan,size, positionVec,rotationSpeed,velocity, 1, 0, true, particleVertices);
+        return new VectorParticle(this.gameSession, shape,lifeSpan,size, positionVec,rotationSpeed,velocity, 1, 0, true, particleVertices);
 
      }
 

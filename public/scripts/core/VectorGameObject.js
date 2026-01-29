@@ -16,7 +16,7 @@ export default class VectorGameObject extends GameObject {
   // The constructor initializes our VectorGameObject class
   // It takes the following key parameters and stores them:
   // float x, float y, p5.Vector array vertices, float rotation (radians), float scale, int alpha (between 0 and 255)
-  constructor(x, y, vertices, closeShape, strokeWeight, fill, rotation, scale, alpha, shapeOverride) {
+  constructor(gameSession, x, y, vertices, closeShape, strokeWeight, fill, rotation, scale, alpha, shapeOverride) {
     // Calculate the width and height of our vector graphic
     // Go through all vertices to find the min/max x and y
     let minX = Number.POSITIVE_INFINITY;
@@ -42,7 +42,7 @@ export default class VectorGameObject extends GameObject {
     height = height == 0 ? 1 : height;
 
     // Now we have everything we need to call the base GameObject constructor
-    super(x, y, width, height, rotation, scale, alpha);
+    super(gameSession, x, y, width, height, rotation, scale, alpha);
 
     // Convert the passed in vertices to a p5.Vector array
     let vectorVertices = HelperFunctions.Point2VectorArray(this.p5, vertices);

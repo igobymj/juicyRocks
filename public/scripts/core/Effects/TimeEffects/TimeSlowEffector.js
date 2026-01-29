@@ -4,14 +4,11 @@
 
 */
 
-import GameSession from "../../GameSession.js";
-
-
 export default class TimeSlowEffector {
 
-	constructor(eventName) {
+	constructor(gameSession, eventName) {
 
-        this.__gameSession = new GameSession();
+        this.__gameSession = gameSession;
 
         //construct this effector object using the juiceSettings object        
         this.__active = this.gameSession.juiceSettings.container[eventName].timeSlow.active;

@@ -3,7 +3,7 @@
 import VectorParticle from "./VectorParticle.js";
 
 export default class ShipVectorParticle extends VectorParticle {
-	constructor(duration, size, particleVertices, position, rotation, startVelocity, color){
+	constructor(gameSession, duration, size, particleVertices, position, rotation, startVelocity, color){
         var expPosition = position;
         var expRotation = rotation;
    
@@ -22,7 +22,7 @@ export default class ShipVectorParticle extends VectorParticle {
 
         var strokeWeight = 1;
 
-        super(duration, size, particleVertices, expPosition, expRotation, startVelocity, true,strokeWeight);
+        super(gameSession, duration, size, particleVertices, expPosition, expRotation, startVelocity, true,strokeWeight);
         this.__fillColor = color;
         this.__rotation = rotation;
         //console.log(this.__rotation);

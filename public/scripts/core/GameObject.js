@@ -8,7 +8,6 @@
   Last Updated 5/7/22 by Eddie
 */
 
-import GameSession from "../core/GameSession.js";
 import HelperFunctions from "./HelperFunctions.js";
 import Collision from "./Collision.js";
 
@@ -17,11 +16,10 @@ export default class GameObject {
   /* Constructor */
   // The constructor initializes our GameObject class
   // It takes the following key parameters and stores them:
-  // float x, float y, float width, float height, float rotation (radians), float scale, int alpha (between 0 and 255)
+  // gameSession, float x, float y, float width, float height, float rotation (radians), float scale, int alpha (between 0 and 255)
   // NOTE: x, y and width, height are stored as p5.vectors called position and size respectively
-  constructor(x, y, width, height, rotation, scale, alpha) {
-	// Get new GameSession reference in case there is none loaded yet
-    this.__gameSession = new GameSession();
+  constructor(gameSession, x, y, width, height, rotation, scale, alpha) {
+    this.__gameSession = gameSession;
 	// Get the p5 instance we will be using from the GameSession
     this.__p5 = this.gameSession.p5;
 	// Setup our other member variables

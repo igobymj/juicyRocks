@@ -1,9 +1,8 @@
 import VectorGameObject from "../core/VectorGameObject.js";
-import GameSession from "../core/GameSession.js";
 
 
 export default class Bullet extends VectorGameObject {
-    constructor(shipPosition, shipRotation) {
+    constructor(gameSession, shipPosition, shipRotation) {
         //create VectorGameObject using above verts, and X/Y from instantiation
 		let bulletVertices = [
             { x: -.5, y: -.5 },
@@ -12,9 +11,7 @@ export default class Bullet extends VectorGameObject {
             { x: -.5, y: .5 },
         ];
 
-        super(shipPosition.x, shipPosition.y, bulletVertices, true, 1, true, shipRotation, 1, 255);
-
-        this.__gameSession = new GameSession();
+        super(gameSession, shipPosition.x, shipPosition.y, bulletVertices, true, 1, true, shipRotation, 1, 255);
         
         // velocity vector
         this.__position = this.p5.createVector(shipPosition.x, shipPosition.y);
@@ -77,9 +74,4 @@ export default class Bullet extends VectorGameObject {
         this.__velocity = velocity;
     }
     
-    get gameSession() {
-        return this.__gameSession;
-    }
-
-
 }

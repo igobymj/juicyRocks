@@ -28,14 +28,14 @@ import TimeSlowEffector from "../Effects/TimeEffects/TimeSlowEffector.js";
 
 export default class JuiceEventManager extends Manager {
 
-	constructor() {
+	constructor(gameSession) {
 
 		// singleton constructor
 		if (JuiceEventManager.__instance) {
             return JuiceEventManager.__instance;
         }
-		
-		super();
+
+		super(gameSession);
 		
         JuiceEventManager.__instance = this;
 
@@ -111,13 +111,13 @@ export default class JuiceEventManager extends Manager {
 			case "shake":
 				// only one screen shake effect can be active at a time, and they do not interrupt
 //				this.shakeSemaphore = true;
-				return new ScreenShakeEffector(eventName, triggerObject);					
+				return new ScreenShakeEffector(this.gameSession, eventName, triggerObject);					
 				break;
 			case "colorFlash":
-				return new ColorFlashEffector(eventName);
+				return new ColorFlashEffector(this.gameSession, eventName);
 				break;
 			case "particles":
-				return new ParticleSystem(eventName,triggerObject);
+				return new ParticleSystem(this.gameSession, eventName, triggerObject);
 				break;
 			case "hitPause":
 				this.gameSession.gameUpdate.delayFrames = this.gameSession.juiceSettings.container[eventName].hitPause.frames;
@@ -125,7 +125,7 @@ export default class JuiceEventManager extends Manager {
 				break;
 			case "timeSlow":
 				console.log("slowed time");
-				return new TimeSlowEffector(eventName);
+				return new TimeSlowEffector(this.gameSession, eventName);
 				break;
 			default:
 				console.log("error creating effect: " + eventName + " " + effectName);

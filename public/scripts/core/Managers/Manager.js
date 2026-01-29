@@ -8,16 +8,11 @@
   Last Updated 5/7/22
 */
 
-import GameSession from "../GameSession.js";
-
-
 export default class Manager {
   /* Constructor */
   // The constructor initializes our Manager class
-  constructor() {
-	// Get new GameSession reference in case there is none loaded yet
-    this.__gameSession = new GameSession();
-    this.__p5 = this.gameSession.p5;
+  constructor(gameSession) {
+    this.__gameSession = gameSession;
   }
 
   
@@ -27,8 +22,8 @@ export default class Manager {
 	   return this.__gameSession;
   }
   
-  // p5 getter
+  // p5 getter - delegates to gameSession
   get p5(){
-	   return this.__p5;
+	   return this.__gameSession.p5;
   }
 }

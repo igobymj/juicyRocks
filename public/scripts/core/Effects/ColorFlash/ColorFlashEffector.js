@@ -16,14 +16,11 @@
 */
 
 
-import GameSession from "../../GameSession.js";
-
-
 export default class ColorFlashEffector {
 
-    constructor(eventName) {
+    constructor(gameSession, eventName) {
 
-        this.__gameSession = new GameSession();
+        this.__gameSession = gameSession;
 
         //for returning type to semaphore counter
         this.__effectName = "colorFlash";

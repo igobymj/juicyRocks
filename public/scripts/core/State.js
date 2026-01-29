@@ -15,16 +15,14 @@
  * 
 */
 
-import GameSession from "./GameSession.js";
-
 export default class State {
 
-    constructor(name){
-        
+    constructor(gameSession, name){
+
         this.__name = name;
 
         //link to gameSession
-        this.__gameSession = new GameSession();
+        this.__gameSession = gameSession;
         this.__p5 = this.__gameSession.p5;
         this.__gameSession.addStateToGame(this);
 

@@ -48,14 +48,6 @@ export default class bulletManager extends Manager {
 		}
 	}
 
-	// collisionWithAsteroids(asteroidManager){
-		
-	// 			var newExplosionSystem = new ExplosionSystem(null, 300, tmpPos, tmpRotation, 50, null, false);
-	// 			this.__gameSession.particleManager.addParticleSystem(newExplosionSystem);
-	// 		}
-	// 	}		
-	
-
 	//getters
 	get bullets() {
 		return this.__bullets;

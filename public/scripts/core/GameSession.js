@@ -5,7 +5,6 @@ import InputManager from "./Managers/InputManager.js";
 import TimeManager from "./Managers/TimeManager.js";
 import ShipManager from "./Managers/ShipManager.js";
 import AsteroidManager from "./Managers/AsteroidManager.js";
-import ParticleManager from "./Managers/ParticleManager.js";
 import SpriteManager from "./Managers/SpriteManager.js";
 import JuiceGuiManager from "./Managers/JuiceGuiManager.js";
 import JuiceManager from "./Managers/JuiceManager.js";
@@ -49,9 +48,6 @@ export default class GameSession {
 
 		//TimeManager
 		this.__timeManager = new TimeManager(this);
-
-		//Particle Manager
-		this.__particleManager = new ParticleManager(this);
 
 		//Ship Manager
 		this.__shipManager = new ShipManager(this);
@@ -217,14 +213,6 @@ export default class GameSession {
 
 	set screenShakeManager(screenShakeManager) {
 		this.__screenShakeManager = screenShakeManager;
-	}
-
-	get particleManager() {
-		return this.__particleManager;
-	}
-
-	set particleManager(particleManager) {
-		this.__particleManager = particleManager;
 	}
 
 	get asteroidManager() {

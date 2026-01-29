@@ -7,10 +7,6 @@
 
 import GameState from "../game/states/GameState.js";
 import VectorGameObject from "../core/VectorGameObject.js";
-import SpriteParticle from "../core/Effects/ParticleEffects/SpriteParticle.js"; // TODO: Remove after testing
-import ShipVectorParticle from "../core/Effects/ParticleEffects/VectorParticle.js";
-import ShipParticleSystem from "../core/Effects/ParticleEffects/ShipParticleSystem.js";
-import ExplosionSystem from "../core/Effects/ParticleEffects/ExplosionSystem.js";
 
 
 export default class Ship extends VectorGameObject {
@@ -74,16 +70,6 @@ export default class Ship extends VectorGameObject {
                 // set thrust to "false" as default
                 this.__thrust = false;
 
-            // take keyboard input for rotation, then rotate accounting for timescale
-            
-
-            // if (this.p5.keyIsDown(this.p5.LEFT_ARROW)) {
-            //     this.rotation -= this.p5.PI * this.__rotationSpeed * this.gameSession.timeManager.deltaTime;
-            // }
-            // if (this.p5.keyIsDown(this.p5.RIGHT_ARROW)) {
-            //     this.rotation += this.p5.PI * this.__rotationSpeed * this.gameSession.timeManager.deltaTime;
-            // }
-            
             if (this.gameSession.inputManager.inputObject.forward === true ) {
                 this.thrust = true;
                 // create an acceleration vector based on the ship's current rotation
@@ -95,15 +81,7 @@ export default class Ship extends VectorGameObject {
                 // add acceleration (thrust) to current velocity
                 this.velocity.add(accelerationVector);
 
-                    // Play thruster sound if it's not already playing
-                    // TODO: Re-enable when sound is implemented
-                    // if (!this.__gameSession.soundManager.isThrusting){
-                    //     this.__gameSession.soundManager.playThruster();
-                    // }
                 }
-                // else if (this.__gameSession.soundManager.isThrusting){
-                //     this.__gameSession.soundManager.stopThruster();
-                // }
 
             // apply speed clamp so that the speed doesn't get insane
             if (this.velocity.mag() > this.__speedClamp) {
@@ -155,30 +133,6 @@ export default class Ship extends VectorGameObject {
 
             // creates the flame effect (vector)
             if (this.thrust) {
-                // Calculate an offset behind the ship to make a nice place to spawn rocket fx particles
-                let smokeSpawnOffset = p5.Vector.fromAngle(this.rotation, -20); //second parameter is offset length
-                let smokeSpawnPoint = p5.Vector.add(this.position, smokeSpawnOffset);
-            
-                // Particle A: orange glow
-                if (this.p5.frameCount % (Math.floor(Math.random() * 2 + 4)) === 0 ) {
-                    // first parameter is duration in seconds
-                    //this.__gameSession.particleManager.addSmoke(3, smokeSpawnPoint.x, smokeSpawnPoint.y, this.p5.color(255, 165, 0, 128));
-                }
-                // Particle B: occasional puff of smoke
-                if (this.p5.frameCount % (Math.floor(Math.random() * 2 + 10)) === 0 ) {
-                    // parameters are: particle (must be of type image), float x, float y, float rotation (radians), float scale, p5Vector moveVector, float duration (in seconds) 
-                    let particleVelocity = this.p5.createVector(this.velocity.x, this.velocity.y);
-                    particleVelocity.mult(Math.random() * .2 * 0.25);
-                    //this.gameSession.particleManager.addParticle(new SpriteParticle("smoke", smokeSpawnPoint.x + Math.random() * 5, smokeSpawnPoint.y  + Math.random() * 5, 0, Math.random()*.25+1, particleVelocity, 1.25));
-                }
-                // TODO: this isn't quite working. Weiqiang maybe try to fix?
-                // Weiqiang: Yes, I can.
-
-                /*
-                for( let i=0; i<10; i++ ) {
-                    this.__gameSession.particleManager.addJet(this.position.x,this.position.y, this.rotation, this.velocity);
-                }
-                */
                 if( this.p5.frameCount % 5 === 0 ) {
                     this.flame.renderVertices();
                 }
@@ -189,42 +143,12 @@ export default class Ship extends VectorGameObject {
     }
 
     destroyShip(){
-        
-        let particleVertices = [
-            {x:12,y:2},{x:-12 ,y:11},
-            {x:12,y:-2},{x:-12,y:-11},
-            {x:-14,y:9},{x:-11,y:2},
-            {x:-14,y:-9},{x:-11,y:-2},
-            {x:-16,y:2},{x:-16,y:-2},
-        ];
-        
+
         this.__shipAlive = false;
         this.__deathTimer = this.gameSession.timeManager.time + this.__deadTime;
 
-        var tmpPos = this.__position;
-		var tmpRotation = this.__rotation;
-        for(let i=0;i<particleVertices.length;i++){
-                var line=[2];
-                line[0]= particleVertices[i];
-                line[1]= particleVertices[i+1];
-                var newShipParticleSystem = new ShipParticleSystem(this.gameSession, null, 5000, tmpPos, tmpRotation, 1, null, false,line);
-				this.__gameSession.particleManager.addParticleSystem(newShipParticleSystem);
-                i++;
-        }
-
-        // shut off thrust sound if necessary
-        // TODO: Re-enable when sound is implemented
-        // if (this.gameSession.soundManager.isThrusting) {
-        //     this.gameSession.soundManager.stopThruster();
-        // }
-
-
         // Pass name of event to Juice Event Manager
-        this.gameSession.juiceEventManager.addNew("destroyShip");
-
-        //Explosions if needed 
-       //var newExplosionSystem = new ExplosionSystem(null, 300, tmpPos, tmpRotation, 50, null, false);
-	    //this.__gameSession.particleManager.addParticleSystem(newExplosionSystem);
+        this.gameSession.juiceEventManager.addNew("destroyShip", this);
     }
 
     spawnShip() {

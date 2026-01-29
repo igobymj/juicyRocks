@@ -47,6 +47,7 @@ export default class Ship extends VectorGameObject {
 
         // velocity vector
         this.__velocity = this.p5.createVector(0, 0);
+        this.__deltaDistance = this.p5.createVector(0, 0);
         this.__rotation = 0;
 
         // variabless for animating flame effect
@@ -63,6 +64,11 @@ export default class Ship extends VectorGameObject {
 		
 		// Create a VectorGameObject to handle drawing the flame exhaust
 		this.__flame = new VectorGameObject(gameSession, 0, 0, this.__flameVertices, true, 1/this.scale, false, 0, 1, 255);
+
+        // Enable black fill so the concave notch at the back of the ship is
+        // opaque against the background, matching the original render behavior.
+        this.fill = true;
+        this.fillColor = this.p5.color(0);
 
     }
 
@@ -95,9 +101,8 @@ export default class Ship extends VectorGameObject {
             }
 
             // move the ship, using the velocity vector, now is deltaDistance
-            var tmpVel = this.p5.createVector(this.velocity.x, this.velocity.y);
-            var deltaDistance = tmpVel.mult(this.gameSession.timeManager.deltaTime);
-            this.position.add(deltaDistance);
+            this.__deltaDistance.set(this.velocity.x, this.velocity.y).mult(this.gameSession.timeManager.deltaTime);
+            this.position.add(this.__deltaDistance);
 
             // wrapping: check for ship going off the edge of the screen and wrap it back to the opposite side
             super.wrap();
@@ -117,34 +122,16 @@ export default class Ship extends VectorGameObject {
     }
 
     render() {
-        
         if(this.__shipAlive){
+            super.render();
 
-            // NOTE: this is a bad override of VectorGameObject's render class. Written like this to enable simplified
-            // rendering of flame effect
-            // TODO: eliminate redundant override
-            super.beginRender();
-
-            // Style formatting
-            this.p5.stroke([this.p5.red(this.strokeColor), this.p5.green(this.strokeColor), this.p5.blue(this.strokeColor), this.alpha]);
-            // Prevent scaling of the stroke weight when scaling the vertices/graphic
-            this.p5.strokeWeight((1 / this.scale) * this.strokeWeight);
-            this.p5.fill(0);
-
-            this.p5.beginShape();
-            for (let i = 0; i < this.vertices.length; i++) {
-                this.p5.vertex(this.vertices[i].x, this.vertices[i].y);
+            // Draw flame exhaust inside the same transform context that
+            // super.render() has already torn down, so we re-enter it briefly.
+            if (this.thrust && this.p5.frameCount % SHIP_FLAME_RENDER_INTERVAL === 0) {
+                super.beginRender();
+                this.flame.renderVertices();
+                super.endRender();
             }
-            this.p5.endShape(this.p5.CLOSE);
-
-            // creates the flame effect (vector)
-            if (this.thrust) {
-                if( this.p5.frameCount % SHIP_FLAME_RENDER_INTERVAL === 0 ) {
-                    this.flame.renderVertices();
-                }
-            }
-
-            super.endRender();
         }
     }
 

@@ -2,7 +2,6 @@
 //No collision yet, and only the large asteroid is in the database so far.
 // By MJ
 //last modified by Eddie 5/7/22
-//TODO: Better wrapping
 
 import VectorGameObject from "../core/VectorGameObject.js";
 import EllipseGameObject from "../core/EllipseGameObject.js";
@@ -96,6 +95,9 @@ export default class Asteroid extends VectorGameObject {
 
         this.__rotationSpeed = ASTEROID_ROTATION_SPEED;
 
+        // Reusable scratch vector to avoid per-frame allocations
+        this.__deltaDistance = this.p5.createVector(0, 0);
+
         // add EYEBALLS!
             if (type === "large") {
                 this.__eyes = new Eyeballs(gameSession, this.position, ASTEROID_EYEBALL_SIZE_LARGE);
@@ -113,9 +115,9 @@ export default class Asteroid extends VectorGameObject {
     }
 
     update() {
-        var deltaDistance = this.p5.createVector(this.movementVector.x, this.movementVector.y).mult(ASTEROID_MOVEMENT_MULTIPLIER * this.gameSession.timeManager.deltaTime);
+        this.__deltaDistance.set(this.movementVector.x, this.movementVector.y).mult(ASTEROID_MOVEMENT_MULTIPLIER * this.gameSession.timeManager.deltaTime);
         // move the asteroid
-        this.position.add(deltaDistance);
+        this.position.add(this.__deltaDistance);
 
         // rotate the asteroid
         this.rotation += this.p5.PI / this.__rotationSpeed * this.__rotationScale;
@@ -123,8 +125,6 @@ export default class Asteroid extends VectorGameObject {
         //update the eyeball
         this.__eyes.update(this.x,this.y);
 
-        // wrapping. Currently wraps on center point which looks pretty bad. But it works.
-        // TODO: more sophisticated wrapping (??)
         super.wrap();
 
         return null;

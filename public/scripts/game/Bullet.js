@@ -21,6 +21,9 @@ export default class Bullet extends VectorGameObject {
         this.__startTime = this.gameSession.timeManager.time;
         this.__duration = BULLET_DURATION;
 
+        // Reusable scratch vector to avoid per-frame allocations
+        this.__deltaDistance = this.p5.createVector(0, 0);
+
     }
 
     timeOut(){
@@ -31,10 +34,9 @@ export default class Bullet extends VectorGameObject {
     update() {
         if (!this.timeOut()) {
             // move the Bullet, using the velocity vector
-            var tmpVel = this.p5.createVector(this.velocity.x, this.velocity.y);
-            var deltaDistance = tmpVel.mult(this.gameSession.timeManager.deltaTime);
+            this.__deltaDistance.set(this.velocity.x, this.velocity.y).mult(this.gameSession.timeManager.deltaTime);
 
-            this.position.add(deltaDistance);
+            this.position.add(this.__deltaDistance);
 
             if(this.gameSession.asteroidManager.collide(this,true)) {
                 // add juice effects!

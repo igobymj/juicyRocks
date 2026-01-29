@@ -24,6 +24,10 @@ export default class Eyeballs {
 
 		this.__eyeballSize = size;
 
+		// Reusable scratch vectors to avoid per-frame allocations
+		this.__scratchEyeVec = gameSession.p5.createVector(0, 0);
+		this.__scratchPupilVec = gameSession.p5.createVector(0, 0);
+
 	}
 
 
@@ -33,19 +37,19 @@ export default class Eyeballs {
 		this.eyeball.update( x, y );
 
 		// calculate pupil position
-		// get a copy of ship's current position
-		let shipVector = this.gameSession.shipManager.ship.position.copy();
-		let eyeballVector = this.gameSession.p5.createVector(x,y);
-		// subtract vectors to get vector that points at ship
-		let pupilVector = shipVector.sub(eyeballVector);
+		// reuse scratch vectors instead of allocating new ones each frame
+		let shipPos = this.gameSession.shipManager.ship.position;
+		this.__scratchEyeVec.set(x, y);
+		// vector that points from eyeball to ship
+		this.__scratchPupilVec.set(shipPos.x - x, shipPos.y - y);
 		// normalize resulting vector...
-		pupilVector.normalize();
+		this.__scratchPupilVec.normalize();
 		// then multiply it so that it sits in a nice creepy place
-		pupilVector.mult(this.__eyeballSize/4);
+		this.__scratchPupilVec.mult(this.__eyeballSize/4);
 		// don't forget to actually move the pupil :)
-		pupilVector.add(eyeballVector);
+		this.__scratchPupilVec.add(this.__scratchEyeVec);
 		// and finally... update
-		this.pupil.update(pupilVector.x, pupilVector.y);
+		this.pupil.update(this.__scratchPupilVec.x, this.__scratchPupilVec.y);
 
 	}
 

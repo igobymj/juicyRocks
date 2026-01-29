@@ -111,6 +111,7 @@ public/scripts/
 │   └── HelperFunctions.js
 ├── game/
 │   ├── states/GameState.js
+│   ├── gameplayConstants.js  # Tuning constants (speeds, timers, limits)
 │   ├── Ship.js
 │   ├── Asteroid.js
 │   └── Bullet.js
@@ -142,9 +143,19 @@ p5.draw()
 1. **Circular dependencies** - GameSession ↔ GameUpdate create each other
 2. **Singleton overuse** - Most classes instantiate GameSession internally instead of DI
 3. **JuiceManager bloat** - 200+ lines of manual DOM event binding
-4. **Dead code** - `_old` suffix files, obsolete ParticleManager
-5. **Magic numbers** - Hardcoded values scattered throughout (e.g., Ship rotation speed)
+4. ~~**Dead code** - `_old` suffix files, obsolete ParticleManager~~ (ParticleManager removed; `_old` files remain)
+5. ~~**Magic numbers** - Hardcoded values scattered throughout~~ (extracted to `game/gameplayConstants.js`)
 6. **DOM coupling** - JuiceManager attaches `gameSession` property to HTML elements
+7. ~~**Asteroid wrapping** - Wraps on center point, looks bad for large asteroids (`Asteroid.js`)~~ (margin-based wrapping using `diagonal/2`)
+8. **Ship render override** - Ship.render() redundantly overrides VectorGameObject.render() (`Ship.js:125`)
+9. **ColorFlash fade** - Missing exponential fade on color flash effector (`ColorFlashEffector.js:68`)
+10. **Particle system abstraction** - ExplosionSystem and SmokeTrailSystem need a shared configurable base class
+11. **Sound system disabled** - All SoundManager references commented out; sound classes have unimplemented dispose methods
+12. **SpriteManager brittleness** - No error handling for sprite loading (`SpriteManager.js:31`)
+13. **SpriteGameObject collision** - Size passed as 0,0; needs manual width/height support
+14. **GameSession state management** - `addState()` not safe for non-pre-existing states (`GameSession.js:99`)
+15. **Particle definitions inline** - ParticleSystemDefinitions defaults should move to external JSON (`ParticleSystemDefinitions.js:19`)
+16. **`_old` suffix files** - Legacy VectorParticle_old.js still in codebase
 
 ## Debug Keys (in index.js)
 

@@ -286,10 +286,13 @@ export default class GameObject {
   }
 
   wrap() {
-      if (this.__position.x > this.gameSession.canvasWidth) { this.__position.x = 0; }
-      if (this.__position.x < 0) { this.__position.x = this.gameSession.canvasWidth; }
-      if (this.__position.y > this.gameSession.canvasHeight) { this.__position.y = 0; }
-      if (this.__position.y < 0) { this.__position.y = this.gameSession.canvasHeight; }
+      const margin = this.diagonal / 2;
+      const w = this.gameSession.canvasWidth;
+      const h = this.gameSession.canvasHeight;
+      if (this.__position.x > w + margin) { this.__position.x = -margin; }
+      if (this.__position.x < -margin) { this.__position.x = w + margin; }
+      if (this.__position.y > h + margin) { this.__position.y = -margin; }
+      if (this.__position.y < -margin) { this.__position.y = h + margin; }
   }
 
   // Rotation getter and setter

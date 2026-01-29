@@ -26,6 +26,15 @@ import ColorFlashEffector from "../Effects/ColorFlash/ColorFlashEffector.js";
 import ParticleSystem from "../Effects/ParticleEffects/ParticleSystem.js";
 import TimeSlowEffector from "../Effects/TimeEffects/TimeSlowEffector.js";
 
+// Maps effect names to their effector classes.
+// Each class constructor follows the signature: (gameSession, eventName, triggerObject)
+const effectTypes = {
+	shake: ScreenShakeEffector,
+	colorFlash: ColorFlashEffector,
+	particles: ParticleSystem,
+	timeSlow: TimeSlowEffector,
+};
+
 export default class JuiceEventManager extends Manager {
 
 	constructor(gameSession) {
@@ -36,12 +45,12 @@ export default class JuiceEventManager extends Manager {
         }
 
 		super(gameSession);
-		
+
         JuiceEventManager.__instance = this;
 
         this.__effectors = new Array();
-        // array of ints to hold number of effects currently in play. Avoids inappropriate stacking of 
-        // certain effects. 
+        // array of ints to hold number of effects currently in play. Avoids inappropriate stacking of
+        // certain effects.
         this.__effectSemaphors = [];
         this.__shakeSemaphore = false; // screen shakes should be allowed to complete before another shake is fired
 
@@ -103,34 +112,23 @@ export default class JuiceEventManager extends Manager {
 
 	}
 
-	// factory function for various effect types
-	// object is optionally passed in case its X/Y is important e.g. for particle effects
+	// Factory function for various effect types.
+	// Uses the effectTypes map to instantiate the correct class.
+	// hitPause is handled separately since it doesn't create an effector object.
 	newEventFactory(eventName, effectName, triggerObject) {
 
-		switch(effectName) {
-			case "shake":
-				// only one screen shake effect can be active at a time, and they do not interrupt
-//				this.shakeSemaphore = true;
-				return new ScreenShakeEffector(this.gameSession, eventName, triggerObject);					
-				break;
-			case "colorFlash":
-				return new ColorFlashEffector(this.gameSession, eventName);
-				break;
-			case "particles":
-				return new ParticleSystem(this.gameSession, eventName, triggerObject);
-				break;
-			case "hitPause":
-				this.gameSession.gameUpdate.delayFrames = this.gameSession.juiceSettings.container[eventName].hitPause.frames;
-				return null;
-				break;
-			case "timeSlow":
-				console.log("slowed time");
-				return new TimeSlowEffector(this.gameSession, eventName);
-				break;
-			default:
-				console.log("error creating effect: " + eventName + " " + effectName);
-				return false;
+		if (effectName === "hitPause") {
+			this.gameSession.gameUpdate.delayFrames = this.gameSession.juiceSettings.container[eventName].hitPause.frames;
+			return null;
 		}
+
+		const EffectorClass = effectTypes[effectName];
+		if (EffectorClass) {
+			return new EffectorClass(this.gameSession, eventName, triggerObject);
+		}
+
+		console.log("error creating effect: " + eventName + " " + effectName);
+		return false;
 	}
 
 	// getters/setters

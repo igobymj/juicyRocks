@@ -4,6 +4,7 @@
 
 import Manager from "./Manager.js";
 import Bullet from "../../game/Bullet.js";
+import { AMMO_LIMIT } from "../../game/gameplayConstants.js";
 
 export default class bulletManager extends Manager {
 
@@ -18,7 +19,7 @@ export default class bulletManager extends Manager {
 
 		//Instance Variables
 		this.__bullets= new Array(); //holds bullets
-		this.__ammoLimit = 4;
+		this.__ammoLimit = AMMO_LIMIT;
 
 		if( this.gameSession.verbose === true ) {
 			console.log("bullet Manager created successfully");

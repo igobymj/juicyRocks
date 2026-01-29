@@ -7,6 +7,16 @@
 import VectorGameObject from "../core/VectorGameObject.js";
 import EllipseGameObject from "../core/EllipseGameObject.js";
 import Eyeballs from "../core/Effects/Other/Eyeballs.js";
+import {
+    ASTEROID_VELOCITY_MAX_LARGE,
+    ASTEROID_VELOCITY_MAX_MEDIUM,
+    ASTEROID_VELOCITY_MAX_SMALL,
+    ASTEROID_MOVEMENT_MULTIPLIER,
+    ASTEROID_ROTATION_SPEED,
+    ASTEROID_EYEBALL_SIZE_LARGE,
+    ASTEROID_EYEBALL_SIZE_MEDIUM,
+    ASTEROID_EYEBALL_SIZE_SMALL
+} from "./gameplayConstants.js";
 
 
 export default class Asteroid extends VectorGameObject {
@@ -62,13 +72,13 @@ export default class Asteroid extends VectorGameObject {
         this.__type = type;
         
         if (type === "large") {
-            this.__velocityMax = 2;
+            this.__velocityMax = ASTEROID_VELOCITY_MAX_LARGE;
         }
         else if (type == "medium") {
-            this.__velocityMax = 3;
+            this.__velocityMax = ASTEROID_VELOCITY_MAX_MEDIUM;
         }
         else if (type === "small") {
-            this.__velocityMax = 4;
+            this.__velocityMax = ASTEROID_VELOCITY_MAX_SMALL;
         }
         else {
             console.log("asteroid type not set correctly");
@@ -79,23 +89,22 @@ export default class Asteroid extends VectorGameObject {
         // velocity maxima are set according to asteroid type
         let velocityX = (Math.random() - 0.5) * this.__velocityMax;
         let velocityY = (Math.random() - 0.5) * this.__velocityMax;
-        this.__movementVector = this.p5.createVector(velocityX, velocityY).mult(0.1 * this.gameSession.timeManager.deltaTime);
+        this.__movementVector = this.p5.createVector(velocityX, velocityY).mult(ASTEROID_MOVEMENT_MULTIPLIER * this.gameSession.timeManager.deltaTime);
 
         //set its rotation scaler
         this.__rotationScale = Math.random() - 0.5;
 
-        //eww, magic number
-        this.__rotationSpeed = 128;
+        this.__rotationSpeed = ASTEROID_ROTATION_SPEED;
 
         // add EYEBALLS!
             if (type === "large") {
-                this.__eyes = new Eyeballs(gameSession, this.position, 40);
+                this.__eyes = new Eyeballs(gameSession, this.position, ASTEROID_EYEBALL_SIZE_LARGE);
             }
             else if (type == "medium") {
-                this.__eyes = new Eyeballs(gameSession, this.position, 20);
+                this.__eyes = new Eyeballs(gameSession, this.position, ASTEROID_EYEBALL_SIZE_MEDIUM);
             }
             else if (type === "small") {
-                this.__eyes = new Eyeballs(gameSession, this.position, 10);
+                this.__eyes = new Eyeballs(gameSession, this.position, ASTEROID_EYEBALL_SIZE_SMALL);
             }
             else {
                 console.log("asteroid type not set correctly");
@@ -104,7 +113,7 @@ export default class Asteroid extends VectorGameObject {
     }
 
     update() {
-        var deltaDistance = this.p5.createVector(this.movementVector.x, this.movementVector.y).mult(0.1 * this.gameSession.timeManager.deltaTime);
+        var deltaDistance = this.p5.createVector(this.movementVector.x, this.movementVector.y).mult(ASTEROID_MOVEMENT_MULTIPLIER * this.gameSession.timeManager.deltaTime);
         // move the asteroid
         this.position.add(deltaDistance);
 

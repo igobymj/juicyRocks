@@ -7,6 +7,14 @@
 
 import GameState from "../game/states/GameState.js";
 import VectorGameObject from "../core/VectorGameObject.js";
+import {
+    SHIP_ROTATION_SPEED,
+    SHIP_THRUST_AMOUNT,
+    SHIP_SPEED_CLAMP,
+    SHIP_DEAD_TIME,
+    SHIP_SCALE,
+    SHIP_FLAME_RENDER_INTERVAL
+} from "./gameplayConstants.js";
 
 
 export default class Ship extends VectorGameObject {
@@ -27,16 +35,14 @@ export default class Ship extends VectorGameObject {
 
         //creates VectorGameObject using above vertices, The remainder of arguments are the same
         //as described above for the constructor, note that coordinates are not set (0,0) as they will be set in spawnShip()
-        super(gameSession, 0,0, shipVertices, true, 1, false, 0, .5, 255);
+        super(gameSession, 0,0, shipVertices, true, 1, false, 0, SHIP_SCALE, 255);
 
-        // tweakable variables for gameplay
-        // TODO: These should be abstracted into constants file. These are some crazy looking magic numbers
-        this.__rotationSpeed = 0.000627510040161;
-        this.__thrustAmount = .01/60;  // .01 per frame converted into seconds 
-        this.__speedClamp = 0.4;
+        this.__rotationSpeed = SHIP_ROTATION_SPEED;
+        this.__thrustAmount = SHIP_THRUST_AMOUNT;
+        this.__speedClamp = SHIP_SPEED_CLAMP;
 
         this.__shipAlive = false;
-        this.__deadTime = 4000;
+        this.__deadTime = SHIP_DEAD_TIME;
         this.__deathTimer = this.gameSession.timeManager.realTimeSinceStartup + this.__deadTime;
 
         // velocity vector
@@ -133,7 +139,7 @@ export default class Ship extends VectorGameObject {
 
             // creates the flame effect (vector)
             if (this.thrust) {
-                if( this.p5.frameCount % 5 === 0 ) {
+                if( this.p5.frameCount % SHIP_FLAME_RENDER_INTERVAL === 0 ) {
                     this.flame.renderVertices();
                 }
             }

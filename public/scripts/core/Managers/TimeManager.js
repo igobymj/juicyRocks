@@ -12,6 +12,7 @@
 */
 
 import Manager from "./Manager.js";
+import { DEFAULT_FRAME_RATE, DEFAULT_FIXED_RATE } from "../../game/gameplayConstants.js";
 
 
 export default class TimeManager extends Manager {
@@ -28,8 +29,8 @@ export default class TimeManager extends Manager {
         this.__instance = {}; //TimeManager
 
         this.__timeScale = 1;
-        this.__frameRate = 60;
-        this.__fixedRate = 60;
+        this.__frameRate = DEFAULT_FRAME_RATE;
+        this.__fixedRate = DEFAULT_FIXED_RATE;
 
         // Scaled Time - deltaTime should be used for all movement.
         // deltaTime is in milliseconds per frame

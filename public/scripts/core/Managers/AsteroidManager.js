@@ -5,6 +5,12 @@
 
 import Manager from "./Manager.js";
 import Asteroid from "../../game/Asteroid.js";
+import {
+    LEVEL_START_ROCKS,
+    LEVEL_RESET_DELAY,
+    SAFE_SPAWN_DISTANCE,
+    ASTEROID_SPAWN_RANGE
+} from "../../game/gameplayConstants.js";
 
 
 export default class AsteroidManager extends Manager{
@@ -26,10 +32,10 @@ export default class AsteroidManager extends Manager{
 
 		//Gameplay Variables
 		//Number of large asteroids at level start
-		this.__levelStartRocks = 5;
+		this.__levelStartRocks = LEVEL_START_ROCKS;
 
 		this.__resetTime = 0;
-		this.__resetDelay = 4000; // level reset delay in milliseconds
+		this.__resetDelay = LEVEL_RESET_DELAY;
 
 		if( this.gameSession.verbose === true ) {
 			console.log("asteroid Manager created successfully");
@@ -39,7 +45,7 @@ export default class AsteroidManager extends Manager{
 	levelStart() {
 
 		for ( let i=0; i < this.__levelStartRocks; i++ ) {
-			this.spawnAsteroid( 1, "large", Math.random() * 1000, Math.random() * 1000); 
+			this.spawnAsteroid( 1, "large", Math.random() * ASTEROID_SPAWN_RANGE, Math.random() * ASTEROID_SPAWN_RANGE);
 		}
 
 	}
@@ -75,7 +81,7 @@ export default class AsteroidManager extends Manager{
 
 		// test each asteroid to see how far it is (x,y) from screen center
 		for( let i = this.asteroids.length - 1; i >= 0; i-- ) {
-			if( p5.Vector.dist(centerVec, this.asteroids[i].position)  < 200  ) {
+			if( p5.Vector.dist(centerVec, this.asteroids[i].position)  < SAFE_SPAWN_DISTANCE  ) {
 				// not safe to spawn/respawn the ship just yet
 				return false;
 			}

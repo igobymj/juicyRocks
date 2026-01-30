@@ -133,7 +133,6 @@ p5.draw()
     ├── BulletManager.render()
     ├── Ship.render()
     ├── AsteroidManager.render()
-    ├── ParticleManager.render()
     └── JuiceEventManager.render()
 ```
 
@@ -142,7 +141,7 @@ p5.draw()
 1. **Circular dependencies** - GameSession ↔ GameUpdate create each other
 2. **Singleton overuse** - Most classes instantiate GameSession internally instead of DI
 3. ~~**JuiceManager bloat** - 200+ lines of manual DOM event binding~~ (deleted; replaced by JuiceGuiManager)
-4. ~~**Dead code** - `_old` suffix files, obsolete ParticleManager~~ (ParticleManager removed; `_old` files remain)
+4. ~~**Dead code** - `_old` suffix files, obsolete ParticleManager~~ (all removed)
 5. ~~**Magic numbers** - Hardcoded values scattered throughout~~ (extracted to `game/gameplayConstants.js`)
 6. ~~**DOM coupling** - JuiceManager attaches `gameSession` property to HTML elements~~ (deleted with JuiceManager)
 7. ~~**Asteroid wrapping** - Wraps on center point, looks bad for large asteroids (`Asteroid.js`)~~ (margin-based wrapping using `diagonal/2`)

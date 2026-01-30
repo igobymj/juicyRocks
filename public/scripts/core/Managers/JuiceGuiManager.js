@@ -30,6 +30,11 @@ export default class JuiceGuiManager {
                         id: "bulletHitParticles",
                         children: [
                             {
+                                label: "Active",
+                                path: "container.bulletHit.particles.active",
+                                type: "checkbox"
+                            },
+                            {
                                 label: "Type",
                                 path: "particleSystems.bulletHit.vectorParticle.shape",
                                 type: "select",
@@ -76,6 +81,11 @@ export default class JuiceGuiManager {
                         type: "collapse",
                         id: "bulletHitScreenShake",
                         children: [
+                            {
+                                label: "Active",
+                                path: "container.bulletHit.shake.active",
+                                type: "checkbox"
+                            },
                             {
                                 label: "Type",
                                 path: "container.bulletHit.shake.form",
@@ -134,6 +144,108 @@ export default class JuiceGuiManager {
                                 path: "container.bulletHit.hitPause.frames",
                                 type: "range",
                                 min: 0, max: 10
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                label: "Asteroid Hit Juice",
+                type: "collapse",
+                id: "asteroidHitEffects",
+                children: [
+                    {
+                        label: "Deconstruct",
+                        type: "collapse",
+                        id: "asteroidHitDeconstruct",
+                        children: [
+                            {
+                                label: "Active",
+                                path: "container.asteroidHit.deconstruct.active",
+                                type: "checkbox"
+                            },
+                            {
+                                label: "Speed",
+                                path: "container.asteroidHit.deconstruct.speed",
+                                type: "range",
+                                min: 5, max: 200
+                            },
+                            {
+                                label: "Rotation",
+                                path: "container.asteroidHit.deconstruct.rotationSpeed",
+                                type: "range",
+                                min: 0, max: 20,
+                                step: 0.5
+                            },
+                            {
+                                label: "Duration",
+                                path: "container.asteroidHit.deconstruct.duration",
+                                type: "range",
+                                min: 0.1, max: 5.0,
+                                step: 0.1
+                            },
+                            {
+                                label: "Fade",
+                                path: "container.asteroidHit.deconstruct.fade",
+                                type: "checkbox"
+                            },
+                            {
+                                label: "Drag",
+                                path: "container.asteroidHit.deconstruct.drag",
+                                type: "range",
+                                min: 0.9, max: 1.0,
+                                step: 0.01
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                label: "Destroy Ship Juice",
+                type: "collapse",
+                id: "destroyShipEffects",
+                children: [
+                    {
+                        label: "Deconstruct",
+                        type: "collapse",
+                        id: "destroyShipDeconstruct",
+                        children: [
+                            {
+                                label: "Active",
+                                path: "container.destroyShip.deconstruct.active",
+                                type: "checkbox"
+                            },
+                            {
+                                label: "Speed",
+                                path: "container.destroyShip.deconstruct.speed",
+                                type: "range",
+                                min: 5, max: 200
+                            },
+                            {
+                                label: "Rotation",
+                                path: "container.destroyShip.deconstruct.rotationSpeed",
+                                type: "range",
+                                min: 0, max: 20,
+                                step: 0.5
+                            },
+                            {
+                                label: "Duration",
+                                path: "container.destroyShip.deconstruct.duration",
+                                type: "range",
+                                min: 0.1, max: 5.0,
+                                step: 0.1
+                            },
+                            {
+                                label: "Fade",
+                                path: "container.destroyShip.deconstruct.fade",
+                                type: "checkbox"
+                            },
+                            {
+                                label: "Drag",
+                                path: "container.destroyShip.deconstruct.drag",
+                                type: "range",
+                                min: 0.9, max: 1.0,
+                                step: 0.01
                             }
                         ]
                     }

@@ -187,4 +187,9 @@ export default class Asteroid extends VectorGameObject {
         return this.__movementVector;
     }
 
+    // alias so effects that read triggerObject.velocity work uniformly
+    get velocity() {
+        return this.__movementVector;
+    }
+
 }

@@ -7,24 +7,22 @@ CREATION: takes a juice event by name, uses factory pattern to instantiate the c
 UPDATE: enumerates 'effectors' array, removes "finished" events from array, and calls effectors' update and render methods
 
 Created 6/15/22 by MJ
-Updated: 2/24/24
+Updated: 1/31/26
 
 */
 
 /* NOTE: This obviates the need for MANAGERs for each type of effect. Each effect's system is fully managed by this manager, which
 uses a factory pattern to support a variety of different effects.
 
-Therefore for example, PARTICLEMANAGER is now obsolete
-
 */
 
 
 import Manager from "./Manager.js";
-import NullGameObject from "../NullGameObject.js";
 import ScreenShakeEffector from "../Effects/ScreenShake/ScreenShakeEffector.js";
 import ColorFlashEffector from "../Effects/ColorFlash/ColorFlashEffector.js";
 import ParticleSystem from "../Effects/ParticleEffects/ParticleSystem.js";
 import TimeSlowEffector from "../Effects/TimeEffects/TimeSlowEffector.js";
+import DeconstructEffector from "../Effects/Deconstruct/DeconstructEffector.js";
 
 // Maps effect names to their effector classes.
 // Each class constructor follows the signature: (gameSession, eventName, triggerObject)
@@ -33,6 +31,7 @@ const effectTypes = {
 	colorFlash: ColorFlashEffector,
 	particles: ParticleSystem,
 	timeSlow: TimeSlowEffector,
+	deconstruct: DeconstructEffector,
 };
 
 export default class JuiceEventManager extends Manager {
@@ -41,74 +40,73 @@ export default class JuiceEventManager extends Manager {
 
 		// singleton constructor
 		if (JuiceEventManager.__instance) {
-            return JuiceEventManager.__instance;
-        }
+			return JuiceEventManager.__instance;
+		}
 
 		super(gameSession);
 
-        JuiceEventManager.__instance = this;
+		JuiceEventManager.__instance = this;
 
-        this.__effectors = new Array();
-        // array of ints to hold number of effects currently in play. Avoids inappropriate stacking of
-        // certain effects.
-        this.__effectSemaphors = [];
-        this.__shakeSemaphore = false; // screen shakes should be allowed to complete before another shake is fired
+		this.__effectors = new Array();
+		// array of ints to hold number of effects currently in play. Avoids inappropriate stacking of
+		// certain effects.
+		this.__effectSemaphors = [];
+		this.__shakeSemaphore = false; // screen shakes should be allowed to complete before another shake is fired
 
-        if( this.gameSession.verbose === true ) {
-	        console.log("juice event Manager created successfully");
-	    }
+		if (this.gameSession.verbose === true) {
+			console.log("juice event Manager created successfully");
+		}
 
 	}
 
 	update() {
 
-	    // iterates backwards for removing element in-place when necessary
-	    for(let i = this.effectors.length - 1; i >=0; i-- ){
-            if(this.effectors[i].finished()){
-                this.effectors.splice(i, 1);
-            }
-            else{
-                this.effectors[i].update();
-            }
-        }
-    }
+		// iterates backwards for removing element in-place when necessary
+		for (let i = this.effectors.length - 1; i >= 0; i--) {
+			if (this.effectors[i].finished()) {
+				this.effectors.splice(i, 1);
+			}
+			else {
+				this.effectors[i].update();
+			}
+		}
+	}
 
-    render() {
+	render() {
 
-	    for(let i = this.effectors.length - 1; i >=0; i-- ){
-            this.effectors[i].render();
-        }
-    }
+		for (let i = this.effectors.length - 1; i >= 0; i--) {
+			this.effectors[i].render();
+		}
+	}
 
 
 	//add new effect (push onto array)
 	//interface is string, object. String is required, object is optional
 	addNew(eventName, triggerObject) {
 
-        // ensure that this event exists
-        if( eventName in this.gameSession.juiceSettings.container) {
-            // a given event may have more than one effect/system. Iterate through each
-            for( let effectName in this.gameSession.juiceSettings.container[eventName] ) {
-            	// create an effect object and push it onto effectors[] array
-            	if( this.gameSession.juiceSettings.container[eventName][effectName].active === true ) {
-					if(effectName === "shake" && this.shakeSemaphore === true) {
+		// ensure that this event exists
+		if (eventName in this.gameSession.juiceSettings.container) {
+			// a given event may have more than one effect/system. Iterate through each
+			for (let effectName in this.gameSession.juiceSettings.container[eventName]) {
+				// create an effect object and push it onto effectors[] array
+				if (this.gameSession.juiceSettings.container[eventName][effectName].active === true) {
+					if (effectName === "shake" && this.shakeSemaphore === true) {
 						continue;
 					}
 					else {
-	    	        	let effectObject = this.newEventFactory(eventName,effectName,triggerObject);
-	            		// hit pause runs its own timer so will not be included in this array (returns null)
-	            		if( effectObject != null) {
-	            			this.effectors.push(effectObject);
-	            		}
-	            		this.effectSemaphors[effectName] = true;
-	            	}
-	            }
-            }
-            console.log("DEBUG: " + eventName + " juice event added")
-        }
-        else {
-            console.log("ERROR: " + eventName + " event is not defined in juiceSettings");
-        }
+						let effectObject = this.newEventFactory(eventName, effectName, triggerObject);
+						// hit pause runs its own timer so will not be included in this array (returns null)
+						if (effectObject != null) {
+							this.effectors.push(effectObject);
+						}
+						this.effectSemaphors[effectName] = true;
+					}
+				}
+			}
+		}
+		else {
+			console.log("ERROR: " + eventName + " event is not defined in juiceSettings");
+		}
 
 	}
 
@@ -140,7 +138,7 @@ export default class JuiceEventManager extends Manager {
 		this.__effectors = effectors;
 	}
 
-	get effectSemaphors () {
+	get effectSemaphors() {
 		return this.__effectSemaphors;
 	}
 

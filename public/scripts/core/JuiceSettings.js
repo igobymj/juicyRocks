@@ -28,12 +28,12 @@ export default class JuiceSettings {
 	    	},
 	    	bulletHit : {
 	    		particles : {
-	    			active:  true,
+	    			active:  false,
 	    			particleSystem : "bulletHit"
 	    		},
 
 	    		shake : {
-	    			active : true,
+	    			active : false,
 	    			xAxis: false,
 	    			yAxis : false,
 	    			duration : 0.5, // nominal duration: 0.3 seconds
@@ -44,7 +44,7 @@ export default class JuiceSettings {
 	    			inheritVelocity: false
 	    		},
 	    		hitPause : {
-	    			active : true,
+	    			active : false,
 	    			frames : 0
 	    		},
 	    		colorFlash : {
@@ -63,7 +63,7 @@ export default class JuiceSettings {
 	    	},
 	    	destroyShip : {
 	    		shake : {
-	    			active : true,
+	    			active : false,
 	    			xAxis : true,
 	    			yAxis : true,
 	    			rotation : false,
@@ -76,12 +76,24 @@ export default class JuiceSettings {
 	    			scale : 0.1,
 	    			duration : 3.5,
 	    			stackable : true
+	    		},
+	    		deconstruct: {
+	    			active: false,
+	    			speed: 40,
+	    			rotationSpeed: 0,
+	    			duration: 1.0,
+	    			fade: true,
+	    			drag: 0.98
 	    		}
 	    	},
 	    	asteroidHit: {
-	    		particles: {
-	    			active : true,
-	    			particleSystem : "asteroidHit" 
+	    		deconstruct: {
+	    			active: false,
+	    			speed: 40,
+	    			rotationSpeed: 0,
+	    			duration: 1.0,
+	    			fade: true,
+	    			drag: 0.98
 	    		}
 	    	},
 	    	eyeBallsOnAsteroids: {
@@ -99,22 +111,6 @@ export default class JuiceSettings {
 
 
 	    this.__particleSystems = {
-	    	asteroidHit: {
-	    		vectorParticle: {
-	    			shape : "line",
-	    			count : 15,
-	    			size: 10,
-	    			pattern : "radial",
-	    			rotation : "random",
-	    			rotationSpeed: 5,
-	    			particleLife : 2,
-	    			initialVelocityRandom: false,
-	    			initialVelocity : 30,
-	    			fade : true,
-	    			followObject : false,
-	    			inheritVelocity : true
-	    		}
-	    	},
 	    	bulletHit: {
 	    		vectorParticle: {
 	    			shape : "line",

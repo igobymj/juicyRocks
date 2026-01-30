@@ -103,8 +103,7 @@ export default class AsteroidManager extends Manager{
 			if(this.asteroids[i].collide(gameObject)){
 				collision = true;
 				if(destroyAsteroids){
-					// getting rid of this event which I think is redundant
-					// this.gameSession.juiceEventManager.addNew("asteroidHit", this.asteroids[i]);
+					this.gameSession.juiceEventManager.addNew("asteroidHit", this.asteroids[i]);
 					if( this.asteroids[i].nextType != "none") {
 						this.spawnAsteroid(2, this.asteroids[i].nextType, this.asteroids[i].position.x, this.asteroids[i].position.y)
 					}

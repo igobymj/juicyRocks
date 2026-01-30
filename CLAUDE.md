@@ -74,6 +74,7 @@ core/Effects/
 ├── ScreenShake/ScreenShakeEffector.js
 ├── ColorFlash/ColorFlashEffector.js, FlashColor.js
 ├── TimeEffects/TimeSlowEffector.js
+├── Deconstruct/DeconstructEffector.js
 └── ParticleEffects/ (16 files - various particle types)
 ```
 

@@ -35,7 +35,7 @@ export default class Ship extends VectorGameObject {
 
         //creates VectorGameObject using above vertices, The remainder of arguments are the same
         //as described above for the constructor, note that coordinates are not set (0,0) as they will be set in spawnShip()
-        super(gameSession, 0,0, shipVertices, true, 1, false, 0, SHIP_SCALE, 255);
+        super(gameSession, 0, 0, shipVertices, true, 1, false, 0, SHIP_SCALE, 255);
 
         this.__rotationSpeed = SHIP_ROTATION_SPEED;
         this.__thrustAmount = SHIP_THRUST_AMOUNT;
@@ -61,9 +61,9 @@ export default class Ship extends VectorGameObject {
             { x: -34, y: 0 },
             { x: -28, y: 11 },
         ];
-		
-		// Create a VectorGameObject to handle drawing the flame exhaust
-		this.__flame = new VectorGameObject(gameSession, 0, 0, this.__flameVertices, true, 1/this.scale, false, 0, 1, 255);
+
+        // Create a VectorGameObject to handle drawing the flame exhaust
+        this.__flame = new VectorGameObject(gameSession, 0, 0, this.__flameVertices, true, 1 / this.scale, false, 0, 1, 255);
 
         // Enable black fill so the concave notch at the back of the ship is
         // opaque against the background, matching the original render behavior.
@@ -78,14 +78,14 @@ export default class Ship extends VectorGameObject {
 
         this.rotateShip();
 
-        if(this.__shipAlive){
-                // set thrust to "false" as default
-                this.__thrust = false;
+        if (this.__shipAlive) {
+            // set thrust to "false" as default
+            this.__thrust = false;
 
-            if (this.gameSession.inputManager.inputObject.forward === true ) {
+            if (this.gameSession.inputManager.inputObject.forward === true) {
                 this.thrust = true;
                 // create an acceleration vector based on the ship's current rotation
-	  		    let accelerationVector = p5.Vector.fromAngle(this.rotation);
+                let accelerationVector = p5.Vector.fromAngle(this.rotation);
                 // keep acceleration vector's direction but set magnitude to 1
                 accelerationVector.normalize();
                 // multiply by thrust constant, and adjust for any time dilation/compression
@@ -93,7 +93,7 @@ export default class Ship extends VectorGameObject {
                 // add acceleration (thrust) to current velocity
                 this.velocity.add(accelerationVector);
 
-                }
+            }
 
             // apply speed clamp so that the speed doesn't get insane
             if (this.velocity.mag() > this.__speedClamp) {
@@ -107,22 +107,22 @@ export default class Ship extends VectorGameObject {
             // wrapping: check for ship going off the edge of the screen and wrap it back to the opposite side
             super.wrap();
 
-            if( !this.gameSession.juiceSettings.container.cheats.ship.invincibility && this.gameSession.asteroidManager.collide(this, true) ) {
+            if (!this.gameSession.juiceSettings.container.cheats.ship.invincibility && this.gameSession.asteroidManager.collide(this, true)) {
                 this.destroyShip();
             }
         }
 
         //spawns the ship the first time and subsequent times after death
         else {
-            if( this.gameSession.timeManager.time > this.__deathTimer ) {
+            if (this.gameSession.timeManager.time > this.__deathTimer) {
                 this.spawnShip();
             }
         }
-        
+
     }
 
     render() {
-        if(this.__shipAlive){
+        if (this.__shipAlive) {
             super.render();
 
             // Draw flame exhaust inside the same transform context that
@@ -135,7 +135,7 @@ export default class Ship extends VectorGameObject {
         }
     }
 
-    destroyShip(){
+    destroyShip() {
 
         this.__shipAlive = false;
         this.__deathTimer = this.gameSession.timeManager.time + this.__deadTime;
@@ -146,15 +146,14 @@ export default class Ship extends VectorGameObject {
 
     spawnShip() {
 
-        // first run a test to see if the center of the screen is free of asteroids, then spawn
-
         let invincible = this.gameSession.juiceSettings.container.cheats.ship.invincibility;
 
+        // first run a test to see if the center of the screen is free of asteroids, then spawn
         //skips over "safeToSpawn" test if invincibility toggle is on
-        if( this.gameSession.asteroidManager.safeToSpawn(this.gameSession.canvasWidth / 2, this.gameSession.canvasHeight / 2) || invincible ) {
+        if (this.gameSession.asteroidManager.safeToSpawn(this.gameSession.canvasWidth / 2, this.gameSession.canvasHeight / 2) || invincible) {
             this.__shipAlive = true;
-            this.position.x = this.gameSession.canvasWidth/2; 
-            this.position.y = this.gameSession.canvasHeight/2;
+            this.position.x = this.gameSession.canvasWidth / 2;
+            this.position.y = this.gameSession.canvasHeight / 2;
             this.velocity.setMag(0);
         }
     }
@@ -162,17 +161,17 @@ export default class Ship extends VectorGameObject {
     // process input
     rotateShip() {
 
-        if(this.gameSession.inputManager.inputObject.left === true ) {
-            this.rotation -= this.p5.PI * this.__rotationSpeed * this.gameSession.timeManager.deltaTime;        
+        if (this.gameSession.inputManager.inputObject.left === true) {
+            this.rotation -= this.p5.PI * this.__rotationSpeed * this.gameSession.timeManager.deltaTime;
         }
-        if(this.gameSession.inputManager.inputObject.right === true ) {
-            this.rotation += this.p5.PI * this.__rotationSpeed * this.gameSession.timeManager.deltaTime;        
+        if (this.gameSession.inputManager.inputObject.right === true) {
+            this.rotation += this.p5.PI * this.__rotationSpeed * this.gameSession.timeManager.deltaTime;
         }
     }
 
     fireBullet() {
         this.gameSession.bulletManager.fireBullet(this.position, this.rotation);
-    }    
+    }
 
     // getters & setters
     get rotation() {
@@ -183,7 +182,7 @@ export default class Ship extends VectorGameObject {
         return this.__position;
     }
 
-    set position( newPosition ) {
+    set position(newPosition) {
         this.__position = newPosition;
     }
 
@@ -191,7 +190,7 @@ export default class Ship extends VectorGameObject {
         return this.__velocity;
     }
 
-    set velocity( newVelocity ) {
+    set velocity(newVelocity) {
         this.__velocity = newVelocity;
     }
 
@@ -199,7 +198,7 @@ export default class Ship extends VectorGameObject {
         return this.__rotation;
     }
 
-    set rotation( newRotation ) {
+    set rotation(newRotation) {
         this.__rotation = newRotation;
     }
 
@@ -209,7 +208,7 @@ export default class Ship extends VectorGameObject {
 
     get thrust() {
         // in case it is somehow not set
-        if(this.__thrust === null ) {
+        if (this.__thrust === null) {
             return false;
         }
         else {
@@ -221,7 +220,7 @@ export default class Ship extends VectorGameObject {
         return this.__flame;
     }
 
-    set thrust( newThrust ) {
+    set thrust(newThrust) {
         this.__thrust = newThrust;
     }
 
@@ -229,7 +228,7 @@ export default class Ship extends VectorGameObject {
         return this.__vertices;
     }
 
-    set vertices ( newVertices ) {
+    set vertices(newVertices) {
         this.__vertices = newVertices;
     }
 

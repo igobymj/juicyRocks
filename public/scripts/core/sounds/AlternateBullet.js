@@ -43,7 +43,7 @@ export default class AlternateBullet extends SoundObject{
 
 		// Adjust frequency based on time scale
 		let freq = this.__oscFrequency * timeScale;
-		Math.max(Math.min(freq, 10000), 20);
+		freq = Math.max(Math.min(freq, 10000), 20);
 		this.__osc.set({ frequency: freq });
 		this.__freq.set({ baseFrequency: freq });
 

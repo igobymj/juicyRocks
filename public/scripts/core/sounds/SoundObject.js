@@ -31,12 +31,12 @@ export default class SoundObject{
 
 	// "Virtual" Play method
 	play(){
-		print("WARNING: play method from base SoundObject was called. This should be overloaded in the derived class.");
+		console.warn("play method from base SoundObject was called. This should be overloaded in the derived class.");
 	}
 
 	//"Virtual" Stop method
 	stop(){
-		print("WARNING: stop method from base SoundObject was called. This should be overloaded in the derived class.");
+		console.warn("stop method from base SoundObject was called. This should be overloaded in the derived class.");
 	}
 
 	connect(node){
@@ -45,6 +45,6 @@ export default class SoundObject{
 	}
 
 	dispose(){
-		print("WARNING: dispose method from base SoundObject was called, this should be overloaded in the derived class.");
+		console.warn("dispose method from base SoundObject was called, this should be overloaded in the derived class.");
 	}
 }

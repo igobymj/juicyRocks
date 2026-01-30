@@ -13,11 +13,12 @@ import AlternateBullet from "./AlternateBullet.js";
 export default class BulletSound extends SoundClass{
 	/* Constructor */
 	constructor(){
-		super();
-
 		if(BulletSound.__instance){
 			return BulletSound.__instance;
 		}
+
+		super();
+
 		BulletSound.__instance = this;
 
 		this.__instance = {}; //BulletSound instance

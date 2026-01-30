@@ -56,7 +56,7 @@ export default class InputManager extends Manager {
     // for one-shot keypresses
     keyInput( keyInputValue ) {
         // fire bullet
-        if(keyInputValue === " " || keyInputValue === "Shift" ) {
+        if(keyInputValue === "Enter" || keyInputValue === "Shift" ) {
              this.gameSession.shipManager.ship.fireBullet();
         }
 

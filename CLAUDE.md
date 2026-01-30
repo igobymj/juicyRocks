@@ -155,11 +155,16 @@ p5.draw()
 15. **Particle definitions inline** - ParticleSystemDefinitions defaults should move to external JSON (`ParticleSystemDefinitions.js:19`)
 16. ~~**`_old` suffix files** - Legacy VectorParticle_old.js still in codebase~~ (deleted VectorParticle_old.js and ParticleSystem_old.js)
 
-## Debug Keys (in index.js)
+## Controls
 
-- `i` - Increase time scale
-- `o` - Decrease time scale
-- `q` - Reset time scale to 1
+- **Move:** Arrow Keys / WASD (rotate left/right, thrust forward)
+- **Fire:** Enter / Shift
+
+### Debug Keys (in index.js)
+
+- `i` - Set time scale to 0.1
+- `o` - Reset time scale to 1
+- `q` - Set time scale to 2
 
 ## Adding New Juice Effects
 

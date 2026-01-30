@@ -40,6 +40,14 @@ h1 {
 	border: none !important;
 }
 
+.nav-controls-legend{
+	color: white;
+	font-size: 0.85em;
+	margin-left: auto;
+	align-self: center;
+	white-space: nowrap;
+}
+
 .collapse-label{
 	color: white !important;
 	font-weight:bold;

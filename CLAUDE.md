@@ -51,9 +51,8 @@ All inherit from `Manager.js` base class:
 - `TimeManager` - Scaled/unscaled/fixed delta time
 - `InputManager` - Keyboard state
 - `ShipManager`, `AsteroidManager`, `BulletManager` - Entity management
-- `ParticleManager` - Legacy, mostly superseded by JuiceEventManager
 - `SoundManager` - Audio playback
-- `JuiceManager` - Bridges HTML UI controls to JuiceSettings
+- `JuiceGuiManager` - Schema-driven UI generation, bridges controls to JuiceSettings
 
 ### Game Objects (in `game/`)
 
@@ -142,20 +141,20 @@ p5.draw()
 
 1. **Circular dependencies** - GameSession ↔ GameUpdate create each other
 2. **Singleton overuse** - Most classes instantiate GameSession internally instead of DI
-3. **JuiceManager bloat** - 200+ lines of manual DOM event binding
+3. ~~**JuiceManager bloat** - 200+ lines of manual DOM event binding~~ (deleted; replaced by JuiceGuiManager)
 4. ~~**Dead code** - `_old` suffix files, obsolete ParticleManager~~ (ParticleManager removed; `_old` files remain)
 5. ~~**Magic numbers** - Hardcoded values scattered throughout~~ (extracted to `game/gameplayConstants.js`)
-6. **DOM coupling** - JuiceManager attaches `gameSession` property to HTML elements
+6. ~~**DOM coupling** - JuiceManager attaches `gameSession` property to HTML elements~~ (deleted with JuiceManager)
 7. ~~**Asteroid wrapping** - Wraps on center point, looks bad for large asteroids (`Asteroid.js`)~~ (margin-based wrapping using `diagonal/2`)
 8. **Ship render override** - Ship.render() redundantly overrides VectorGameObject.render() (`Ship.js:125`)
 9. **ColorFlash fade** - Missing exponential fade on color flash effector (`ColorFlashEffector.js:68`)
 10. **Particle system abstraction** - ExplosionSystem and SmokeTrailSystem need a shared configurable base class
-11. **Sound system disabled** - All SoundManager references commented out; sound classes have unimplemented dispose methods
+11. ~~**Sound system disabled** - All SoundManager references commented out; sound classes have unimplemented dispose methods~~ (bullet sound re-enabled; frequency clamp, print() calls, and singleton order fixed; explosion/thruster sounds still disabled)
 12. **SpriteManager brittleness** - No error handling for sprite loading (`SpriteManager.js:31`)
 13. **SpriteGameObject collision** - Size passed as 0,0; needs manual width/height support
 14. **GameSession state management** - `addState()` not safe for non-pre-existing states (`GameSession.js:99`)
 15. **Particle definitions inline** - ParticleSystemDefinitions defaults should move to external JSON (`ParticleSystemDefinitions.js:19`)
-16. **`_old` suffix files** - Legacy VectorParticle_old.js still in codebase
+16. ~~**`_old` suffix files** - Legacy VectorParticle_old.js still in codebase~~ (deleted VectorParticle_old.js and ParticleSystem_old.js)
 
 ## Debug Keys (in index.js)
 
@@ -168,8 +167,7 @@ p5.draw()
 1. Create effector class in `core/Effects/` with `update()`, `render()`, `finished()` methods
 2. Add configuration to `JuiceSettings.js`
 3. Add case to `JuiceEventManager.newEventFactory()`
-4. Add UI controls in `index.html`
-5. Bind controls in `JuiceManager.js`
+4. Add schema entry in `JuiceGuiManager.js`
 
 ## Collision System
 

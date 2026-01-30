@@ -12,12 +12,12 @@ import AlternateBullet from "./AlternateBullet.js";
 
 export default class BulletSound extends SoundClass{
 	/* Constructor */
-	constructor(){
+	constructor(gameSession){
 		if(BulletSound.__instance){
 			return BulletSound.__instance;
 		}
 
-		super();
+		super(gameSession);
 
 		BulletSound.__instance = this;
 
@@ -30,14 +30,14 @@ export default class BulletSound extends SoundClass{
 		// Default bullet
 		this.__defaultBulletPool = new Array();
 		for (let i = 0; i < this.__poolSize; ++i) {
-			this.__defaultBulletPool.push(new DefaultBullet());
+			this.__defaultBulletPool.push(new DefaultBullet(gameSession));
 		}
 		this.__soundObjects.push(this.__defaultBulletPool);
 
 		// Alternate bullet
 		this.__alternateBulletPool = new Array();
 		for (let i = 0; i < this.__poolSize; ++i) {
-			this.__alternateBulletPool.push(new AlternateBullet());
+			this.__alternateBulletPool.push(new AlternateBullet(gameSession));
 		}
 		this.__soundObjects.push(this.__alternateBulletPool);
 

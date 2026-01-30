@@ -1,5 +1,3 @@
-import GameSession from "../GameSession.js";
-import SoundObject from "./SoundObject.js"
 /*
 	SoundClass class
 
@@ -13,9 +11,8 @@ import SoundObject from "./SoundObject.js"
 export default class SoundClass{
 	/* Constructor */
 	//Creates a main output node and an internal array of SoundObjects
-	constructor(){
-		// Get new GameSession reference in case there is none loaded yet
-    	this.__gameSession = new GameSession();
+	constructor(gameSession){
+		this.__gameSession = gameSession;
 		//Main output node
 		this.__output = new Tone.PanVol();
 

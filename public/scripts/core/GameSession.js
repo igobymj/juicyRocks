@@ -7,7 +7,6 @@ import ShipManager from "./Managers/ShipManager.js";
 import AsteroidManager from "./Managers/AsteroidManager.js";
 import SpriteManager from "./Managers/SpriteManager.js";
 import JuiceGuiManager from "./Managers/JuiceGuiManager.js";
-import JuiceManager from "./Managers/JuiceManager.js";
 import JuiceEventManager from "./Managers/JuiceEventManager.js";
 import BulletManager from "./Managers/BulletManager.js";
 import JuiceSettings from "./JuiceSettings.js";
@@ -80,9 +79,6 @@ export default class GameSession {
 
 		//Current state
 		this.__currentState = {};
-
-		//JuiceManager - Instantiate Last (not sure if necessary, but for now)
-		// this.__juiceManager = new JuiceManager();
 
 		if (this.verbose === true) {
 			console.log("Session Created Successfully.");
@@ -281,14 +277,6 @@ export default class GameSession {
 
 	set juiceEventManager(juiceEventManager) {
 		this.__juiceEventManager = juiceEventManager;
-	}
-
-	get juiceManager() {
-		return this.__juiceManager;
-	}
-
-	set juiceManager(juiceManager) {
-		this.__juiceManager = juiceManager;
 	}
 
 	get juiceGuiManager() {

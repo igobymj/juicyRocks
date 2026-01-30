@@ -30,7 +30,7 @@ export default class SoundManager extends Manager {
 		this.__mainMix = new Tone.Volume().toDestination();
 		this.__sfxMix = new Tone.Volume().connect(this.__mainMix);
 
-		this.__bulletSound = new BulletSound();
+		this.__bulletSound = new BulletSound(gameSession);
 		this.__bulletSound.connect(this.__sfxMix);
 
 		if( this.gameSession.verbose === true) {

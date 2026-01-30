@@ -1,7 +1,7 @@
 // juiceSettings.js
-// container object for all the interactive juice settings in the app, 
-// including cheats like invulnerability etc. Works in tandem with JuiceManager.js
-// which typically triggers the updateJuice() method. UpdateJuice() is allowed to 
+// container object for all the interactive juice settings in the app,
+// including cheats like invulnerability etc. Settings are mutated by
+// JuiceGuiManager via setValue(). UpdateJuice() is allowed to
 // create new name:value pairs which may or may not be cool.
 // created by MJ 6/2/22
 

@@ -1,4 +1,3 @@
-import GameSession from "../GameSession.js";
 /*
 	SoundObject class
 
@@ -12,9 +11,8 @@ import GameSession from "../GameSession.js";
 export default class SoundObject{
 	/* Constructor */
 	//Creates a main output node and amplitude envelope
-	constructor(){
-		// Get new GameSession reference in case there is none loaded yet
-    	this.__gameSession = new GameSession();
+	constructor(gameSession){
+		this.__gameSession = gameSession;
 		//Main output node
 		this.__output = new Tone.PanVol();
 		this.__env = new Tone.AmplitudeEnvelope().connect(this.__output);

@@ -67,6 +67,14 @@ GameObject (base - position, rotation, collision)
 
 `Bullet` extends `GameObject` directly.
 
+### Particle Hierarchy (in `core/Effects/ParticleEffects/`)
+
+```
+Particle (lightweight base — no GameObject inheritance)
+├── VectorParticle (draws shapes via direct p5 calls)
+└── SpriteParticle (draws sprite images via direct p5 calls)
+```
+
 ### Juice/Effects System (in `core/Effects/`)
 
 ```
@@ -75,7 +83,7 @@ core/Effects/
 ├── ColorFlash/ColorFlashEffector.js, FlashColor.js
 ├── TimeEffects/TimeSlowEffector.js
 ├── Deconstruct/DeconstructEffector.js
-└── ParticleEffects/ (16 files - various particle types)
+└── ParticleEffects/ (Particle base, VectorParticle, SpriteParticle, VectorParticleEffect, ParticleSystem, ParticleSystemDefinitions)
 ```
 
 Effects are created via `JuiceEventManager.newEventFactory()` which reads from `JuiceSettings`.
@@ -148,7 +156,7 @@ p5.draw()
 7. ~~**Asteroid wrapping** - Wraps on center point, looks bad for large asteroids (`Asteroid.js`)~~ (margin-based wrapping using `diagonal/2`)
 8. **Ship render override** - Ship.render() redundantly overrides VectorGameObject.render() (`Ship.js:125`)
 9. **ColorFlash fade** - Missing exponential fade on color flash effector (`ColorFlashEffector.js:68`)
-10. **Particle system abstraction** - ExplosionSystem and SmokeTrailSystem need a shared configurable base class
+10. ~~**Particle system abstraction** - ExplosionSystem and SmokeTrailSystem need a shared configurable base class~~ (lightweight `Particle` base class created; VectorParticle/SpriteParticle extend it directly; dead particle files deleted: PrimitiveParticle, Explosion, ExplosionSystem, ShipVectorParticle, ShipParticleSystem, JetSmoke, JetParticleSystem, SmokeTrail, SmokeTrailSystem)
 11. ~~**Sound system disabled** - All SoundManager references commented out; sound classes have unimplemented dispose methods~~ (bullet sound re-enabled; frequency clamp, print() calls, and singleton order fixed; explosion/thruster sounds still disabled)
 12. **SpriteManager brittleness** - No error handling for sprite loading (`SpriteManager.js:31`)
 13. **SpriteGameObject collision** - Size passed as 0,0; needs manual width/height support

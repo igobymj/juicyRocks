@@ -1,5 +1,5 @@
 import VectorGameObject from "../core/VectorGameObject.js";
-import { BULLET_DURATION, BULLET_HIT_DELAY_FRAMES } from "./gameplayConstants.js";
+import { BULLET_DURATION } from "./gameplayConstants.js";
 
 
 export default class Bullet extends VectorGameObject {
@@ -39,8 +39,7 @@ export default class Bullet extends VectorGameObject {
             this.position.add(this.__deltaDistance);
 
             if(this.gameSession.asteroidManager.collide(this,true)) {
-                // add juice effects!
-                this.gameSession.gameUpdate.delayFrames = BULLET_HIT_DELAY_FRAMES;
+                // add juice effects (hitPause is handled by JuiceEventManager)
                 this.gameSession.juiceEventManager.addNew("bulletHit", this);
                 //return false if it hit an asteroid
                 return false;

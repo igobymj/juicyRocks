@@ -1,73 +1,41 @@
-// Sprite Particle
-// For a single sprite particle
+// SpriteParticle — draws sprite images via direct p5 calls.
+// Extends Particle (lightweight base) instead of SpriteGameObject.
 
-import SpriteGameObject from "../../SpriteGameObject.js";
+import Particle from "./Particle.js";
 
+export default class SpriteParticle extends Particle {
 
-export default class SpriteParticle extends SpriteGameObject {
+    // particleName: string key for spriteManager lookup
+    // x, y: spawn position
+    // rotation: initial rotation (radians)
+    // scale: render scale
+    // moveVector: p5.Vector velocity
+    // duration: lifetime in seconds
+    // alpha: initial alpha (0–255)
+    constructor(gameSession, particleName, x, y, rotation, scale, moveVector, duration, alpha) {
 
+        const p5 = gameSession.p5;
+        const position = p5.createVector(x, y);
+        const durationMs = duration * 1000;
 
-	/* Constructor */
-	// parameters are: particle (must be of type image), float x, float y, float rotation (radians), float scale, p5Vector moveVector, float duration (in seconds) 
-	constructor( particleName, x, y, rotation, scale, moveVector, duration, alpha ) {
+        // Particle base: (gameSession, position, velocity, rotation, rotationSpeed, scale, alpha, duration, fade)
+        super(gameSession, position, moveVector, rotation, rotation, scale, alpha, durationMs, true);
 
-		super( particleName, x, y, rotation, scale, alpha );
-
-		this.__velocity = moveVector;
-		this.__rotationSpeed = rotation;
-		this.__duration = duration * 1000;
-
-		this.__startTime = this.gameSession.timeManager.time;
-
-	}
-
-	update( ) {
-        if (!this.finished()) {
-            //this.__position.add(this.__velocity * this.__timeManager.deltaTime);
-            this.__position.add(this.__velocity);
-            this.rotation += 30; //this.rotationSpeed;
-
-            //check if at edge of screen; if so, wrap around
-            super.wrap();
-        }
-	}
-
-	render() {
-		super.render();
-	}
-
-	// All particles must contain this method
-	finished() {
-        return (this.gameSession.timeManager.time - this.startTime) >= this.duration;
+        this.__spriteImage = gameSession.spriteManager.getSprite(particleName);
+        this.__width = this.__spriteImage.width * scale;
+        this.__height = this.__spriteImage.height * scale;
     }
 
-    // getters and setters
-	get startTime()  {
-		return this.__startTime;
-	}
+    render() {
+        const p = this.p5;
 
-	get duration() {
-		return this.__duration;
-	}
-
-	get position() {
-		return this.__position;
-	}
-
-	get velocity() {
-		return this.__velocity;
-	}
-
-	get rotationSpeed() {
-		return this.__rotationSpeed;
-	}
-
-	render() {
-		super.render();
-	}
-
-
-
-
-
+        p.push();
+        p.translate(this.position.x, this.position.y);
+        p.rotate(this.rotation);
+        p.scale(this.scale);
+        p.tint(255, this.alpha);
+        p.image(this.__spriteImage, 0, 0, this.__width, this.__height);
+        p.noTint();
+        p.pop();
+    }
 }

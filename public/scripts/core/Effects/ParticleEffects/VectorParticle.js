@@ -1,12 +1,10 @@
-// generator for vector particles
-// the actual array of particles is managed by VectorParticleEffect.js 
-// (we don't have a provision for bitmap particles)
+// VectorParticle — draws shapes via direct p5 calls.
+// Extends Particle (lightweight base) instead of VectorGameObject.
 
+import Particle from "./Particle.js";
+import HelperFunctions from "../../HelperFunctions.js";
 
-import VectorGameObject from "../../VectorGameObject.js";
-
-
-export default class VectorParticle extends VectorGameObject {
+export default class VectorParticle extends Particle {
 
     constructor(gameSession, shape, duration, size, position, rotationSpeed, startVelocity, strokeWeight, fill, fade, particleVertices) {
 
@@ -22,94 +20,75 @@ export default class VectorParticle extends VectorGameObject {
             ];
         }
 
-        super(gameSession, position.x, position.y, particleVertices, true, strokeWeight, fill, 0, 1, 255, shape);
+        // Scale velocity and rotation to match original behavior
+        startVelocity.mult(.005);
+        const scaledRotationSpeed = rotationSpeed * .005;
 
-        this.__gameSession = gameSession;
+        // Particle base: (gameSession, position, velocity, rotation, rotationSpeed, scale, alpha, duration, fade)
+        super(gameSession, position, startVelocity, 0, scaledRotationSpeed, 1, 255, duration, fade);
 
-        // set up time manager, and record start time
-        this.__timeManager = this.__gameSession.timeManager;
-        this.__startTime = this.__timeManager.time;
+        // Convert vertex data to p5.Vector array
+        this.__vertices = HelperFunctions.Point2VectorArray(this.p5, particleVertices);
+        this.__shape = shape;
+        this.__strokeWeight = strokeWeight;
+        this.__fill = fill;
+        this.__strokeColor = this.p5.color(255);
+        this.__fillColor = this.p5.color(255);
+        this.__closeShape = true;
 
-        // duration in milliseconds
-        this.__duration = duration;
-
-        // velocity is pixels/second, rotation is rotations (2pi radians)/sec
-
-        startVelocity.mult(.005); // velocity is very large, needs to be scaled
-        this.__velocity = startVelocity;
-        this.__rotationSpeed = rotationSpeed * .005;
-        this.__fade = fade;
-
-        // acceleration vector
+        // Acceleration vector — multiplied into velocity each frame
         this.__accelerationVector = this.p5.createVector(1.02, 1.02);
-
-    }
-
-    // returns true or false depending on whether the particle's lifetime has exceeded its defined duration
-    finished() {
-        return (this.__timeManager.time - this.__startTime) >= this.__duration;
-    }
-
-    // something like gravity can change acceleration of particles in runtime
-    // not currently used though
-    applyForce(force) {
-        this.__accelerationVector = force;
     }
 
     update() {
-
-        // this changes the velocity by acceleration vector
+        // Apply acceleration before base physics
         this.velocity.mult(this.__accelerationVector);
 
-        // this is for calculating deltaDistance using mult(), but not changing the original velocity
-        let tmpVelocity = this.p5.createVector(this.velocity.x, this.velocity.y);
-        let deltaDistance = tmpVelocity.mult(this.gameSession.timeManager.deltaTime);
-
-        this.position.add(deltaDistance);
-
-        this.rotation += (this.rotationSpeed * this.gameSession.timeManager.deltaTime);
-
-        if( this.fade === true) {
-            let fadePercent = (this.__timeManager.time - this.__startTime) / this.__duration; 
-            this.alpha = 255 - (255 * fadePercent);
-        }
-
-        //note that unlike other objects, particles do not wrap
-        //super.wrap();
-
+        // Base physics: position, rotation, fade, scale
+        super.update();
     }
 
     render() {
-        super.render();
+        const p = this.p5;
 
+        p.push();
+        p.translate(this.position.x, this.position.y);
+        p.rotate(this.rotation);
+        p.scale(this.scale);
+
+        // Stroke
+        p.strokeWeight((1 / this.scale) * this.__strokeWeight);
+        p.stroke([p.red(this.__strokeColor), p.green(this.__strokeColor), p.blue(this.__strokeColor), this.alpha]);
+
+        // Fill
+        if (this.__fill) {
+            p.fill([p.red(this.__fillColor), p.green(this.__fillColor), p.blue(this.__fillColor), this.alpha]);
+        } else {
+            p.noFill();
+        }
+
+        // Draw shape
+        if (this.__shape === "circle" || this.__shape === "dot") {
+            const radius = this.__shape === "dot" ? 1 : 5;
+            p.ellipse(0, 0, radius);
+        } else {
+            p.beginShape();
+            for (let i = 0; i < this.__vertices.length; i++) {
+                p.vertex(this.__vertices[i].x, this.__vertices[i].y);
+            }
+            if (this.__closeShape) {
+                p.endShape(p.CLOSE);
+            } else {
+                p.endShape();
+            }
+        }
+
+        p.pop();
     }
 
-    get gameSession() {
-        return this.__gameSession;
-    }
+    get strokeColor() { return this.__strokeColor; }
+    set strokeColor(c) { this.__strokeColor = c; }
 
-    get velocity() {
-        return this.__velocity;
-    }
-
-    get rotationSpeed() {
-        return this.__rotationSpeed;
-    }
-
-    get position() {
-        return this.__position;
-    }
-
-    get rotation() {
-        return this.__rotation;
-    }
-
-    set rotation(rotation) {
-        this.__rotation = rotation;
-    }
-
-    get fade() {
-        return this.__fade;
-    }
-
+    get fillColor() { return this.__fillColor; }
+    set fillColor(c) { this.__fillColor = c; }
 }

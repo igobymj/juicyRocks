@@ -41,13 +41,11 @@ export default class DefaultBullet extends SoundObject{
 	play(){
 		let timeScale = this.__gameSession.timeManager.timeScale;
 
-		// Adjust frequency based on time scale
-		let freq = this.__oscFrequency * timeScale;
-		freq = Math.max(Math.min(freq, 10000), 20);
-		this.__osc.set({ frequency: freq });
-		this.__freq.set({ baseFrequency: freq });
+		// Keep pitch constant
+		this.__osc.set({ frequency: this.__oscFrequency });
+		this.__freq.set({ baseFrequency: this.__oscFrequency });
 
-		// Adjust envelope durations based on time scale
+		// Stretch envelope duration based on time scale
 		let dur = timeScale > 0 ? this.__envDuration / timeScale : 0;
 		dur = Math.max(Math.min(dur, 1.5), 0.01);
 		this.__env.release = dur;

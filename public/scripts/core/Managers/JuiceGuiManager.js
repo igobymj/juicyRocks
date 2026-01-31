@@ -140,10 +140,42 @@ export default class JuiceGuiManager {
                         id: "bulletHitPause",
                         children: [
                             {
+                                label: "Active",
+                                path: "container.bulletHit.hitPause.active",
+                                type: "checkbox"
+                            },
+                            {
                                 label: "Frames",
                                 path: "container.bulletHit.hitPause.frames",
                                 type: "range",
                                 min: 0, max: 10
+                            }
+                        ]
+                    },
+                    {
+                        label: "Time Slow",
+                        type: "collapse",
+                        id: "bulletHitTimeSlow",
+                        children: [
+                            {
+                                label: "Active",
+                                path: "container.bulletHit.timeSlow.active",
+                                type: "checkbox"
+                            },
+                            {
+                                label: "Intensity",
+                                path: "container.bulletHit.timeSlow.scale",
+                                type: "range",
+                                min: 0.05, max: 1.0,
+                                step: 0.05,
+                                invert: true
+                            },
+                            {
+                                label: "Duration",
+                                path: "container.bulletHit.timeSlow.duration",
+                                type: "range",
+                                min: 0.05, max: 2.0,
+                                step: 0.05
                             }
                         ]
                     }
@@ -246,6 +278,33 @@ export default class JuiceGuiManager {
                                 type: "range",
                                 min: 0.9, max: 1.0,
                                 step: 0.01
+                            }
+                        ]
+                    },
+                    {
+                        label: "Time Slow",
+                        type: "collapse",
+                        id: "destroyShipTimeSlow",
+                        children: [
+                            {
+                                label: "Active",
+                                path: "container.destroyShip.timeSlow.active",
+                                type: "checkbox"
+                            },
+                            {
+                                label: "Intensity",
+                                path: "container.destroyShip.timeSlow.scale",
+                                type: "range",
+                                min: 0.05, max: 1.0,
+                                step: 0.05,
+                                invert: true
+                            },
+                            {
+                                label: "Duration",
+                                path: "container.destroyShip.timeSlow.duration",
+                                type: "range",
+                                min: 0.1, max: 5.0,
+                                step: 0.1
                             }
                         ]
                     }
@@ -365,18 +424,16 @@ export default class JuiceGuiManager {
             input.min = item.min;
             input.max = item.max;
             if (item.step) input.step = item.step;
-            input.value = currentValue;
 
-            // Optional: value display
-            // const valDisplay = document.createElement('span');
-            // valDisplay.textContent = ` (${currentValue})`;
-            // label.appendChild(valDisplay);
+            const invert = item.invert === true;
+            const toSlider = (v) => invert ? (item.min + item.max - v) : v;
+            const fromSlider = toSlider; // same transform in both directions
+
+            input.value = toSlider(currentValue);
 
             input.addEventListener('input', (e) => {
-                // Determine if value should be number
-                let val = parseFloat(e.target.value);
+                let val = fromSlider(parseFloat(e.target.value));
                 this.setValue(item.path, val);
-                // valDisplay.textContent = ` (${val})`;
             });
         }
         else if (item.type === 'checkbox') {

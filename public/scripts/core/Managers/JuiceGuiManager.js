@@ -1,3 +1,7 @@
+// separate manager for UI interactions with JuiceSettings, also allows for data driven construction of the UI
+// updated by MJ 1/31/26
+
+
 export default class JuiceGuiManager {
     constructor(gameSession) {
         if (JuiceGuiManager.__instance) {

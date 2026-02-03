@@ -4,6 +4,7 @@
 // JuiceGuiManager via setValue(). UpdateJuice() is allowed to
 // create new name:value pairs which may or may not be cool.
 // created by MJ 6/2/22
+// updated by MJ 2/3/26
 
 
 export default class JuiceSettings {
@@ -11,7 +12,7 @@ export default class JuiceSettings {
 	constructor() {
 
 		//singleton
-		if(JuiceSettings.__instance) {
+		if (JuiceSettings.__instance) {
 			return JuiceSettings.__instance;
 		}
 
@@ -19,131 +20,133 @@ export default class JuiceSettings {
 
 		this.__instance = {};
 
-	    // defaults. These can be overridden from the HTML interface.
-	    this.__container = {
-	    	cheats : {
-	    		ship : {
-	    			invincibility: true
-	    		}
-	    	},
-	    	bulletHit : {
-	    		particles : {
-	    			active:  false,
-	    			particleSystem : "bulletHit"
-	    		},
+		// defaults. These can be overridden from the HTML interface.
+		this.__container = {
+			cheats: {
+				ship: {
+					invincibility: true
+				}
+			},
+			bulletHit: {
+				particles: {
+					active: false,
+					particleSystem: "bulletHit"
+				},
 
-	    		shake : {
-	    			active : false,
-	    			xAxis: false,
-	    			yAxis : false,
-	    			duration : 0.5, // nominal duration: 0.3 seconds
-	    			amplitude : 0.5,
-	    			frequency : 10, //cycles per second
-	    			form : "simple",
-	    			fade : false,
-	    			inheritVelocity: false
-	    		},
-	    		hitPause : {
-	    			active : false,
-	    			frames : 0
-	    		},
-	    		colorFlash : {
-	    			active: false,
-	    			color : "white",
-	    			alpha: 200,
-	    			duration : 0.5,
-	    			stackable: false,
-	    			stackWindow: 0.25
-	    		},
-	    		timeSlow : {
-	    			active : false,
-	    			scale : 0.25,
-	    			duration : 0.1
-	    		}
-	    	},
-	    	destroyShip : {
-	    		shake : {
-	    			active : false,
-	    			xAxis : true,
-	    			yAxis : true,
-	    			rotation : false,
-	    			duration: 2, // nominal duration: 2 seconds
-	    			intensity : 0.5,
-	    			form : "noise"
-	    		},
-	    		timeSlow : {
-	    			active : false,
-	    			scale : 0.1,
-	    			duration : 3.5,
-	    			stackable : true
-	    		},
-	    		deconstruct: {
-	    			active: false,
-	    			speed: 40,
-	    			rotationSpeed: 0,
-	    			duration: 1.0,
-	    			fade: true,
-	    			drag: 0.98
-	    		}
-	    	},
-	    	asteroidHit: {
-	    		deconstruct: {
-	    			active: false,
-	    			speed: 40,
-	    			rotationSpeed: 0,
-	    			duration: 1.0,
-	    			fade: true,
-	    			drag: 0.98
-	    		}
-	    	},
-	    	eyeBallsOnAsteroids: {
-	    		eyeBalls: {
-	    			active : false
-	    		}
-	    	},
-	    	particleTester: {
-	    		particles: {
-	    			active : true,
-	    			particleSystem : "particleTest"
-	    		}
-	    	}
-	    };
+				shake: {
+					active: false,
+					xAxis: false,
+					yAxis: false,
+					duration: 0.5, // nominal duration: 0.3 seconds
+					amplitude: 0.5,
+					frequency: 10, //cycles per second
+					form: "simple",
+					fade: false,
+					inheritVelocity: false
+				},
+				hitPause: {
+					active: false,
+					frames: 0
+				},
+				colorFlash: {
+					active: false,
+					color: "white",
+					alpha: 200,
+					duration: 0.5,
+					stackable: false,
+					stackWindow: 0.25
+				},
+				timeSlow: {
+					active: false,
+					scale: 0.25,
+					duration: 0.1
+				}
+			},
+			destroyShip: {
+				shake: {
+					active: false,
+					xAxis: true,
+					yAxis: true,
+					rotation: false,
+					duration: 2, // nominal duration: 2 seconds
+					intensity: 0.5,
+					form: "noise"
+				},
+				timeSlow: {
+					active: false,
+					scale: 0.1,
+					duration: 3.5,
+					stackable: true
+				},
+				deconstruct: {
+					active: false,
+					speed: 40,
+					rotationSpeed: 0,
+					duration: 1.0,
+					fade: true,
+					drag: 0.98
+				}
+			},
+			asteroidHit: {
+				deconstruct: {
+					active: false,
+					speed: 40,
+					rotationSpeed: 0,
+					duration: 1.0,
+					fade: true,
+					drag: 0.98
+				}
+			},
+			eyeBallsOnAsteroids: {
+				eyeBalls: {
+					active: false
+				}
+			},
+			particleTester: {
+				particles: {
+					active: true,
+					particleSystem: "particleTest"
+				}
+			}
+		};
 
 
-	    this.__particleSystems = {
-	    	bulletHit: {
-	    		vectorParticle: {
-	    			shape : "line",
-	    			count : 15,
-	    			size: 10,
-	    			pattern : "radial",
-	    			rotation : "random",
-	    			rotationSpeed: 5,
-	    			particleLife : 2,
-	    			initialVelocityRandom: false,
-	    			initialVelocity : 30,
-	    			fade : true,
-	    			followObject : false,
-	    			inheritVelocity : false
-	    		}
-	    	},
+		// particle systems are stored independently of the juice settings and called from the juice event.
+		// the setting here is a default, expected to be overridden by the user UI interactions.	
+		this.__particleSystems = {
+			bulletHit: {
+				vectorParticle: {
+					shape: "line",
+					count: 15,
+					size: 10,
+					pattern: "radial",
+					rotation: "random",
+					rotationSpeed: 5,
+					particleLife: 2,
+					initialVelocityRandom: false,
+					initialVelocity: 30,
+					fade: true,
+					followObject: false,
+					inheritVelocity: false
+				}
+			},
 
-	    	particleTest: {
-	    		vectorParticle: {
-	    			shape : "circle",
-	    			count : 15,
-	    			size: 10,
-	    			pattern : "radial",
-	    			rotation : "random",
-	    			rotationSpeed: 5,
-	    			particleLife : 2,
-	    			initialVelocityRandom: false,
-	    			initialVelocity : 30,
-	    			fade : true,
-	    			followObject : false
-	    		}
-	    	}
-	    };
+			particleTest: {
+				vectorParticle: {
+					shape: "circle",
+					count: 15,
+					size: 10,
+					pattern: "radial",
+					rotation: "random",
+					rotationSpeed: 5,
+					particleLife: 2,
+					initialVelocityRandom: false,
+					initialVelocity: 30,
+					fade: true,
+					followObject: false
+				}
+			}
+		};
 
 		console.log("default juice settings created");
 
@@ -159,7 +162,7 @@ export default class JuiceSettings {
 		// probably good to keep this around
 		// maybe in time have something like this display at the bottom of the page and fade out?
 		// don't print "active" because that is boring
-		if( effectParameter != "active") {
+		if (effectParameter != "active") {
 			console.log(eventName + " " + effectName + " " + effectParameter + ": " + this.container[eventName][effectName][effectParameter]);
 		}
 
@@ -170,7 +173,7 @@ export default class JuiceSettings {
 		this.particleSystems[eventName][effectName][effectParameter] = status;
 
 		console.log(eventName + " " + effectName + " " + effectParameter + ": " + this.particleSystems[eventName][effectName][effectParameter]);
-	
+
 	}
 
 	//getters & setters
@@ -186,7 +189,7 @@ export default class JuiceSettings {
 		return this.__container;
 	}
 
-	set container( container ) {
+	set container(container) {
 		this.__container = container;
 	}
 
@@ -194,7 +197,7 @@ export default class JuiceSettings {
 		return this.__particleSystems;
 	}
 
-	set particleSystems( particleSystems ) {
+	set particleSystems(particleSystems) {
 		this.__particleSystems = particleSystems;
 	}
 

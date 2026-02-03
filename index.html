@@ -1,55 +1,75 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name='description' content='A "Juiced" version of Asteroids.'>
-    <meta name='author' content='TODO: AUTHORS'>
 
-    <!-- Mobile viewport -->
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
+<head>
+  <meta charset="utf-8">
+  <meta name='description' content='A "Juiced" version of Asteroids.'>
+  <meta name='author' content='TODO: AUTHORS'>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <!-- Mobile viewport -->
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
 
-    <!-- Bootstrap is used for layout and non-game page elements -->
-    <link rel="stylesheet" type="text/css" href="./public/styles/bootstrap.min.css">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 
-    <!-- Font import from CDN -->
-    <link href="https://fonts.cdnfonts.com/css/hyperspace" rel="stylesheet">
-            
-    <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="./public/styles/index.css">
-    
-  </head>
-  <body>
+  <!-- Bootstrap is used for layout and non-game page elements -->
+  <link rel="stylesheet" type="text/css" href="./public/styles/bootstrap.min.css">
 
-    
-    <div class="juiceteroid_container">
+  <!-- Font import from CDN -->
+  <link href="https://fonts.cdnfonts.com/css/hyperspace" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="./public/styles/index.css">
+
+</head>
+
+<body>
+
+
+  <div class="juiceteroid_container">
     <!-- Nav Bar -->
     <nav>
       <div class="nav nav-tabs nav-tabs-custom" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-canvas-tab" data-bs-toggle="tab" data-bs-target="#nav-canvas" type="button" role="tab" aria-controls="nav-canvas" aria-selected="true"><h1>JUICETEROIDS</h1></button>
-        <button class="nav-link" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about" type="button" role="tab" aria-controls="nav-about" aria-selected="false"><h1>ABOUT</h1></button>
-        <button class="nav-link" id="nav-credits-tab" data-bs-toggle="tab" data-bs-target="#nav-credits" type="button" role="tab" aria-controls="nav-credits" aria-selected="false"><h1>CREDITS</h1></button>
+        <button class="nav-link active" id="nav-canvas-tab" data-bs-toggle="tab" data-bs-target="#nav-canvas"
+          type="button" role="tab" aria-controls="nav-canvas" aria-selected="true">
+          <h1>JUICE ROCKS</h1>
+        </button>
+        <button class="nav-link" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about" type="button"
+          role="tab" aria-controls="nav-about" aria-selected="false">
+          <h1>ABOUT</h1>
+        </button>
+        <button class="nav-link" id="nav-credits-tab" data-bs-toggle="tab" data-bs-target="#nav-credits" type="button"
+          role="tab" aria-controls="nav-credits" aria-selected="false">
+          <h1>CREDITS</h1>
+        </button>
         <span class="nav-controls-legend"><b>MOVE:</b> Arrow Keys / WASD &nbsp;&nbsp; <b>FIRE:</b> Enter / Shift</span>
       </div>
     </nav>
-    
+
     <!-- Nav Bar Content-->
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active" id="nav-canvas" role="tabpanel" aria-labelledby="nav-canvas">
-        
+
         <!-- Game Canvas -->
-        <div class = "row">
-          <div class = "col-3 juice-controller" id = "juice-col">
-            <div id = "juice-menu">
+        <div class="row">
+          <div class="col-3 juice-controller" id="juice-col">
+            <div id="juice-menu">
               <!--This form organizes our controls for our game.-->
 
 
             </div>
           </div>
-          <div class = "col-9 canvas-col" id = "canvas-col">
-            <div id = "canvas"></div>
+          <div class="col-9 canvas-col" id="canvas-col">
+            <div id="canvas"></div>
+          </div>
+        </div>
+
+        <!-- Footer (only shown on game tab) -->
+        <div class="row" style="margin-top: 2rem;">
+          <div class="twelve columns">
+            <div>
+              <h3>There can never be too many particles</h3>
+            </div>
           </div>
         </div>
 
@@ -57,46 +77,78 @@
 
       <div class="tab-pane fade" id="nav-about" role="tabpanel" aria-labelledby="nav-about">
 
-        <!-- About -->
-        <div class = "row">
-          <div class = "col-12">"I don't mess with squares, now do that mean I'm out of shape?" -Lil Wayne</div>
+        <!-- About (loaded from external file) -->
+        <div id="about-content">
+          <div class="row">
+            <div class="col-12">Loading about...</div>
+          </div>
         </div>
 
       </div>
 
       <div class="tab-pane fade" id="nav-credits" role="tabpanel" aria-labelledby="nav-credits">
 
-        <!-- Game Credits -->
-        <div class = "row">
-          <div class = "col-12">The quick, brown fox jumped over the lazy dog...</div>
+        <!-- Game Credits (loaded from external file) -->
+        <div id="credits-content">
+          <div class="row">
+            <div class="col-12">Loading credits...</div>
+          </div>
         </div>
 
       </div>
     </div>
-    
 
+  </div>
 
+  <!-- JAVASCRIPT IMPORTS -->
+  <!-- Bootstrap for form and nav elements-->
+  <script type="text/javascript" src="./public/scripts/libs/bootstrap/bootstrap.bundle.min.js"></script>
 
-      <!-- Footer -->
-      <div class = "row">
-        <div class = "twelve columns">
-          <div><h3>There can never be too many particles</h3></div>
-        </div>
-      </div>
+  <!-- Tone.js for audio synthesis -->
+  <script src="https://cdn.jsdelivr.net/npm/tone@14/build/Tone.js"></script>
 
-    </div>
+  <!-- P5 is used for rendering -->
+  <script type="module" src="./public/scripts/libs/p5/p5.js"></script>
 
-    <!-- JAVASCRIPT IMPORTS -->
-    <!-- Bootstrap for form and nav elements-->
-    <script type="text/javascript" src="./public/scripts/libs/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- Script to load credits and about content -->
+  <script>
+    // Load credits content when the credits tab is clicked
+    let creditsLoaded = false;
+    document.getElementById('nav-credits-tab').addEventListener('click', function () {
+      if (!creditsLoaded) {
+        fetch('./public/credits.html')
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('credits-content').innerHTML = html;
+            creditsLoaded = true;
+          })
+          .catch(error => {
+            console.error('Error loading credits:', error);
+            document.getElementById('credits-content').innerHTML = '<div class="row"><div class="col-12">Error loading credits.</div></div>';
+          });
+      }
+    });
 
-    <!-- Tone.js for audio synthesis -->
-    <script src="https://cdn.jsdelivr.net/npm/tone@14/build/Tone.js"></script>
+    // Load about content when the about tab is clicked
+    let aboutLoaded = false;
+    document.getElementById('nav-about-tab').addEventListener('click', function () {
+      if (!aboutLoaded) {
+        fetch('./public/about.html')
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('about-content').innerHTML = html;
+            aboutLoaded = true;
+          })
+          .catch(error => {
+            console.error('Error loading about:', error);
+            document.getElementById('about-content').innerHTML = '<div class="row"><div class="col-12">Error loading about.</div></div>';
+          });
+      }
+    });
+  </script>
 
-    <!-- P5 is used for rendering -->
-    <script type="module" src="./public/scripts/libs/p5/p5.js"></script>
-    
-    <!-- entry point of application -->
-    <script type="module" src="./public/scripts/index.js"></script>
-  </body>
+  <!-- entry point of application -->
+  <script type="module" src="./public/scripts/index.js"></script>
+</body>
+
 </html>

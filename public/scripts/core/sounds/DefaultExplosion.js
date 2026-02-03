@@ -10,8 +10,8 @@ import SoundObject from './SoundObject.js';
 
 export default class DefaultExplosion extends SoundObject{
 	/* Constructor */
-	constructor(){
-		super();
+	constructor(gameSession){
+		super(gameSession);
 
 		// Set initial volume level
 		this.__output.set({volume: 0});

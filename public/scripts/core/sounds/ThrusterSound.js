@@ -11,18 +11,19 @@ import DefaultThruster from "./DefaultThruster.js";
 
 export default class ThrusterSound extends SoundClass{
 	/* Constructor */
-	constructor(){
-		super();
-
+	constructor(gameSession){
 		if(ThrusterSound.__instance){
 			return ThrusterSound.__instance;
 		}
+
+		super(gameSession);
+
 		ThrusterSound.__instance = this;
 
 		this.__instance = {}; //ThrusterSound instance
 
 		// Default thruster sound
-		this.__defaultThruster = new DefaultThruster();
+		this.__defaultThruster = new DefaultThruster(gameSession);
 		this.__defaultThruster.connect(this.__output);
 		this.__soundObjects.push(this.__defaultThruster);
 	}

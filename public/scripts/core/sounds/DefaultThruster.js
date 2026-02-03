@@ -11,12 +11,12 @@ import SoundObject from "./SoundObject.js";
 
 export default class DefaultThruster extends SoundObject{
 	/* Constructor */
-	constructor(){
-		super();
-
+	constructor(gameSession){
 		if(DefaultThruster.__instance){
 			return DefaultThruster.__instance;
 		}
+
+		super(gameSession);
 		DefaultThruster.__instance = this;
 
 		this.__instance = {}; //DefaultThruster instance

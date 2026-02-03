@@ -104,6 +104,7 @@ export default class AsteroidManager extends Manager{
 				collision = true;
 				if(destroyAsteroids){
 					this.gameSession.juiceEventManager.addNew("asteroidHit", this.asteroids[i]);
+				this.gameSession.soundManager.playExplosion();
 					if( this.asteroids[i].nextType != "none") {
 						this.spawnAsteroid(2, this.asteroids[i].nextType, this.asteroids[i].position.x, this.asteroids[i].position.y)
 					}

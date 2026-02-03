@@ -53,6 +53,7 @@ export default class Ship extends VectorGameObject {
         // variabless for animating flame effect
         this.__framesSinceFlame = 0;
         this.__thrust = false;
+        this.__wasThrusting = false;
 
         // We also want to have a flame exhaust appear when we move
         // so this array stores the vertices for the flame effect
@@ -95,6 +96,14 @@ export default class Ship extends VectorGameObject {
 
             }
 
+            // Trigger thruster sound on state transitions
+            if (this.__thrust && !this.__wasThrusting) {
+                this.gameSession.soundManager.playThruster();
+            } else if (!this.__thrust && this.__wasThrusting) {
+                this.gameSession.soundManager.stopThruster();
+            }
+            this.__wasThrusting = this.__thrust;
+
             // apply speed clamp so that the speed doesn't get insane
             if (this.velocity.mag() > this.__speedClamp) {
                 this.velocity.setMag(this.__speedClamp);
@@ -136,6 +145,10 @@ export default class Ship extends VectorGameObject {
     }
 
     destroyShip() {
+        if (this.__wasThrusting) {
+            this.gameSession.soundManager.stopThruster();
+            this.__wasThrusting = false;
+        }
 
         this.__shipAlive = false;
         this.__deathTimer = this.gameSession.timeManager.time + this.__deadTime;

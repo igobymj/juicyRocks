@@ -12,12 +12,12 @@ import DefaultExplosion from "./DefaultExplosion.js";
 
 export default class ExplosionSound extends SoundClass{
 	/* Constructor */
-	constructor(){
-		super();
-
+	constructor(gameSession){
 		if(ExplosionSound.__instance){
 			return ExplosionSound.__instance;
 		}
+
+		super(gameSession);
 		ExplosionSound.__instance = this;
 
 		this.__instance = {}; //ExplosionSound instance
@@ -29,7 +29,7 @@ export default class ExplosionSound extends SoundClass{
 		// Default explosion
 		this.__defaultExplosionPool = new Array();
 		for (let i = 0; i < this.__poolSize; ++i) {
-			this.__defaultExplosionPool.push(new DefaultExplosion());
+			this.__defaultExplosionPool.push(new DefaultExplosion(gameSession));
 		}
 		this.__soundObjects.push(this.__defaultExplosionPool);
 

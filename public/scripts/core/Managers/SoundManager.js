@@ -10,6 +10,8 @@
 
 import Manager from "./Manager.js";
 import BulletSound from "../sounds/BulletSound.js";
+import ExplosionSound from "../sounds/ExplosionSound.js";
+import ThrusterSound from "../sounds/ThrusterSound.js";
 
 export default class SoundManager extends Manager {
 	/* Constructor */
@@ -33,9 +35,27 @@ export default class SoundManager extends Manager {
 		this.__bulletSound = new BulletSound(gameSession);
 		this.__bulletSound.connect(this.__sfxMix);
 
+		this.__explosionSound = new ExplosionSound(gameSession);
+		this.__explosionSound.connect(this.__sfxMix);
+
+		this.__thrusterSound = new ThrusterSound(gameSession);
+		this.__thrusterSound.connect(this.__sfxMix);
+
 		if( this.gameSession.verbose === true) {
 			console.log("sound manager created successfully");
 		}
+	}
+
+	playExplosion() {
+		this.__explosionSound.play();
+	}
+
+	playThruster() {
+		this.__thrusterSound.play();
+	}
+
+	stopThruster() {
+		this.__thrusterSound.stop();
 	}
 
 	playBullet() {

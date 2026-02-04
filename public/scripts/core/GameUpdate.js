@@ -47,6 +47,13 @@ export default class GameUpdate extends Manager {
         this.gameSession.asteroidManager.render();
         this.gameSession.juiceEventManager.render();
 
+        // Border rect that moves with screen shake to make the effect visible
+        let p = this.gameSession.p5;
+        p.noFill();
+        p.stroke(255);
+        p.strokeWeight(3);
+        p.rect(0, 0, this.gameSession.canvasWidth, this.gameSession.canvasHeight);
+
     }
 
     keyIsDown(){

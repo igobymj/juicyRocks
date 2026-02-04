@@ -121,8 +121,8 @@ export default class JuiceGuiManager {
                                 label: "Amplitude",
                                 path: "container.bulletHit.shake.amplitude",
                                 type: "range",
-                                min: 1, max: 100,
-                                step: 0.1
+                                min: 0, max: 1,
+                                step: 0.01
                             },
                             {
                                 label: "Duration",

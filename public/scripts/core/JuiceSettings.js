@@ -23,6 +23,7 @@ export default class JuiceSettings {
 		// defaults. These can be overridden from the HTML interface.
 		this.__container = {
 			cheats: {
+				juiceFx: false,
 				ship: {
 					invincibility: true
 				}

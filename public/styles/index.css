@@ -13,34 +13,63 @@ label {
 	font-weight: bold;
 }
 
-#nav-canvas-tab, #nav-credits-tab, #nav-about-tab{
+#nav-canvas-tab,
+#nav-credits-tab,
+#nav-about-tab {
 	background-color: #222222 !important;
 	border-bottom: .05rem solid white;
 }
 
-canvas{
-	height:100%;
+#nav-about-tab h1,
+#nav-credits-tab h1 {
+	font-size: 1.0em;
+}
+
+canvas {
+	height: 100%;
 	border: .05rem solid white;
 }
 
-#juice-menu{
+#juice-menu {
 	border: .05rem solid white;
-	overflow: auto;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+#juice-menu .juice-pinned {
+	flex-shrink: 0;
+	border-bottom: .05rem solid white;
+}
+
+#juice-menu .juice-pinned form {
+	margin: 0;
+}
+
+#juice-menu .juice-pinned .juice-item {
+	border-bottom: none !important;
+	margin-bottom: 0 !important;
+	padding: 0.3rem 1rem !important;
+}
+
+#juice-menu .juice-scrollable {
+	flex: 1;
+	overflow-y: auto;
 }
 
 h1 {
 	color: white;
 	font-weight: bold;
-	font-family: 'Hyperspace', sans-serif;                                            
+	font-family: 'Hyperspace', sans-serif;
 }
 
-.nav-tabs-custom{
+.nav-tabs-custom {
 	color: white !important;
 	text-decoration: none;
 	border: none !important;
 }
 
-.nav-controls-legend{
+.nav-controls-legend {
 	color: white;
 	font-size: 0.85em;
 	margin-left: auto;
@@ -48,25 +77,64 @@ h1 {
 	white-space: nowrap;
 }
 
-.collapse-label{
+.collapse-label {
 	color: white !important;
-	font-weight:bold;
+	font-weight: bold;
 }
 
-.juiceteroid_container{
+.collapse-toggle {
+	display: block;
+	margin-top: 10px;
+}
+
+.collapse-section-top {
+	border-left: 3px solid transparent;
+	padding-left: 10px;
+	margin-top: 10px;
+}
+
+.collapse-section-top:has(.collapse.show),
+.collapse-section-top:has(.collapse.collapsing) {
+	border-left-color: white;
+}
+
+/* Dim all sibling controls when a collapse group's "Active" toggle is off */
+.juice-inactive > *:not(:first-child) {
+	opacity: 0.35;
+	transition: opacity 0.15s;
+}
+
+#juice-log {
+	max-height: 4.5em;
+	overflow-y: auto;
+	scrollbar-width: none;
+	font-size: 0.85em;
+	opacity: 0.6;
+}
+
+#juice-log::-webkit-scrollbar {
+	display: none;
+}
+
+#juice-log p {
+	margin: 0;
+	line-height: 1.5em;
+}
+
+.juiceteroid_container {
 	margin: 1%;
 }
 
-.juice-controller{
+.juice-controller {
 	padding: 0rem !important;
 }
 
-.canvas-col{
-	padding-left:0rem !important;
+.canvas-col {
+	padding-left: 0rem !important;
 	padding-right: 0rem !important;
 }
 
-.juice-item{
+.juice-item {
 	padding: 1rem !important;
 	margin-bottom: 1rem !important;
 	border-bottom: .05rem solid white;
@@ -74,33 +142,34 @@ h1 {
 
 /** Bootstrap overrides **/
 
-.form-range::-moz-range-thumb{
-	background-color:#222222 !important;
+.form-range::-moz-range-thumb {
+	background-color: #222222 !important;
 	border: .05rem solid white !important;
 }
 
-.form-range::-moz-range-track{
+.form-range::-moz-range-track {
 	background-color: white !important;
 	height: .05rem !important;
 }
 
-.form-select{
-	background-color:#222222 !important;
+.form-select {
+	background-color: #222222 !important;
 	color: white !important;
 	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='white' stroke='%23343a40' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+	padding-left: 1.0rem !important;
 }
 
-.form-check-input:checked{
+.form-check-input:checked {
 	background-color: #222222 !important;
 	border-color: white !important;
 }
 
-.form-check-input:focus{
+.form-check-input:focus {
 	border-color: white !important;
 	box-shadow: 0px 1px 1px #222222 inset, 0px 0px 8px #999999 !important;
 }
 
-.form-check-input{
+.form-check-input {
 	background-color: #222222 !important;
 	border-color: white !important;
 	float: right !important;
@@ -109,9 +178,9 @@ h1 {
 textarea:focus,
 .form-range:focus::-moz-range-thumb,
 input[type="checkbox"]:focus,
-select:focus {   
+select:focus {
 	-webkit-appearance: none !important;
-  border-color: white !important;
-  box-shadow: 0 1px 1px #222222 inset, 0 0 8px #999999 !important;
-  outline: 0 none !important;
+	border-color: white !important;
+	box-shadow: 0 1px 1px #222222 inset, 0 0 8px #999999 !important;
+	outline: 0 none !important;
 }

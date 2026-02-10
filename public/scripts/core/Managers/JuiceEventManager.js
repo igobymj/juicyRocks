@@ -84,6 +84,9 @@ export default class JuiceEventManager extends Manager {
 	//interface is string, object. String is required, object is optional
 	addNew(eventName, triggerObject) {
 
+		// global juice toggle – skip all effects when master switch is off
+		if (!this.gameSession.juiceSettings.container.cheats.juiceFx) return;
+
 		// ensure that this event exists
 		if (eventName in this.gameSession.juiceSettings.container) {
 			// a given event may have more than one effect/system. Iterate through each

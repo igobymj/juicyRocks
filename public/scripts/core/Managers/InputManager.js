@@ -32,21 +32,21 @@ export default class InputManager extends Manager {
 
     update() {
         
-        // for held keypresses
-        if(this.gameSession.p5.keyIsDown(37) || this.gameSession.p5.keyIsDown(65) ) {
+        // for held keypresses (WASD only — arrow keys conflict with UI sliders)
+        if(this.gameSession.p5.keyIsDown(65) ) {
             this.inputObject.left = true;
         }
         else {
             this.inputObject.left = false;
         }
-        if(this.gameSession.p5.keyIsDown(39) || this.gameSession.p5.keyIsDown(68) ) {
-            this.inputObject.right = true;           
+        if(this.gameSession.p5.keyIsDown(68) ) {
+            this.inputObject.right = true;
         }
         else {
             this.inputObject.right = false;
         }
-        if(this.gameSession.p5.keyIsDown(38) || this.gameSession.p5.keyIsDown(87) ) {
-            this.inputObject.forward = true;            
+        if(this.gameSession.p5.keyIsDown(87) ) {
+            this.inputObject.forward = true;
         }
         else {
             this.inputObject.forward = false;
@@ -55,8 +55,8 @@ export default class InputManager extends Manager {
 
     // for one-shot keypresses
     keyInput( keyInputValue ) {
-        // fire bullet
-        if(keyInputValue === "Enter" || keyInputValue === "Shift" ) {
+        // fire bullet (only when ship is alive)
+        if((keyInputValue === "Enter" || keyInputValue === "Shift") && this.gameSession.shipManager.ship.shipAlive) {
              this.gameSession.shipManager.ship.fireBullet();
         }
 

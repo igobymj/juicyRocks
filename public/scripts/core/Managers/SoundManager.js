@@ -5,7 +5,7 @@
 	and sound board (public methods for playing each sound).
 
 	By Jonathan Leland
-	Last Updated 5/7/22 by Eddie Melcer
+	Last Updated 2/3/26 by Michael John, aligned with gameSession architecture changes and fixed bugs
 */
 
 import Manager from "./Manager.js";

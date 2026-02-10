@@ -17,6 +17,11 @@ export default class JuiceGuiManager {
                 type: "group",
                 children: [
                     {
+                        label: "Juice FX",
+                        path: "container.cheats.juiceFx",
+                        type: "checkbox"
+                    },
+                    {
                         label: "Invincibility",
                         path: "container.cheats.ship.invincibility",
                         type: "checkbox"
@@ -109,7 +114,11 @@ export default class JuiceGuiManager {
                             {
                                 label: "Inherit Velocity",
                                 path: "container.bulletHit.shake.inheritVelocity",
-                                type: "checkbox"
+                                type: "checkbox",
+                                excludes: [
+                                    "container.bulletHit.shake.xAxis",
+                                    "container.bulletHit.shake.yAxis"
+                                ]
                             },
                             {
                                 label: "Frequency",
@@ -318,53 +327,73 @@ export default class JuiceGuiManager {
     }
 
     initialize() {
+        this.buildPathLabels();
+        this._lastLogPath = null;
+
         const parentElement = document.getElementById('juice-menu');
         if (!parentElement) return;
 
         // Clear existing content (removed the hardcoded form)
         parentElement.innerHTML = '';
 
-        const container = document.createElement('div');
-        container.className = 'juice-controller';
+        // Split schema: groups (Cheats) are pinned at top, rest scrolls
+        const pinnedItems = this.schema.filter(item => item.type === 'group');
+        const scrollableItems = this.schema.filter(item => item.type !== 'group');
 
-        const form = document.createElement('form');
-        container.appendChild(form);
+        // Pinned section (Invincibility toggle)
+        const pinnedDiv = document.createElement('div');
+        pinnedDiv.className = 'juice-pinned';
+        const pinnedForm = document.createElement('form');
+        pinnedDiv.appendChild(pinnedForm);
+        this.buildUI(pinnedItems, pinnedForm);
+        parentElement.appendChild(pinnedDiv);
 
-        this.buildUI(this.schema, form);
-        parentElement.appendChild(container);
+        // Scrollable section (all collapsible effect groups)
+        const scrollableDiv = document.createElement('div');
+        scrollableDiv.className = 'juice-scrollable';
+        const scrollForm = document.createElement('form');
+        scrollableDiv.appendChild(scrollForm);
+        this.buildUI(scrollableItems, scrollForm);
+        parentElement.appendChild(scrollableDiv);
     }
 
-    buildUI(schemaItems, parent) {
+    buildUI(schemaItems, parent, depth = 0) {
         schemaItems.forEach(item => {
             if (item.type === 'group') {
-                this.createGroup(item, parent);
+                this.createGroup(item, parent, depth);
             } else if (item.type === 'collapse') {
-                this.createCollapse(item, parent);
+                this.createCollapse(item, parent, depth);
             } else {
                 this.createControl(item, parent);
             }
         });
     }
 
-    createGroup(item, parent) {
+    createGroup(item, parent, depth) {
         const div = document.createElement('div');
         div.className = 'juice-item';
 
-        // Only add label if it exists (some groups might be invisible containers)
-        if (item.label) {
-            // Check if first child is checkbox to inline it? No, stick to consistent vertically stacked design for now.
-            // But for "Cheats -> Invincibility", the HTML had the label and the checkbox in one "juice-item" div.
-            // Stick to standard layout: Label (if group label), then children.
-        }
-
-        this.buildUI(item.children, div);
+        this.buildUI(item.children, div, depth);
         parent.appendChild(div);
     }
 
-    createCollapse(item, parent) {
+    createCollapse(item, parent, depth) {
+        // Ensure parent has an ID so Bootstrap accordion (data-bs-parent) works
+        if (!parent.id) {
+            parent.id = `accordion-${JuiceGuiManager.__accordionId++}`;
+        }
+
+        // Wrapper holds label + content together; top-level gets accent border
+        const wrapper = document.createElement('div');
+        if (depth === 0) {
+            wrapper.className = 'collapse-section collapse-section-top';
+        } else {
+            wrapper.className = 'collapse-section';
+        }
+
         // Label/Link to toggle
         const labelDiv = document.createElement('label');
-        labelDiv.className = 'form-check-label';
+        labelDiv.className = 'form-check-label collapse-toggle';
 
         const link = document.createElement('a');
         link.setAttribute('aria-expanded', 'false');
@@ -372,24 +401,50 @@ export default class JuiceGuiManager {
         link.setAttribute('data-bs-toggle', 'collapse');
         link.setAttribute('data-bs-target', `#${item.id}`);
         link.textContent = item.label;
-        // Basic styling to look like a link/button
         link.style.cursor = "pointer";
 
         labelDiv.appendChild(link);
-        parent.appendChild(labelDiv);
+        wrapper.appendChild(labelDiv);
 
         // Collapsible Content Div
         const contentDiv = document.createElement('div');
         contentDiv.className = 'juice-effect collapse';
         contentDiv.id = item.id;
+        // Only one sibling collapse open at a time
+        contentDiv.setAttribute('data-bs-parent', `#${parent.id}`);
 
-        // Add some margin/padding for nested look
+        // Nested indent
         contentDiv.style.paddingLeft = "10px";
-        contentDiv.style.marginBottom = "10px";
 
-        this.buildUI(item.children, contentDiv);
-        parent.appendChild(contentDiv);
-        parent.appendChild(document.createElement('br'));
+        this.buildUI(item.children, contentDiv, depth + 1);
+
+        // If this collapse has an "Active" toggle, disable sibling controls when inactive
+        const activeChild = item.children.find(c => c.path && c.path.endsWith('.active'));
+        if (activeChild) {
+            const activeId = `control-${activeChild.path.replace(/\./g, '-')}`;
+            const activeInput = contentDiv.querySelector(`#${activeId}`);
+            if (activeInput) {
+                // Sibling controls: inputs/selects in this contentDiv but not in nested collapses
+                const getSiblings = () =>
+                    [...contentDiv.querySelectorAll('input, select')].filter(
+                        el => el !== activeInput && el.closest('.collapse') === contentDiv
+                    );
+
+                const setDisabled = (disabled) => {
+                    getSiblings().forEach(el => el.disabled = disabled);
+                    contentDiv.classList.toggle('juice-inactive', disabled);
+                };
+
+                // Set initial state
+                setDisabled(!activeInput.checked);
+
+                // Update on toggle
+                activeInput.addEventListener('change', () => setDisabled(!activeInput.checked));
+            }
+        }
+
+        wrapper.appendChild(contentDiv);
+        parent.appendChild(wrapper);
     }
 
     createControl(item, parent) {
@@ -456,6 +511,14 @@ export default class JuiceGuiManager {
 
             input.addEventListener('change', (e) => {
                 this.setValue(item.path, e.target.checked);
+                if (e.target.checked && item.excludes) {
+                    item.excludes.forEach(exPath => {
+                        this.setValue(exPath, false);
+                        const exId = `control-${exPath.replace(/\./g, '-')}`;
+                        const exEl = document.getElementById(exId);
+                        if (exEl) exEl.checked = false;
+                    });
+                }
             });
 
             wrapper.appendChild(label);
@@ -486,7 +549,78 @@ export default class JuiceGuiManager {
         }
         obj[keys[keys.length - 1]] = value;
 
-        // Optional: Trigger any updates if needed, e.g. console log
-        // console.log(`Set ${path} to ${value}`);
+        // Auto-enable the global Juice FX toggle when any effect is activated
+        if (path.endsWith('.active') && value === true) {
+            this.gameSession.juiceSettings.container.cheats.juiceFx = true;
+            const juiceFxEl = document.getElementById('control-container-cheats-juiceFx');
+            if (juiceFxEl) juiceFxEl.checked = true;
+        }
+
+        // Log the change to the footer
+        const message = this.formatChange(path, value);
+        if (message) this.logChange(path, message);
+    }
+
+    // Walk the schema tree to build a flat path → label context map
+    buildPathLabels() {
+        this.pathLabels = {};
+        const walk = (items, parents = []) => {
+            items.forEach(item => {
+                if (item.children) {
+                    walk(item.children, [...parents, item.label]);
+                } else if (item.path) {
+                    this.pathLabels[item.path] = { parents, label: item.label, type: item.type };
+                }
+            });
+        };
+        walk(this.schema);
+    }
+
+    // Build a human-readable message for a setting change
+    formatChange(path, value) {
+        const info = this.pathLabels[path];
+        if (!info) return null;
+
+        // Build context from parent labels, skip the "Cheats" group name
+        const context = info.parents.filter(p => p !== 'Cheats').join(' ');
+        const displayValue = typeof value === 'number'
+            ? (Number.isInteger(value) ? value : parseFloat(value.toFixed(2)))
+            : value;
+
+        if (path.endsWith('.active')) {
+            // Active toggle: "Bullet Hit Juice Particles enabled"
+            return `${context} ${value ? 'enabled' : 'disabled'}`;
+        } else if (info.type === 'checkbox') {
+            // Other checkbox: "Screen Shake Fade Out enabled"
+            return `${context} ${info.label} ${value ? 'enabled' : 'disabled'}`;
+        } else {
+            // Range/select: "Bullet Hit Juice Particles count set to 50"
+            return `${context} ${info.label} set to ${displayValue}`;
+        }
+    }
+
+    // Append a message to the footer log
+    logChange(path, message) {
+        const log = document.getElementById('juice-log');
+        if (!log) return;
+
+        // If the last entry was for the same path (e.g. slider drag), update in place
+        if (this._lastLogPath === path && log.lastElementChild) {
+            log.lastElementChild.textContent = message;
+        } else {
+            const p = document.createElement('p');
+            p.textContent = message;
+            log.appendChild(p);
+
+            // Cap the log at 50 entries
+            while (log.children.length > 50) {
+                log.removeChild(log.firstChild);
+            }
+        }
+
+        this._lastLogPath = path;
+        log.scrollTop = log.scrollHeight;
     }
 }
+
+JuiceGuiManager.__accordionId = 0;

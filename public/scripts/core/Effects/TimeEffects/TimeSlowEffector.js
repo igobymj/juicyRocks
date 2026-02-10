@@ -23,12 +23,14 @@ export default class TimeSlowEffector {
 
     finished(){
         if( (this.gameSession.timeManager.unscaledTime - this.startTime) >= this.duration) {
-			if( this.gameSession.timeManager.timeScale > 1 ) {
+			let newScale = this.gameSession.timeManager.timeScale + 0.03;
+			if( newScale >= 1 ) {
 				this.gameSession.timeManager.setScale(1.0);
-	            return "timeSlow";
+				return "timeSlow";
 			}
 			else {
-				this.gameSession.timeManager.setScale(this.gameSession.timeManager.timeScale + .03 );
+				this.gameSession.timeManager.setScale(newScale);
+				return false;
 			}
         }
         else {

@@ -78,21 +78,18 @@ var juiceteroids = function (p) {
 			p.rect(0, 0, gameSession.canvasWidth, gameSession.canvasHeight);
 		}
 
-
-
-
 		// *** CHEAT CODES/DEBUG FEATURES *** //
 		// ****** ALL OF THESE SHOULD BE MOVED TO INPUTMANAGER, THIS IS A BROKEN IMPLEMENTATION ******* //
 
-		// Test time scale effects on sounds
-		if (p.key === 'i') {
-			gameSession.timeManager.timeScale = 0.1;
-		}
-		if (p.key === 'o') {
+		// time scale cheat hack
+		if (p.key === '0') {
 			gameSession.timeManager.timeScale = 1;
 		}
-		if (p.key === 'q') {
-			gameSession.timeManager.timeScale = 2;
+		if (p.key === '=') {
+			gameSession.timeManager.timeScale += 0.1;
+		}
+		if (p.key === '-') {
+			gameSession.timeManager.timeScale -= 0.05
 		}
 
 		//Test SoundObject switching on bullet sound with one alternate

@@ -26,6 +26,13 @@ export default class JuiceSettings {
 				juiceFx: false,
 				ship: {
 					invincibility: true
+				},
+				score: {
+					pulse: false,
+					pulseScale: 1.3,
+					multiplier: 1,
+					fontSize: 32,
+					slotMachine: false
 				}
 			},
 			bulletHit: {
@@ -98,6 +105,19 @@ export default class JuiceSettings {
 					drag: 0.98
 				}
 			},
+			scoreIncrement: {
+				floatingScore: {
+					active: false,
+					duration: 0.8,
+					fontSize: 20
+				}
+			},
+			scoreArrive: {
+				particles: {
+					active: false,
+					particleSystem: "scoreArrive"
+				}
+			},
 			eyeBallsOnAsteroids: {
 				eyeBalls: {
 					active: false
@@ -145,6 +165,24 @@ export default class JuiceSettings {
 					initialVelocity: 30,
 					fade: true,
 					followObject: false
+				}
+			},
+
+			scoreArrive: {
+				vectorParticle: {
+					shape: "dot",
+					count: 8,
+					size: 5,
+					pattern: "radial",
+					rotation: "random",
+					rotationSpeed: 3,
+					particleLife: 1,
+					initialVelocityRandom: true,
+					initialVelocity: 50,
+					fade: true,
+					followObject: false,
+					inheritVelocity: false,
+					gravity: false
 				}
 			}
 		};

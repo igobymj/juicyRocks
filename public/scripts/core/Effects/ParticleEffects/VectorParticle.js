@@ -6,7 +6,7 @@ import HelperFunctions from "../../HelperFunctions.js";
 
 export default class VectorParticle extends Particle {
 
-    constructor(gameSession, shape, duration, size, position, rotationSpeed, startVelocity, strokeWeight, fill, fade, particleVertices) {
+    constructor(gameSession, shape, duration, size, position, rotationSpeed, startVelocity, strokeWeight, fill, fade, particleVertices, gravity) {
 
         if (size === null) {
             size = 1;
@@ -38,11 +38,17 @@ export default class VectorParticle extends Particle {
 
         // Acceleration vector — multiplied into velocity each frame
         this.__accelerationVector = this.p5.createVector(1.02, 1.02);
+        this.__gravity = gravity || false;
     }
 
     update() {
         // Apply acceleration before base physics
         this.velocity.mult(this.__accelerationVector);
+
+        // Apply gravity (downward force)
+        if (this.__gravity) {
+            this.velocity.y += 0.006;
+        }
 
         // Base physics: position, rotation, fade, scale
         super.update();

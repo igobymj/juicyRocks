@@ -9,6 +9,7 @@ import SpriteManager from "./Managers/SpriteManager.js";
 import JuiceGuiManager from "./Managers/JuiceGuiManager.js";
 import JuiceEventManager from "./Managers/JuiceEventManager.js";
 import BulletManager from "./Managers/BulletManager.js";
+import ScoreManager from "./Managers/ScoreManager.js";
 import JuiceSettings from "./JuiceSettings.js";
 import ParticleSystemDefinitions from "./Effects/ParticleEffects/ParticleSystemDefinitions.js";
 
@@ -62,6 +63,9 @@ export default class GameSession {
 
 		//manages all juice effects through a single central object
 		this.__juiceEventManager = new JuiceEventManager(this);
+
+		//Score Manager
+		this.__scoreManager = new ScoreManager(this);
 
 		//Object to store all current juice settings
 		this.__juiceSettings = new JuiceSettings();
@@ -277,6 +281,14 @@ export default class GameSession {
 
 	set juiceEventManager(juiceEventManager) {
 		this.__juiceEventManager = juiceEventManager;
+	}
+
+	get scoreManager() {
+		return this.__scoreManager;
+	}
+
+	set scoreManager(scoreManager) {
+		this.__scoreManager = scoreManager;
 	}
 
 	get juiceGuiManager() {

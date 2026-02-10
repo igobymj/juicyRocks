@@ -146,7 +146,9 @@ export default class VectorParticleEffect {
 
         //  constructor(shape, duration, size, position, rotationSpeed, startVelocity, strokeWeight, fill, fade, particleVertices )
 
-        return new VectorParticle(this.gameSession, shape,lifeSpan,size, positionVec,rotationSpeed,velocity, 1, 0, true, particleVertices);
+        let gravity = this.effectParameters.vectorParticle.gravity || false;
+
+        return new VectorParticle(this.gameSession, shape,lifeSpan,size, positionVec,rotationSpeed,velocity, 1, 0, true, particleVertices, gravity);
 
      }
 

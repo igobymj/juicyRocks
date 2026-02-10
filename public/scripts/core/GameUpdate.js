@@ -33,6 +33,7 @@ export default class GameUpdate extends Manager {
             this.gameSession.asteroidManager.update();
             this.gameSession.shipManager.ship.update();
             this.gameSession.juiceEventManager.update();
+            this.gameSession.scoreManager.update();
         }
         else {
             this.delayFrames = this.delayFrames - 1;
@@ -46,6 +47,7 @@ export default class GameUpdate extends Manager {
         this.gameSession.shipManager.ship.render();
         this.gameSession.asteroidManager.render();
         this.gameSession.juiceEventManager.render();
+        this.gameSession.scoreManager.render();
 
         // Border rect that moves with screen shake to make the effect visible
         let p = this.gameSession.p5;

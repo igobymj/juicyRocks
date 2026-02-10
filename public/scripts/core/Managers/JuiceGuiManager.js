@@ -322,6 +322,108 @@ export default class JuiceGuiManager {
                         ]
                     }
                 ]
+            },
+            {
+                label: "Score Juice",
+                type: "collapse",
+                id: "scoreEffects",
+                children: [
+                    {
+                        label: "Font Size",
+                        path: "container.cheats.score.fontSize",
+                        type: "range",
+                        min: 16, max: 256
+                    },
+                    {
+                        label: "Score Pulse",
+                        path: "container.cheats.score.pulse",
+                        type: "checkbox"
+                    },
+                    {
+                        label: "Pulse Scale",
+                        path: "container.cheats.score.pulseScale",
+                        type: "range",
+                        min: 1.0, max: 2.0,
+                        step: 0.05
+                    },
+                    {
+                        label: "Slot Machine",
+                        path: "container.cheats.score.slotMachine",
+                        type: "checkbox"
+                    },
+                    {
+                        label: "Score Multiplier",
+                        path: "container.cheats.score.multiplier",
+                        type: "select",
+                        options: [1, 2, 3, 5, 8, 13, 21, 34, 55]
+                    },
+                    {
+                        label: "Flying Score",
+                        type: "collapse",
+                        id: "scoreFloating",
+                        children: [
+                            {
+                                label: "Active",
+                                path: "container.scoreIncrement.floatingScore.active",
+                                type: "checkbox"
+                            },
+                            {
+                                label: "Duration",
+                                path: "container.scoreIncrement.floatingScore.duration",
+                                type: "range",
+                                min: 0.2, max: 3.0,
+                                step: 0.1
+                            },
+                            {
+                                label: "Font Size",
+                                path: "container.scoreIncrement.floatingScore.fontSize",
+                                type: "range",
+                                min: 10, max: 48
+                            }
+                        ]
+                    },
+                    {
+                        label: "Score Particles",
+                        type: "collapse",
+                        id: "scoreParticles",
+                        children: [
+                            {
+                                label: "Active",
+                                path: "container.scoreArrive.particles.active",
+                                type: "checkbox"
+                            },
+                            {
+                                label: "Type",
+                                path: "particleSystems.scoreArrive.vectorParticle.shape",
+                                type: "select",
+                                options: ["none", "circle", "dot", "triangle", "square", "line"]
+                            },
+                            {
+                                label: "Count",
+                                path: "particleSystems.scoreArrive.vectorParticle.count",
+                                type: "range",
+                                min: 1, max: 50
+                            },
+                            {
+                                label: "Velocity",
+                                path: "particleSystems.scoreArrive.vectorParticle.initialVelocity",
+                                type: "range",
+                                min: 1, max: 100
+                            },
+                            {
+                                label: "Duration",
+                                path: "particleSystems.scoreArrive.vectorParticle.particleLife",
+                                type: "range",
+                                min: 1, max: 10
+                            },
+                            {
+                                label: "Gravity",
+                                path: "particleSystems.scoreArrive.vectorParticle.gravity",
+                                type: "checkbox"
+                            }
+                        ]
+                    }
+                ]
             }
         ];
     }
@@ -469,11 +571,13 @@ export default class JuiceGuiManager {
                 const option = document.createElement('option');
                 option.value = opt;
                 option.textContent = opt;
-                if (opt === currentValue) option.selected = true;
+                if (String(opt) === String(currentValue)) option.selected = true;
                 input.appendChild(option);
             });
             input.addEventListener('change', (e) => {
-                this.setValue(item.path, e.target.value);
+                const raw = e.target.value;
+                const val = isNaN(raw) ? raw : parseFloat(raw);
+                this.setValue(item.path, val);
             });
         }
         else if (item.type === 'range') {
@@ -550,7 +654,13 @@ export default class JuiceGuiManager {
         obj[keys[keys.length - 1]] = value;
 
         // Auto-enable the global Juice FX toggle when any effect is activated
-        if (path.endsWith('.active') && value === true) {
+        const isScoreJuice = path.startsWith('container.cheats.score.')
+            || path.startsWith('container.scoreIncrement.')
+            || path.startsWith('container.scoreArrive.')
+            || path.startsWith('particleSystems.scoreArrive.');
+        const shouldEnable = (path.endsWith('.active') && value === true)
+            || (isScoreJuice && value === true && typeof value === 'boolean');
+        if (shouldEnable) {
             this.gameSession.juiceSettings.container.cheats.juiceFx = true;
             const juiceFxEl = document.getElementById('control-container-cheats-juiceFx');
             if (juiceFxEl) juiceFxEl.checked = true;

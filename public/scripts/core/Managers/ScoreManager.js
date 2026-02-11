@@ -2,13 +2,8 @@
 ScoreManager
 
 Tracks and renders the player score in the upper-right corner of the canvas.
-Supports pulse animation on increment, slot machine count-up effect, and
-triggers juice events (floating score numbers, particles at score location).
-
-Score increment timing:
-- Flying score ON:  score increments when the flying number reaches the corner
-- Flying score OFF: score increments immediately on asteroid hit
-Particles spawn from the score when all animation/incrementation is complete.
+Supports pulse animation on increment, slot machine count-up effect,
+and triggers juice events (flying score numbers, particles at score location).
 
 Created 2/10/26
 */
@@ -35,8 +30,11 @@ export default class ScoreManager extends Manager {
 		this.__cachedTextW = 0;
 		this.__cachedFontSize = 32;
 
-		// Queue of flying scores waiting to arrive: { points, arriveTime, scorePosition }
+		// Queue of flying scores waiting to arrive
 		this.__pendingFlying = [];
+
+		// Slot machine count-up state
+		this.__counting = false;
 
 		if (this.gameSession.verbose === true) {
 			console.log("score Manager created successfully");
@@ -47,7 +45,6 @@ export default class ScoreManager extends Manager {
 		const juiceSettings = this.gameSession.juiceSettings;
 		const juiceFxOn = juiceSettings.container.cheats.juiceFx;
 
-		// Calculate multiplier (only when juice is on)
 		const multiplier = juiceFxOn ? juiceSettings.container.cheats.score.multiplier : 1;
 		const points = 1 * multiplier;
 
@@ -74,7 +71,7 @@ export default class ScoreManager extends Manager {
 			edgePos = p.createVector(cx + dx * s, cy + dy * s);
 		}
 
-		// Trigger flying score visual effect — target the nearest edge of the score
+		// Trigger flying score visual effect
 		this.gameSession.juiceEventManager.addNew("scoreIncrement", {
 			position: p.createVector(ax, ay),
 			velocity: p.createVector(0, 0),
@@ -87,7 +84,6 @@ export default class ScoreManager extends Manager {
 			&& juiceSettings.container.scoreIncrement.floatingScore.active;
 
 		if (flyingActive) {
-			// Defer score increment until the flying number arrives
 			const duration = juiceSettings.container.scoreIncrement.floatingScore.duration * 1000;
 			this.__pendingFlying.push({
 				points: points,
@@ -95,28 +91,28 @@ export default class ScoreManager extends Manager {
 				scorePosition: scoreCenter
 			});
 		} else {
-			// No flying score — increment immediately
 			this._applyPoints(points, scoreCenter);
 		}
 	}
 
-	// Apply points to the actual score, fire particles, and trigger pulse
 	_applyPoints(points, scorePosition) {
 		const juiceSettings = this.gameSession.juiceSettings;
 		const juiceFxOn = juiceSettings.container.cheats.juiceFx;
 
 		this.__score += points;
 
-		// Pulse fires when score actually increments
+		// Pulse fires when score increments
 		if (juiceFxOn && juiceSettings.container.cheats.score.pulse) {
 			this.__pulseScale = juiceSettings.container.cheats.score.pulseScale;
 		}
 
-		// Particles fire immediately when score increments
+		// Particles fire immediately
 		this._fireArriveParticles(scorePosition);
 
-		// If no slot machine, update display immediately
-		if (!(juiceFxOn && juiceSettings.container.cheats.score.slotMachine)) {
+		// Start slot machine count-up or snap immediately
+		if (juiceFxOn && juiceSettings.container.cheats.score.slotMachine) {
+			this.__counting = true;
+		} else {
 			this.__displayScore = this.__score;
 		}
 	}
@@ -142,12 +138,14 @@ export default class ScoreManager extends Manager {
 			}
 		}
 
-		// Slot machine: increment displayScore toward actual score one step per frame
-		if (juiceFxOn && juiceSettings.container.cheats.score.slotMachine) {
+		// Slot machine count-up animation
+		if (juiceFxOn && juiceSettings.container.cheats.score.slotMachine && this.__counting) {
 			if (this.__displayScore < this.__score) {
 				this.__displayScore++;
+			} else {
+				this.__counting = false;
 			}
-		} else {
+		} else if (!(juiceFxOn && juiceSettings.container.cheats.score.slotMachine)) {
 			// Keep display in sync when slot machine is off
 			this.__displayScore = this.__score;
 		}
@@ -156,7 +154,6 @@ export default class ScoreManager extends Manager {
 	render() {
 		const p = this.p5;
 		const baseFontSize = this.gameSession.juiceSettings.container.cheats.score.fontSize;
-		const scoreText = String(this.__displayScore);
 
 		p.push();
 		p.resetMatrix();
@@ -165,19 +162,24 @@ export default class ScoreManager extends Manager {
 		p.noStroke();
 		p.fill(255);
 
-		// Measure at base size to find the text center, and cache for addScore()
-		const textW = p.textWidth(scoreText);
-		this.__cachedTextW = textW;
-		this.__cachedFontSize = baseFontSize;
-
-		const cx = this.gameSession.canvasWidth - this.__margin - textW / 2;
+		// Fixed right edge anchor — stable regardless of digit count
+		const rx = this.gameSession.canvasWidth - this.__margin;
 		const cy = this.__margin + baseFontSize / 2;
 
-		// Scale from the center of the text
-		p.translate(cx, cy);
+		// Cache text width of display score for addScore edge calculation
+		const displayText = String(this.__displayScore);
+		this.__cachedTextW = p.textWidth(displayText);
+		this.__cachedFontSize = baseFontSize;
+
+		// Static display with pulse scaling from center
+		p.textAlign(p.RIGHT, p.CENTER);
+		const textW = p.textWidth(displayText);
+		const centerX = rx - textW / 2;
+		p.translate(centerX, cy);
 		p.scale(this.__pulseScale);
 		p.textAlign(p.CENTER, p.CENTER);
-		p.text(scoreText, 0, 0);
+		p.text(displayText, 0, 0);
+
 		p.pop();
 	}
 

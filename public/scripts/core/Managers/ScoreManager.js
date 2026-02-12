@@ -28,7 +28,7 @@ export default class ScoreManager extends Manager {
 		// Cached from render() so addScore() can compute edge positions
 		// without calling p5 text functions during the update phase
 		this.__cachedTextW = 0;
-		this.__cachedFontSize = 32;
+		this.__cachedFontSize = 64;
 
 		// Queue of flying scores waiting to arrive
 		this.__pendingFlying = [];

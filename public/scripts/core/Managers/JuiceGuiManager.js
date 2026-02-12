@@ -332,7 +332,7 @@ export default class JuiceGuiManager {
                         label: "Font Size",
                         path: "container.cheats.score.fontSize",
                         type: "range",
-                        min: 16, max: 256
+                        min: 16, max: 512
                     },
                     {
                         label: "Score Pulse",

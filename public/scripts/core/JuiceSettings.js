@@ -31,7 +31,7 @@ export default class JuiceSettings {
 					pulse: false,
 					pulseScale: 1.3,
 					multiplier: 1,
-					fontSize: 32,
+					fontSize: 64,
 					slotMachine: false
 				}
 			},

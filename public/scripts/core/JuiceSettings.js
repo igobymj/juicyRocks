@@ -128,6 +128,7 @@ export default class JuiceSettings {
 				pewpewpew: false
 			},
 			sillyColors: {
+				active: false,
 				shipHue: 0,
 				asteroidHue: 0,
 				particleHue: 0,

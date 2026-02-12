@@ -439,7 +439,7 @@ export default class JuiceGuiManager {
                         type: "checkbox"
                     },
                     {
-                        label: "Eyeballs on Asteroids",
+                        label: "Eyeballs",
                         path: "container.eyeBallsOnAsteroids.eyeBalls.active",
                         type: "checkbox"
                     },
@@ -485,6 +485,11 @@ export default class JuiceGuiManager {
                         type: "collapse",
                         id: "sillyColors",
                         children: [
+                            {
+                                label: "Active",
+                                path: "container.sillyColors.active",
+                                type: "checkbox"
+                            },
                             {
                                 label: "Ship",
                                 path: "container.sillyColors.shipHue",
@@ -780,8 +785,10 @@ export default class JuiceGuiManager {
             || path.startsWith('container.scoreIncrement.')
             || path.startsWith('container.scoreArrive.')
             || path.startsWith('particleSystems.scoreArrive.');
+        const isSillyJuice = path === 'container.sillySounds.pewpewpew';
         const shouldEnable = (path.endsWith('.active') && value === true)
-            || (isScoreJuice && value === true && typeof value === 'boolean');
+            || (isScoreJuice && value === true && typeof value === 'boolean')
+            || (isSillyJuice && value === true);
         if (shouldEnable) {
             this.gameSession.juiceSettings.container.cheats.juiceFx = true;
             const juiceFxEl = document.getElementById('control-container-cheats-juiceFx');
@@ -792,6 +799,14 @@ export default class JuiceGuiManager {
         if (path === 'container.sillySounds.pewpewpew') {
             this.gameSession.soundManager.changeBullet(value ? 2 : 0);
             this.gameSession.soundManager.changeExplosion(value ? 1 : 0);
+        }
+
+        // When juiceFx is toggled off, revert pewpewpew sounds;
+        // when toggled back on, re-apply if pewpewpew is still checked
+        if (path === 'container.cheats.juiceFx') {
+            const pewpew = this.gameSession.juiceSettings.container.sillySounds.pewpewpew;
+            this.gameSession.soundManager.changeBullet(value && pewpew ? 2 : 0);
+            this.gameSession.soundManager.changeExplosion(value && pewpew ? 1 : 0);
         }
 
         // Log the change to the footer
@@ -826,8 +841,8 @@ export default class JuiceGuiManager {
             ? (Number.isInteger(value) ? value : parseFloat(value.toFixed(2)))
             : value;
 
-        if (path.endsWith('.active')) {
-            // Active toggle: "Bullet Hit Juice Particles enabled"
+        if (path.endsWith('.active') && info.label === 'Active') {
+            // Active toggle inside a collapse: "Bullet Hit Juice Particles enabled"
             return `${context} ${value ? 'enabled' : 'disabled'}`;
         } else if (info.type === 'checkbox') {
             // Other checkbox: "Screen Shake Fade Out enabled"

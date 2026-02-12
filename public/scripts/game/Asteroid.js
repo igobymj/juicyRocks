@@ -142,7 +142,8 @@ export default class Asteroid extends VectorGameObject {
     
         super.endRender();
 
-        if( this.gameSession.juiceSettings.container.eyeBallsOnAsteroids.eyeBalls.active === true ) {
+        if( this.gameSession.juiceSettings.container.cheats.juiceFx
+            && this.gameSession.juiceSettings.container.eyeBallsOnAsteroids.eyeBalls.active === true ) {
             this.__eyes.render();
         }
 

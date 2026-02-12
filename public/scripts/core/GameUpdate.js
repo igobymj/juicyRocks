@@ -56,10 +56,11 @@ export default class GameUpdate extends Manager {
 
     render(){
 
-        // Apply silly color overrides
+        // Apply silly color overrides (only when juice FX and colors are active)
+        const juiceFxOn = this.gameSession.juiceSettings.container.cheats.juiceFx;
         const colors = this.gameSession.juiceSettings.container.sillyColors;
         const pp = this.gameSession.p5;
-        if (colors) {
+        if (juiceFxOn && colors && colors.active) {
             // Ship fill color
             const ship = this.gameSession.shipManager.ship;
             const shipRGB = HelperFunctions.HueToRGB(colors.shipHue);
@@ -89,6 +90,14 @@ export default class GameUpdate extends Manager {
             } else {
                 this.gameSession.backgroundColor = 0;
             }
+        } else {
+            // Reset to defaults when colors are inactive
+            this.gameSession.shipManager.ship.fill = false;
+            const asteroids = this.gameSession.asteroidManager.asteroids;
+            for (let i = 0; i < asteroids.length; i++) {
+                asteroids[i].fill = false;
+            }
+            this.gameSession.backgroundColor = 0;
         }
 
         this.gameSession.bulletManager.render();

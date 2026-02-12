@@ -154,8 +154,8 @@ export default class VectorParticleEffect {
 
         // Apply hue-based color: per-system hue first, then global silly particle hue as override
         let hue = this.effectParameters.vectorParticle.hue;
-        const globalHue = this.gameSession.juiceSettings.container.sillyColors.particleHue;
-        if (globalHue > 0) hue = globalHue;
+        const sillyColors = this.gameSession.juiceSettings.container.sillyColors;
+        if (sillyColors.active && sillyColors.particleHue > 0) hue = sillyColors.particleHue;
         const rgb = HelperFunctions.HueToRGB(hue);
         if (rgb) {
             const col = this.gameSession.p5.color(rgb[0], rgb[1], rgb[2]);

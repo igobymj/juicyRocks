@@ -107,6 +107,7 @@ export default class AsteroidManager extends Manager{
 					this.gameSession.scoreManager.addScore(this.asteroids[i]);
 				this.gameSession.soundManager.playExplosion();
 					if( this.asteroids[i].nextType === "none"
+						&& this.gameSession.juiceSettings.container.cheats.juiceFx
 						&& this.gameSession.juiceSettings.container.sillySounds.pewpewpew) {
 						this.gameSession.soundManager.playCheer();
 					}

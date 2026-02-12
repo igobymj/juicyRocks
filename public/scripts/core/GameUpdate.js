@@ -1,4 +1,5 @@
 import Manager from "./Managers/Manager.js";
+import HelperFunctions from "./HelperFunctions.js";
 
 /** GameUpdate
  *
@@ -32,6 +33,18 @@ export default class GameUpdate extends Manager {
             this.gameSession.bulletManager.update();
             this.gameSession.asteroidManager.update();
             this.gameSession.shipManager.ship.update();
+
+            // Thrust trail particles – spawn from the rear of the ship
+            const ship = this.gameSession.shipManager.ship;
+            if (ship.thrust) {
+                const backAngle = ship.rotation + Math.PI;
+                const rearOffset = p5.Vector.fromAngle(backAngle).mult(15);
+                this.gameSession.juiceEventManager.addNew("shipThrust", {
+                    position: p5.Vector.add(ship.position, rearOffset),
+                    velocity: this.gameSession.p5.createVector(0, 0)
+                });
+            }
+
             this.gameSession.juiceEventManager.update();
             this.gameSession.scoreManager.update();
         }
@@ -42,6 +55,41 @@ export default class GameUpdate extends Manager {
     }
 
     render(){
+
+        // Apply silly color overrides
+        const colors = this.gameSession.juiceSettings.container.sillyColors;
+        const pp = this.gameSession.p5;
+        if (colors) {
+            // Ship fill color
+            const ship = this.gameSession.shipManager.ship;
+            const shipRGB = HelperFunctions.HueToRGB(colors.shipHue);
+            if (shipRGB) {
+                ship.fill = true;
+                ship.fillColor = pp.color(shipRGB[0], shipRGB[1], shipRGB[2]);
+            } else {
+                ship.fill = false;
+            }
+
+            // Asteroid fill color
+            const asteroids = this.gameSession.asteroidManager.asteroids;
+            const astRGB = HelperFunctions.HueToRGB(colors.asteroidHue);
+            for (let i = 0; i < asteroids.length; i++) {
+                if (astRGB) {
+                    asteroids[i].fill = true;
+                    asteroids[i].fillColor = pp.color(astRGB[0], astRGB[1], astRGB[2]);
+                } else {
+                    asteroids[i].fill = false;
+                }
+            }
+
+            // Background color
+            const bgRGB = HelperFunctions.HueToRGB(colors.backgroundHue);
+            if (bgRGB) {
+                this.gameSession.backgroundColor = pp.color(bgRGB[0], bgRGB[1], bgRGB[2]);
+            } else {
+                this.gameSession.backgroundColor = 0;
+            }
+        }
 
         this.gameSession.bulletManager.render();
         this.gameSession.shipManager.ship.render();

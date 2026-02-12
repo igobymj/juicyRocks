@@ -118,6 +118,18 @@ export default class JuiceSettings {
 					particleSystem: "scoreArrive"
 				}
 			},
+			shipThrust: {
+				particles: {
+					active: false,
+					particleSystem: "shipThrust"
+				}
+			},
+			sillyColors: {
+				shipHue: 0,
+				asteroidHue: 0,
+				particleHue: 0,
+				backgroundHue: 0
+			},
 			eyeBallsOnAsteroids: {
 				eyeBalls: {
 					active: false
@@ -183,6 +195,26 @@ export default class JuiceSettings {
 					followObject: false,
 					inheritVelocity: false,
 					gravity: true
+				}
+			},
+
+			shipThrust: {
+				vectorParticle: {
+					shape: "dot",
+					count: 2,
+					size: 3,
+					pattern: "random",
+					rotation: "random",
+					rotationSpeed: 2,
+					particleLife: 4,
+					initialVelocityRandom: false,
+					initialVelocity: 0,
+					fade: true,
+					followObject: false,
+					inheritVelocity: false,
+					gravity: false,
+					fill: true,
+					hue: 0
 				}
 			}
 		};

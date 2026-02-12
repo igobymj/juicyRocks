@@ -437,6 +437,78 @@ export default class JuiceGuiManager {
                         label: "Eyeballs on Asteroids",
                         path: "container.eyeBallsOnAsteroids.eyeBalls.active",
                         type: "checkbox"
+                    },
+                    {
+                        label: "Thrust Trail",
+                        type: "collapse",
+                        id: "thrustTrail",
+                        children: [
+                            {
+                                label: "Active",
+                                path: "container.shipThrust.particles.active",
+                                type: "checkbox"
+                            },
+                            {
+                                label: "Density",
+                                path: "particleSystems.shipThrust.vectorParticle.count",
+                                type: "range",
+                                min: 1, max: 5
+                            },
+                            {
+                                label: "Color",
+                                path: "particleSystems.shipThrust.vectorParticle.hue",
+                                type: "range",
+                                min: 0, max: 360,
+                                gradient: "hue"
+                            },
+                            {
+                                label: "Size",
+                                path: "particleSystems.shipThrust.vectorParticle.size",
+                                type: "range",
+                                min: 1, max: 25
+                            },
+                            {
+                                label: "Duration",
+                                path: "particleSystems.shipThrust.vectorParticle.particleLife",
+                                type: "range",
+                                min: 1, max: 10
+                            }
+                        ]
+                    },
+                    {
+                        label: "Colors",
+                        type: "collapse",
+                        id: "sillyColors",
+                        children: [
+                            {
+                                label: "Ship",
+                                path: "container.sillyColors.shipHue",
+                                type: "range",
+                                min: 0, max: 360,
+                                gradient: "hue"
+                            },
+                            {
+                                label: "Asteroid",
+                                path: "container.sillyColors.asteroidHue",
+                                type: "range",
+                                min: 0, max: 360,
+                                gradient: "hue"
+                            },
+                            {
+                                label: "Particle",
+                                path: "container.sillyColors.particleHue",
+                                type: "range",
+                                min: 0, max: 360,
+                                gradient: "hue"
+                            },
+                            {
+                                label: "Background",
+                                path: "container.sillyColors.backgroundHue",
+                                type: "range",
+                                min: 0, max: 360,
+                                gradient: "hue"
+                            }
+                        ]
                     }
                 ]
             }
@@ -475,7 +547,7 @@ export default class JuiceGuiManager {
         // Silly Juice section — hidden until unlocked from About page
         const sillyDiv = document.createElement('div');
         sillyDiv.id = 'silly-juice-section';
-        sillyDiv.style.display = 'none';
+        sillyDiv.style.display = '';
         this.buildUI(this.sillySchema, scrollForm);
         // The silly collapse was appended to scrollForm; grab the last child and wrap it
         const sillyNode = scrollForm.lastElementChild;
@@ -551,7 +623,7 @@ export default class JuiceGuiManager {
         this.buildUI(item.children, contentDiv, depth + 1);
 
         // If this collapse has an "Active" toggle, disable sibling controls when inactive
-        const activeChild = item.children.find(c => c.path && c.path.endsWith('.active'));
+        const activeChild = item.children.find(c => c.label === 'Active' && c.path && c.path.endsWith('.active'));
         if (activeChild) {
             const activeId = `control-${activeChild.path.replace(/\./g, '-')}`;
             const activeInput = contentDiv.querySelector(`#${activeId}`);
@@ -639,6 +711,10 @@ export default class JuiceGuiManager {
                 let val = fromSlider(parseFloat(e.target.value));
                 this.setValue(item.path, val);
             });
+
+            if (item.gradient === 'hue') {
+                input.classList.add('hue-slider');
+            }
         }
         else if (item.type === 'checkbox') {
             // Wrapper for checkbox to align right
@@ -725,6 +801,7 @@ export default class JuiceGuiManager {
             });
         };
         walk(this.schema);
+        walk(this.sillySchema);
     }
 
     // Build a human-readable message for a setting change

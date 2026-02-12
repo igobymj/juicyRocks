@@ -9,6 +9,7 @@ TODO: should be extended into inherited class from "particle" (which currently d
 
 
 import VectorParticle from "./VectorParticle.js";
+import HelperFunctions from "../../HelperFunctions.js";
 
 /* takes two arguments: gameSession, the effect parameters object, and the triggering object */
 export default class VectorParticleEffect {
@@ -147,8 +148,22 @@ export default class VectorParticleEffect {
         //  constructor(shape, duration, size, position, rotationSpeed, startVelocity, strokeWeight, fill, fade, particleVertices )
 
         let gravity = this.effectParameters.vectorParticle.gravity || false;
+        let fill = this.effectParameters.vectorParticle.fill || false;
 
-        return new VectorParticle(this.gameSession, shape,lifeSpan,size, positionVec,rotationSpeed,velocity, 1, 0, true, particleVertices, gravity);
+        let particle = new VectorParticle(this.gameSession, shape,lifeSpan,size, positionVec,rotationSpeed,velocity, 1, fill, true, particleVertices, gravity);
+
+        // Apply hue-based color: per-system hue first, then global silly particle hue as override
+        let hue = this.effectParameters.vectorParticle.hue;
+        const globalHue = this.gameSession.juiceSettings.container.sillyColors.particleHue;
+        if (globalHue > 0) hue = globalHue;
+        const rgb = HelperFunctions.HueToRGB(hue);
+        if (rgb) {
+            const col = this.gameSession.p5.color(rgb[0], rgb[1], rgb[2]);
+            particle.fillColor = col;
+            particle.strokeColor = col;
+        }
+
+        return particle;
 
      }
 

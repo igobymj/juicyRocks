@@ -34,6 +34,7 @@ export default class VectorParticle extends Particle {
         this.__fill = fill;
         this.__strokeColor = this.p5.color(255);
         this.__fillColor = this.p5.color(255);
+        this.__size = size;
         this.__closeShape = true;
 
         // Acceleration vector — multiplied into velocity each frame
@@ -75,8 +76,7 @@ export default class VectorParticle extends Particle {
 
         // Draw shape
         if (this.__shape === "circle" || this.__shape === "dot") {
-            const radius = this.__shape === "dot" ? 1 : 5;
-            p.ellipse(0, 0, radius);
+            p.ellipse(0, 0, this.__size);
         } else {
             p.beginShape();
             for (let i = 0; i < this.__vertices.length; i++) {

@@ -184,3 +184,50 @@ select:focus {
 	box-shadow: 0 1px 1px #222222 inset, 0 0 8px #999999 !important;
 	outline: 0 none !important;
 }
+
+/* Remove borders and excess padding from checkboxes inside collapses */
+.juice-effect > .juice-item {
+	border-bottom: none !important;
+	margin-bottom: 0 !important;
+	padding: 0.3rem 0 !important;
+}
+
+/* Hue gradient slider */
+.hue-slider {
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	background: transparent !important;
+	height: 20px !important;
+}
+
+.hue-slider::-webkit-slider-runnable-track {
+	height: 8px;
+	border-radius: 4px;
+	background: linear-gradient(to right, #fff 0%, #ff0000 2%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%) !important;
+}
+
+.hue-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #fff;
+	border: 2px solid #333;
+	margin-top: -4px;
+	cursor: pointer;
+}
+
+.hue-slider::-moz-range-track {
+	height: 8px !important;
+	border-radius: 4px;
+	background: linear-gradient(to right, #fff 0%, #ff0000 2%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%) !important;
+}
+
+.hue-slider::-moz-range-thumb {
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #222222 !important;
+	border: .05rem solid white !important;
+	cursor: pointer;
+}

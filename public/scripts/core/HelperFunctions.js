@@ -40,4 +40,20 @@ export default class HelperFunctions{
     return p5.noise(time);
   }
 
+  // Convert a hue value (0-360) to an [r, g, b] array. Hue 0 returns null (meaning "default").
+  static HueToRGB(hue) {
+    if (hue <= 0) return null;
+    const h = hue / 60;
+    const c = 255;
+    const x = c * (1 - Math.abs(h % 2 - 1));
+    let r, g, b;
+    if (h < 1)      { r = c; g = x; b = 0; }
+    else if (h < 2) { r = x; g = c; b = 0; }
+    else if (h < 3) { r = 0; g = c; b = x; }
+    else if (h < 4) { r = 0; g = x; b = c; }
+    else if (h < 5) { r = x; g = 0; b = c; }
+    else             { r = c; g = 0; b = x; }
+    return [r, g, b];
+  }
+
 }

@@ -1,5 +1,6 @@
 import SoundClass from './SoundClass.js';
 import DefaultExplosion from "./DefaultExplosion.js";
+import SampleSoundObject from "./SampleSoundObject.js";
 
 /*
 	ExplosionSound class
@@ -26,16 +27,25 @@ export default class ExplosionSound extends SoundClass{
 		this.__poolIndex = 0;
 		this.__poolSize = 4;
 
-		// Default explosion
+		// Default explosion (index 0)
 		this.__defaultExplosionPool = new Array();
 		for (let i = 0; i < this.__poolSize; ++i) {
 			this.__defaultExplosionPool.push(new DefaultExplosion(gameSession));
 		}
 		this.__soundObjects.push(this.__defaultExplosionPool);
 
+		// Sample explosion — thwump.wav (index 1)
+		this.__sampleExplosionPool = new Array();
+		for (let i = 0; i < this.__poolSize; ++i) {
+			this.__sampleExplosionPool.push(new SampleSoundObject(gameSession, "media/audio/thwump.wav", {
+				reverb: { decay: 3, wet: 0.4 }
+			}));
+		}
+		this.__soundObjects.push(this.__sampleExplosionPool);
+
 		// Connect all sound objects
 		for (let i = 0; i < this.__soundObjects.length; ++i) {
-			for (let j = 0; j < this.__poolSize; ++j) {
+			for (let j = 0; j < this.__soundObjects[i].length; ++j) {
 				this.__soundObjects[i][j].connect(this.__output);
 			}
 		}

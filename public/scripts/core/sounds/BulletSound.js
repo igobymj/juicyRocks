@@ -1,6 +1,7 @@
 import SoundClass from "./SoundClass.js";
 import DefaultBullet from "./DefaultBullet.js";
 import AlternateBullet from "./AlternateBullet.js";
+import SampleSoundObject from "./SampleSoundObject.js";
 /*
 	BulletSound class
 
@@ -27,23 +28,30 @@ export default class BulletSound extends SoundClass{
 		this.__poolIndex = 0;
 		this.__poolSize = 4;
 
-		// Default bullet
+		// Default bullet (index 0)
 		this.__defaultBulletPool = new Array();
 		for (let i = 0; i < this.__poolSize; ++i) {
 			this.__defaultBulletPool.push(new DefaultBullet(gameSession));
 		}
 		this.__soundObjects.push(this.__defaultBulletPool);
 
-		// Alternate bullet
+		// Alternate bullet (index 1)
 		this.__alternateBulletPool = new Array();
 		for (let i = 0; i < this.__poolSize; ++i) {
 			this.__alternateBulletPool.push(new AlternateBullet(gameSession));
 		}
 		this.__soundObjects.push(this.__alternateBulletPool);
 
+		// Sample bullet — pewpew.wav (index 2)
+		this.__sampleBulletPool = new Array();
+		for (let i = 0; i < this.__poolSize; ++i) {
+			this.__sampleBulletPool.push(new SampleSoundObject(gameSession, "media/audio/pewpew.wav"));
+		}
+		this.__soundObjects.push(this.__sampleBulletPool);
+
 		// Connect all sound objects
 		for (let i = 0; i < this.__soundObjects.length; ++i) {
-			for (let j = 0; j < this.__poolSize; ++j) {
+			for (let j = 0; j < this.__soundObjects[i].length; ++j) {
 				this.__soundObjects[i][j].connect(this.__output);
 			}
 		}

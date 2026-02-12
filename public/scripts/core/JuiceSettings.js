@@ -124,6 +124,9 @@ export default class JuiceSettings {
 					particleSystem: "shipThrust"
 				}
 			},
+			sillySounds: {
+				pewpewpew: false
+			},
 			sillyColors: {
 				shipHue: 0,
 				asteroidHue: 0,

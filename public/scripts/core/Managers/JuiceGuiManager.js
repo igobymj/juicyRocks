@@ -434,6 +434,11 @@ export default class JuiceGuiManager {
                 id: "sillyEffects",
                 children: [
                     {
+                        label: "pewpewpew",
+                        path: "container.sillySounds.pewpewpew",
+                        type: "checkbox"
+                    },
+                    {
                         label: "Eyeballs on Asteroids",
                         path: "container.eyeBallsOnAsteroids.eyeBalls.active",
                         type: "checkbox"
@@ -781,6 +786,12 @@ export default class JuiceGuiManager {
             this.gameSession.juiceSettings.container.cheats.juiceFx = true;
             const juiceFxEl = document.getElementById('control-container-cheats-juiceFx');
             if (juiceFxEl) juiceFxEl.checked = true;
+        }
+
+        // Switch bullet/explosion sounds when pewpewpew is toggled
+        if (path === 'container.sillySounds.pewpewpew') {
+            this.gameSession.soundManager.changeBullet(value ? 2 : 0);
+            this.gameSession.soundManager.changeExplosion(value ? 1 : 0);
         }
 
         // Log the change to the footer

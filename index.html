@@ -138,6 +138,13 @@
           .then(html => {
             document.getElementById('about-content').innerHTML = html;
             aboutLoaded = true;
+            // Wire up silly mode toggle
+            const sillyToggle = document.getElementById('silly-mode-toggle');
+            if (sillyToggle) {
+              sillyToggle.addEventListener('change', function () {
+                document.dispatchEvent(new CustomEvent('silly-mode', { detail: sillyToggle.checked }));
+              });
+            }
           })
           .catch(error => {
             console.error('Error loading about:', error);

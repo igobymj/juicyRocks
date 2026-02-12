@@ -176,13 +176,13 @@ export default class JuiceSettings {
 					pattern: "radial",
 					rotation: "random",
 					rotationSpeed: 3,
-					particleLife: 1,
+					particleLife: 4,
 					initialVelocityRandom: true,
 					initialVelocity: 50,
 					fade: true,
 					followObject: false,
 					inheritVelocity: false,
-					gravity: false
+					gravity: true
 				}
 			}
 		};

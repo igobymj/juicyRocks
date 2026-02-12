@@ -264,7 +264,7 @@ export default class JuiceGuiManager {
                                 label: "Speed",
                                 path: "container.destroyShip.deconstruct.speed",
                                 type: "range",
-                                min: 5, max: 200
+                                min: 5, max: 255
                             },
                             {
                                 label: "Rotation",
@@ -414,7 +414,7 @@ export default class JuiceGuiManager {
                                 label: "Duration",
                                 path: "particleSystems.scoreArrive.vectorParticle.particleLife",
                                 type: "range",
-                                min: 1, max: 10
+                                min: 4, max: 10
                             },
                             {
                                 label: "Gravity",
@@ -422,6 +422,21 @@ export default class JuiceGuiManager {
                                 type: "checkbox"
                             }
                         ]
+                    }
+                ]
+            }
+        ];
+
+        this.sillySchema = [
+            {
+                label: "Silly Juice",
+                type: "collapse",
+                id: "sillyEffects",
+                children: [
+                    {
+                        label: "Eyeballs on Asteroids",
+                        path: "container.eyeBallsOnAsteroids.eyeBalls.active",
+                        type: "checkbox"
                     }
                 ]
             }
@@ -456,6 +471,21 @@ export default class JuiceGuiManager {
         const scrollForm = document.createElement('form');
         scrollableDiv.appendChild(scrollForm);
         this.buildUI(scrollableItems, scrollForm);
+
+        // Silly Juice section — hidden until unlocked from About page
+        const sillyDiv = document.createElement('div');
+        sillyDiv.id = 'silly-juice-section';
+        sillyDiv.style.display = 'none';
+        this.buildUI(this.sillySchema, scrollForm);
+        // The silly collapse was appended to scrollForm; grab the last child and wrap it
+        const sillyNode = scrollForm.lastElementChild;
+        sillyDiv.appendChild(sillyNode);
+        scrollForm.appendChild(sillyDiv);
+
+        document.addEventListener('silly-mode', (e) => {
+            sillyDiv.style.display = e.detail ? '' : 'none';
+        });
+
         parentElement.appendChild(scrollableDiv);
     }
 
@@ -543,6 +573,17 @@ export default class JuiceGuiManager {
                 // Update on toggle
                 activeInput.addEventListener('change', () => setDisabled(!activeInput.checked));
             }
+        }
+
+        // When a top-level collapse hides, close any nested collapses so
+        // the accent border disappears (CSS uses :has(.collapse.show))
+        if (depth === 0) {
+            contentDiv.addEventListener('hide.bs.collapse', () => {
+                contentDiv.querySelectorAll('.collapse.show').forEach(nested => {
+                    const bsCollapse = bootstrap.Collapse.getInstance(nested);
+                    if (bsCollapse) bsCollapse.hide();
+                });
+            });
         }
 
         wrapper.appendChild(contentDiv);

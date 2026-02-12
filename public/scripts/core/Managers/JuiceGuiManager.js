@@ -557,7 +557,7 @@ export default class JuiceGuiManager {
         // Silly Juice section — hidden until unlocked from About page
         const sillyDiv = document.createElement('div');
         sillyDiv.id = 'silly-juice-section';
-        sillyDiv.style.display = '';
+        sillyDiv.style.display = 'none';
         this.buildUI(this.sillySchema, scrollForm);
         // The silly collapse was appended to scrollForm; grab the last child and wrap it
         const sillyNode = scrollForm.lastElementChild;

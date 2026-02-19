@@ -16,25 +16,27 @@ export default class HeartbeatSound extends SoundObject {
 	constructor(gameSession) {
 		super(gameSession);
 
-		this.__output.set({ volume: -6 });
+		this.__output.set({ volume: 6 });
 
 		// Two square oscillators at different pitches
-		this.__oscLow = new Tone.Oscillator(55, "square");
-		this.__oscHigh = new Tone.Oscillator(70, "square");
+		this.__oscLow = new Tone.Oscillator(48, "triangle");
+		this.__oscHigh = new Tone.Oscillator(60, "triangle");
+
+		// ADSR 0.02, 0.1, 0.025, 0.2
 
 		// Amplitude envelopes — short pulse, fast release
 		this.__envLow = new Tone.AmplitudeEnvelope({
-			attack: 0.005,
+			attack: 0.02,
 			decay: PULSE_DURATION,
-			sustain: 0,
-			release: 0.02
+			sustain: .025,
+			release: 0.2
 		}).connect(this.__output);
 
 		this.__envHigh = new Tone.AmplitudeEnvelope({
-			attack: 0.005,
+			attack: 0.02,
 			decay: PULSE_DURATION,
-			sustain: 0,
-			release: 0.02
+			sustain: 0.025,
+			release: 0.2
 		}).connect(this.__output);
 
 		this.__oscLow.connect(this.__envLow).start();

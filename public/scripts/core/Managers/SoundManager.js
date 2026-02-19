@@ -19,7 +19,7 @@ export default class SoundManager extends Manager {
 	/* Constructor */
 	// Initializes main, sfx, and music volume controls, and global effects sends
 	constructor(gameSession) {
-		if(SoundManager.__instance) {
+		if (SoundManager.__instance) {
 			return SoundManager.__instance;
 		}
 
@@ -51,7 +51,7 @@ export default class SoundManager extends Manager {
 		this.__musicManager = new MusicManager(gameSession);
 		this.__musicManager.connect(this.__musicMix);
 
-		if( this.gameSession.verbose === true) {
+		if (this.gameSession.verbose === true) {
 			console.log("sound manager created successfully");
 		}
 	}
@@ -101,7 +101,8 @@ export default class SoundManager extends Manager {
 		const BASE_BPM = 60;
 		const MAX_BPM = 180;
 		const count = remainingAsteroids;
-		const bpm = Math.min(MAX_BPM, BASE_BPM + (MAX_BPM - BASE_BPM) / (1 + count * 0.2));
+		const bpm = BASE_BPM; // temp for now
+		//		const bpm = Math.min(MAX_BPM, BASE_BPM + (MAX_BPM - BASE_BPM) / (1 + count * 0.2));
 		this.__musicManager.setHeartbeatTempo(bpm);
 	}
 

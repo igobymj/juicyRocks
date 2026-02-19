@@ -13,6 +13,7 @@ import BulletSound from "../sounds/BulletSound.js";
 import ExplosionSound from "../sounds/ExplosionSound.js";
 import ThrusterSound from "../sounds/ThrusterSound.js";
 import SampleSoundObject from "../sounds/SampleSoundObject.js";
+import MusicManager from "../sounds/MusicManager.js";
 
 export default class SoundManager extends Manager {
 	/* Constructor */
@@ -32,6 +33,7 @@ export default class SoundManager extends Manager {
 		//These base mix channels only have volume and mute (no pan/solo)
 		this.__mainMix = new Tone.Volume().toDestination();
 		this.__sfxMix = new Tone.Volume().connect(this.__mainMix);
+		this.__musicMix = new Tone.Volume(-12).connect(this.__mainMix);
 
 		this.__bulletSound = new BulletSound(gameSession);
 		this.__bulletSound.connect(this.__sfxMix);
@@ -44,6 +46,10 @@ export default class SoundManager extends Manager {
 
 		this.__cheerSound = new SampleSoundObject(gameSession, "media/audio/kids-cheering.mp3");
 		this.__cheerSound.connect(this.__sfxMix);
+
+		// Music channel
+		this.__musicManager = new MusicManager(gameSession);
+		this.__musicManager.connect(this.__musicMix);
 
 		if( this.gameSession.verbose === true) {
 			console.log("sound manager created successfully");
@@ -76,6 +82,43 @@ export default class SoundManager extends Manager {
 
 	playCheer() {
 		this.__cheerSound.play();
+	}
+
+	// Music / Heartbeat methods
+	startHeartbeat() {
+		this.__musicManager.startHeartbeat();
+	}
+
+	stopHeartbeat() {
+		this.__musicManager.stopHeartbeat();
+	}
+
+	setHeartbeatTempo(bpm) {
+		this.__musicManager.setHeartbeatTempo(bpm);
+	}
+
+	updateHeartbeatTempo(remainingAsteroids) {
+		const BASE_BPM = 60;
+		const MAX_BPM = 180;
+		const count = remainingAsteroids;
+		const bpm = Math.min(MAX_BPM, BASE_BPM + (MAX_BPM - BASE_BPM) / (1 + count * 0.2));
+		this.__musicManager.setHeartbeatTempo(bpm);
+	}
+
+	playMusic() {
+		this.__musicManager.playTrack();
+	}
+
+	stopMusic() {
+		this.__musicManager.stopTrack();
+	}
+
+	setMusicVolume(db) {
+		this.__musicMix.volume.value = db;
+	}
+
+	get heartbeatPlaying() {
+		return this.__musicManager.heartbeat.playing;
 	}
 
 	get instance() {

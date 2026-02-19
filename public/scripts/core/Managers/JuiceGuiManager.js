@@ -424,6 +424,24 @@ export default class JuiceGuiManager {
                         ]
                     }
                 ]
+            },
+            {
+                label: "Music",
+                type: "collapse",
+                id: "musicControls",
+                children: [
+                    {
+                        label: "Heartbeat",
+                        path: "container.music.heartbeat",
+                        type: "checkbox"
+                    },
+                    {
+                        label: "Volume",
+                        path: "container.music.volume",
+                        type: "range",
+                        min: -40, max: 0, step: 1
+                    }
+                ]
             }
         ];
 
@@ -554,10 +572,9 @@ export default class JuiceGuiManager {
         scrollableDiv.appendChild(scrollForm);
         this.buildUI(scrollableItems, scrollForm);
 
-        // Silly Juice section — hidden until unlocked from About page
+        // Silly Juice section — shown by default, toggled from About page
         const sillyDiv = document.createElement('div');
         sillyDiv.id = 'silly-juice-section';
-        sillyDiv.style.display = 'none';
         this.buildUI(this.sillySchema, scrollForm);
         // The silly collapse was appended to scrollForm; grab the last child and wrap it
         const sillyNode = scrollForm.lastElementChild;
@@ -786,9 +803,11 @@ export default class JuiceGuiManager {
             || path.startsWith('container.scoreArrive.')
             || path.startsWith('particleSystems.scoreArrive.');
         const isSillyJuice = path === 'container.sillySounds.pewpewpew';
+        const isMusicJuice = path === 'container.music.heartbeat';
         const shouldEnable = (path.endsWith('.active') && value === true)
             || (isScoreJuice && value === true && typeof value === 'boolean')
-            || (isSillyJuice && value === true);
+            || (isSillyJuice && value === true)
+            || (isMusicJuice && value === true);
         if (shouldEnable) {
             this.gameSession.juiceSettings.container.cheats.juiceFx = true;
             const juiceFxEl = document.getElementById('control-container-cheats-juiceFx');
@@ -801,12 +820,33 @@ export default class JuiceGuiManager {
             this.gameSession.soundManager.changeExplosion(value ? 1 : 0);
         }
 
-        // When juiceFx is toggled off, revert pewpewpew sounds;
-        // when toggled back on, re-apply if pewpewpew is still checked
+        // When juiceFx is toggled off, revert pewpewpew sounds and stop heartbeat;
+        // when toggled back on, re-apply if pewpewpew/heartbeat are still checked
         if (path === 'container.cheats.juiceFx') {
             const pewpew = this.gameSession.juiceSettings.container.sillySounds.pewpewpew;
             this.gameSession.soundManager.changeBullet(value && pewpew ? 2 : 0);
             this.gameSession.soundManager.changeExplosion(value && pewpew ? 1 : 0);
+
+            const heartbeat = this.gameSession.juiceSettings.container.music.heartbeat;
+            if (value && heartbeat) {
+                this.gameSession.soundManager.startHeartbeat();
+            } else {
+                this.gameSession.soundManager.stopHeartbeat();
+            }
+        }
+
+        // Music volume
+        if (path === 'container.music.volume') {
+            this.gameSession.soundManager.setMusicVolume(value);
+        }
+
+        // Heartbeat toggle
+        if (path === 'container.music.heartbeat') {
+            if (value) {
+                this.gameSession.soundManager.startHeartbeat();
+            } else {
+                this.gameSession.soundManager.stopHeartbeat();
+            }
         }
 
         // Log the change to the footer

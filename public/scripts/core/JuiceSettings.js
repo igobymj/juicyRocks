@@ -124,6 +124,10 @@ export default class JuiceSettings {
 					particleSystem: "shipThrust"
 				}
 			},
+			music: {
+				volume: -12,
+				heartbeat: false
+			},
 			sillySounds: {
 				pewpewpew: false
 			},

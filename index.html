@@ -144,6 +144,8 @@
               sillyToggle.addEventListener('change', function () {
                 document.dispatchEvent(new CustomEvent('silly-mode', { detail: sillyToggle.checked }));
               });
+              // Fire initial event to match default checked state
+              document.dispatchEvent(new CustomEvent('silly-mode', { detail: sillyToggle.checked }));
             }
           })
           .catch(error => {

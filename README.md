@@ -1,9 +1,9 @@
-# Juiceteroids
+# JuiceRocks
 An "Asteroids" game with features demonstrating the game design concept of "Juice"
 
 # Environment Setup
 
-Juiceteroids is a client-side application and thus mainly includes static imports. The development version of the game includes a basic webserver to serve content in order to avoid CORS errors and allow a more sophisticated file structure.
+Juicerocks is a client-side application and thus mainly includes static imports. The development version of the game includes a basic webserver to serve content in order to avoid CORS errors and allow a more sophisticated file structure.
 
 1. Install Node/NPM - at least version 18
 2. Pull latest version of code from repository (either through github desktop or git CLI)

@@ -3,9 +3,9 @@
 // By MJ
 //last modified by Eddie 5/7/22
 
-import VectorGameObject from "../core/VectorGameObject.js";
-import EllipseGameObject from "../core/EllipseGameObject.js";
-import Eyeballs from "../core/Effects/Other/Eyeballs.js";
+import VectorGameObject from "../engine/VectorGameObject.js";
+import EllipseGameObject from "../engine/EllipseGameObject.js";
+import Eyeballs from "./Effects/Eyeballs.js";
 import {
     ASTEROID_VELOCITY_MAX_LARGE,
     ASTEROID_VELOCITY_MAX_MEDIUM,

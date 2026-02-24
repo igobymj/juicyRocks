@@ -1,52 +1,55 @@
 import Manager from "./Managers/Manager.js";
-import HelperFunctions from "./HelperFunctions.js";
 
-/** GameUpdate
+/** GameLoop
  *
- *  Handles all updates from the main game logic
+ *  Base game loop class. Maintains ordered lists of updatable/renderable systems.
+ *  Subclass and override to add game-specific systems.
  *
  */
 
-export default class GameUpdate extends Manager {
+export default class GameLoop extends Manager {
 
     constructor(gameSession){
 
         //singleton
-        if(GameUpdate.__instance){
-            return GameUpdate.__instance;
+        if(GameLoop.__instance){
+            return GameLoop.__instance;
         }
 
         super(gameSession);
 
-        GameUpdate.__instance = this;
+        GameLoop.__instance = this;
         this.__instance = this;
 
         this.__delayFrames = 0;
 
+        // Ordered lists of systems to update/render
+        this.__updateSystems = [];
+        this.__renderSystems = [];
+    }
+
+    // Register a system for the update loop
+    // system must have an update() method
+    // priority determines order (lower = earlier)
+    addUpdateSystem(name, system, priority = 100) {
+        this.__updateSystems.push({ name, system, priority });
+        this.__updateSystems.sort((a, b) => a.priority - b.priority);
+    }
+
+    // Register a system for the render loop
+    // system must have a render() method
+    // priority determines order (lower = earlier)
+    addRenderSystem(name, system, priority = 100) {
+        this.__renderSystems.push({ name, system, priority });
+        this.__renderSystems.sort((a, b) => a.priority - b.priority);
     }
 
     update(){
-        
+
         if(this.delayFrames <= 0) {
-            // All updates first
-            this.gameSession.inputManager.update();
-            this.gameSession.bulletManager.update();
-            this.gameSession.asteroidManager.update();
-            this.gameSession.shipManager.ship.update();
-
-            // Thrust trail particles – spawn from the rear of the ship
-            const ship = this.gameSession.shipManager.ship;
-            if (ship.thrust) {
-                const backAngle = ship.rotation + Math.PI;
-                const rearOffset = p5.Vector.fromAngle(backAngle).mult(15);
-                this.gameSession.juiceEventManager.addNew("shipThrust", {
-                    position: p5.Vector.add(ship.position, rearOffset),
-                    velocity: this.gameSession.p5.createVector(0, 0)
-                });
+            for (const entry of this.__updateSystems) {
+                entry.system.update();
             }
-
-            this.gameSession.juiceEventManager.update();
-            this.gameSession.scoreManager.update();
         }
         else {
             this.delayFrames = this.delayFrames - 1;
@@ -55,56 +58,9 @@ export default class GameUpdate extends Manager {
     }
 
     render(){
-
-        // Apply silly color overrides (only when juice FX and colors are active)
-        const juiceFxOn = this.gameSession.juiceSettings.container.cheats.juiceFx;
-        const colors = this.gameSession.juiceSettings.container.sillyColors;
-        const pp = this.gameSession.p5;
-        if (juiceFxOn && colors && colors.active) {
-            // Ship fill color
-            const ship = this.gameSession.shipManager.ship;
-            const shipRGB = HelperFunctions.HueToRGB(colors.shipHue);
-            if (shipRGB) {
-                ship.fill = true;
-                ship.fillColor = pp.color(shipRGB[0], shipRGB[1], shipRGB[2]);
-            } else {
-                ship.fill = false;
-            }
-
-            // Asteroid fill color
-            const asteroids = this.gameSession.asteroidManager.asteroids;
-            const astRGB = HelperFunctions.HueToRGB(colors.asteroidHue);
-            for (let i = 0; i < asteroids.length; i++) {
-                if (astRGB) {
-                    asteroids[i].fill = true;
-                    asteroids[i].fillColor = pp.color(astRGB[0], astRGB[1], astRGB[2]);
-                } else {
-                    asteroids[i].fill = false;
-                }
-            }
-
-            // Background color
-            const bgRGB = HelperFunctions.HueToRGB(colors.backgroundHue);
-            if (bgRGB) {
-                this.gameSession.backgroundColor = pp.color(bgRGB[0], bgRGB[1], bgRGB[2]);
-            } else {
-                this.gameSession.backgroundColor = 0;
-            }
-        } else {
-            // Reset to defaults when colors are inactive
-            this.gameSession.shipManager.ship.fill = false;
-            const asteroids = this.gameSession.asteroidManager.asteroids;
-            for (let i = 0; i < asteroids.length; i++) {
-                asteroids[i].fill = false;
-            }
-            this.gameSession.backgroundColor = 0;
+        for (const entry of this.__renderSystems) {
+            entry.system.render();
         }
-
-        this.gameSession.bulletManager.render();
-        this.gameSession.shipManager.ship.render();
-        this.gameSession.asteroidManager.render();
-        this.gameSession.juiceEventManager.render();
-        this.gameSession.scoreManager.render();
 
         // Border rect that moves with screen shake to make the effect visible
         let p = this.gameSession.p5;
@@ -112,7 +68,6 @@ export default class GameUpdate extends Manager {
         p.stroke(255);
         p.strokeWeight(3);
         p.rect(0, 0, this.gameSession.canvasWidth, this.gameSession.canvasHeight);
-
     }
 
     keyIsDown(){
@@ -139,6 +94,6 @@ export default class GameUpdate extends Manager {
         this.__delayFrames = delayFrames;
     }
 
- 
+
 
 }

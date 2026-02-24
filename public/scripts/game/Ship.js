@@ -5,8 +5,8 @@
 // By MJ
 // last modified 6/15/22 by MJ
 
-import GameState from "../game/states/GameState.js";
-import VectorGameObject from "../core/VectorGameObject.js";
+import GameState from "./states/GameState.js";
+import VectorGameObject from "../engine/VectorGameObject.js";
 import {
     SHIP_ROTATION_SPEED,
     SHIP_THRUST_AMOUNT,

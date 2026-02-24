@@ -1,7 +1,5 @@
-import GameSession from "./core/GameSession.js";
-import gameUpdate from "./core/GameUpdate.js";
-import GameState from "./game/states/GameState.js";
-import ParticleSystem from "./core/Effects/ParticleEffects/ParticleSystem.js";
+import AsteroidsSession from "./game/AsteroidsSession.js";
+import ParticleSystem from "./engine/Effects/ParticleEffects/ParticleSystem.js";
 
 //import p5 from "./p5/p5.js";
 //This is our global instance of P5. We will save it to our settings singleton for future access.
@@ -21,7 +19,7 @@ document.addEventListener('click', resumeAudioContext);
 document.addEventListener('keydown', resumeAudioContext);
 
 //Instantiate our Game Session - this will be our parent for all game data.
-let gameSession = new GameSession();
+let gameSession = new AsteroidsSession();
 
 //Define how our P5 sketch will look. Treat this as the "Main".
 var juiceteroids = function (p) {
@@ -45,7 +43,7 @@ var juiceteroids = function (p) {
 		var canvas = p.createCanvas(gameSession.canvasWidth, gameSession.canvasHeight * .98);
 		canvas.parent("canvas");
 
-		//look for height of canvas div, make juice div same 
+		//look for height of canvas div, make juice div same
 		let juiceDiv = document.getElementById('juice-menu');
 		let canvasEl = document.getElementById('defaultCanvas0');
 		juiceDiv.style.height = canvasEl.style.height;
@@ -66,12 +64,12 @@ var juiceteroids = function (p) {
 	//core update function of the game
 	p.draw = function () {
 
-		//Call managers and states to update each frame. 
+		//Call managers and states to update each frame.
 		gameSession.timeManager.update();
-		gameSession.gameUpdate.update();
+		gameSession.gameLoop.update();
 
 		p.background(p.color(gameSession.backgroundColor));
-		gameSession.gameUpdate.render();
+		gameSession.gameLoop.render();
 
 		if (gameSession.flashColor != 0) {
 			p.fill(gameSession.flashColor);
@@ -121,7 +119,7 @@ var juiceteroids = function (p) {
 		//Rescale game to match window
 		p.resizeCanvas(gameSession.canvasWidth, gameSession.canvasHeight);
 
-		//look for height of canvas div, make juice div same 
+		//look for height of canvas div, make juice div same
 		let juiceDiv = document.getElementById('juice-menu');
 		let canvasEl = document.getElementById('defaultCanvas0');
 		juiceDiv.style.height = canvasEl.style.height;
@@ -135,4 +133,3 @@ gameSession.shipManager.createShip();
 
 gameSession.asteroidManager.levelStart();
 gameSession.juiceGuiManager.initialize();
-

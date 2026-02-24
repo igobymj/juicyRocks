@@ -8,7 +8,7 @@
 	Extends SoundObject for connect()/dispose() compatibility.
 */
 
-import SoundObject from "./SoundObject.js";
+import SoundObject from "../../engine/sounds/SoundObject.js";
 
 const PULSE_DURATION = 0.08; // seconds per beat pulse
 

@@ -9,8 +9,8 @@ Created by MJ 6/15/22
 */
 
 
-import Manager from "./Manager.js";
-import Ship from "../../game/Ship.js";
+import Manager from "../../engine/Managers/Manager.js";
+import Ship from "../Ship.js";
 
 
 export default class ShipManager extends Manager{

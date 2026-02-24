@@ -7,7 +7,7 @@
 */
 
 
-import EllipseGameObject from "../../EllipseGameObject.js";
+import EllipseGameObject from "../../engine/EllipseGameObject.js";
 
 
 

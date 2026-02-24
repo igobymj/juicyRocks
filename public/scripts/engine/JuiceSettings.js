@@ -1,10 +1,8 @@
 // juiceSettings.js
-// container object for all the interactive juice settings in the app,
-// including cheats like invulnerability etc. Settings are mutated by
-// JuiceGuiManager via setValue(). UpdateJuice() is allowed to
-// create new name:value pairs which may or may not be cool.
+// Base container object for juice settings. Subclass and override
+// createDefaultContainer() / createDefaultParticleSystems() for game-specific events.
 // created by MJ 6/2/22
-// updated by MJ 2/3/26
+// updated by MJ 2/24/26 — extracted engine base class
 
 
 export default class JuiceSettings {
@@ -20,8 +18,17 @@ export default class JuiceSettings {
 
 		this.__instance = {};
 
-		// defaults. These can be overridden from the HTML interface.
-		this.__container = {
+		// defaults — subclasses extend via createDefaultContainer/createDefaultParticleSystems
+		this.__container = this.createDefaultContainer();
+		this.__particleSystems = this.createDefaultParticleSystems();
+
+		console.log("default juice settings created");
+
+	}
+
+	// Override in subclass to add game-specific events
+	createDefaultContainer() {
+		return {
 			cheats: {
 				juiceFx: false,
 				ship: {
@@ -34,144 +41,13 @@ export default class JuiceSettings {
 					fontSize: 64,
 					slotMachine: false
 				}
-			},
-			bulletHit: {
-				particles: {
-					active: false,
-					particleSystem: "bulletHit"
-				},
-
-				shake: {
-					active: false,
-					xAxis: false,
-					yAxis: false,
-					duration: 0.5, // nominal duration: 0.3 seconds
-					amplitude: 0.5,
-					frequency: 10, //cycles per second
-					form: "simple",
-					fade: false,
-					inheritVelocity: false
-				},
-				hitPause: {
-					active: false,
-					frames: 0
-				},
-				colorFlash: {
-					active: false,
-					color: "white",
-					alpha: 200,
-					duration: 0.5,
-					stackable: false,
-					stackWindow: 0.25
-				},
-				timeSlow: {
-					active: false,
-					scale: 0.25,
-					duration: 0.1
-				}
-			},
-			destroyShip: {
-				shake: {
-					active: false,
-					xAxis: true,
-					yAxis: true,
-					rotation: false,
-					duration: 2, // nominal duration: 2 seconds
-					intensity: 0.5,
-					form: "noise"
-				},
-				timeSlow: {
-					active: false,
-					scale: 0.1,
-					duration: 3.5,
-					stackable: true
-				},
-				deconstruct: {
-					active: false,
-					speed: 40,
-					rotationSpeed: 0,
-					duration: 1.0,
-					fade: true,
-					drag: 0.98
-				}
-			},
-			asteroidHit: {
-				deconstruct: {
-					active: false,
-					speed: 40,
-					rotationSpeed: 0,
-					duration: 1.0,
-					fade: true,
-					drag: 0.98
-				}
-			},
-			scoreIncrement: {
-				floatingScore: {
-					active: false,
-					duration: 0.8,
-					fontSize: 20
-				}
-			},
-			scoreArrive: {
-				particles: {
-					active: false,
-					particleSystem: "scoreArrive"
-				}
-			},
-			shipThrust: {
-				particles: {
-					active: false,
-					particleSystem: "shipThrust"
-				}
-			},
-			music: {
-				volume: -12,
-				heartbeat: false
-			},
-			sillySounds: {
-				pewpewpew: false
-			},
-			sillyColors: {
-				active: false,
-				shipHue: 0,
-				asteroidHue: 0,
-				particleHue: 0,
-				backgroundHue: 0
-			},
-			eyeBallsOnAsteroids: {
-				eyeBalls: {
-					active: false
-				}
-			},
-			particleTester: {
-				particles: {
-					active: true,
-					particleSystem: "particleTest"
-				}
 			}
 		};
+	}
 
-
-		// particle systems are stored independently of the juice settings and called from the juice event.
-		// the setting here is a default, expected to be overridden by the user UI interactions.	
-		this.__particleSystems = {
-			bulletHit: {
-				vectorParticle: {
-					shape: "line",
-					count: 15,
-					size: 10,
-					pattern: "radial",
-					rotation: "random",
-					rotationSpeed: 5,
-					particleLife: 2,
-					initialVelocityRandom: false,
-					initialVelocity: 30,
-					fade: true,
-					followObject: false,
-					inheritVelocity: false
-				}
-			},
-
+	// Override in subclass to add game-specific particle systems
+	createDefaultParticleSystems() {
+		return {
 			particleTest: {
 				vectorParticle: {
 					shape: "circle",
@@ -186,56 +62,36 @@ export default class JuiceSettings {
 					fade: true,
 					followObject: false
 				}
-			},
-
-			scoreArrive: {
-				vectorParticle: {
-					shape: "dot",
-					count: 8,
-					size: 5,
-					pattern: "radial",
-					rotation: "random",
-					rotationSpeed: 3,
-					particleLife: 4,
-					initialVelocityRandom: true,
-					initialVelocity: 50,
-					fade: true,
-					followObject: false,
-					inheritVelocity: false,
-					gravity: true
-				}
-			},
-
-			shipThrust: {
-				vectorParticle: {
-					shape: "dot",
-					count: 2,
-					size: 3,
-					pattern: "random",
-					rotation: "random",
-					rotationSpeed: 2,
-					particleLife: 4,
-					initialVelocityRandom: false,
-					initialVelocity: 0,
-					fade: true,
-					followObject: false,
-					inheritVelocity: false,
-					gravity: false,
-					fill: true,
-					hue: 0
-				}
 			}
 		};
+	}
 
-		console.log("default juice settings created");
+	// Merge additional settings into the container (for runtime extension)
+	extend(config) {
+		this._deepMerge(this.__container, config);
+	}
 
+	// Merge additional particle systems
+	extendParticleSystems(systems) {
+		this._deepMerge(this.__particleSystems, systems);
+	}
+
+	_deepMerge(target, source) {
+		for (const key of Object.keys(source)) {
+			if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])
+				&& target[key] && typeof target[key] === 'object') {
+				this._deepMerge(target[key], source[key]);
+			} else {
+				target[key] = source[key];
+			}
+		}
 	}
 
 	// all juice features are based on "events". Generally the form will be string, string, boolean or number
 	// in the case of cheats like invulnerability, the "event" is just called "cheats"
 	updateJuice(eventName, effectName, effectParameter, status) {
 
-		// if (this exists) 
+		// if (this exists)
 		this.container[eventName][effectName][effectParameter] = status;
 
 		// probably good to keep this around

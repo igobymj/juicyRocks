@@ -1,15 +1,11 @@
 
-import GameUpdate from "./GameUpdate.js"
+import GameLoop from "./GameLoop.js"
 import InputManager from "./Managers/InputManager.js";
 import SoundManager from "./Managers/SoundManager.js";
 import TimeManager from "./Managers/TimeManager.js";
-import ShipManager from "./Managers/ShipManager.js";
-import AsteroidManager from "./Managers/AsteroidManager.js";
 import SpriteManager from "./Managers/SpriteManager.js";
 import JuiceGuiManager from "./Managers/JuiceGuiManager.js";
 import JuiceEventManager from "./Managers/JuiceEventManager.js";
-import BulletManager from "./Managers/BulletManager.js";
-import ScoreManager from "./Managers/ScoreManager.js";
 import JuiceSettings from "./JuiceSettings.js";
 import ParticleSystemDefinitions from "./Effects/ParticleEffects/ParticleSystemDefinitions.js";
 
@@ -37,8 +33,8 @@ export default class GameSession {
 		//Debug verbose
 		this.__verbose = true;
 
-		//Game Update object
-		this.__gameUpdate = new GameUpdate(this);
+		//Game Loop object
+		this.__gameLoop = this.createGameLoop();
 
 		//InputManager
 		this.__inputManager = new InputManager(this);
@@ -49,26 +45,14 @@ export default class GameSession {
 		//TimeManager
 		this.__timeManager = new TimeManager(this);
 
-		//Ship Manager
-		this.__shipManager = new ShipManager(this);
-
-		//Asteroid Manager
-		this.__asteroidManager = new AsteroidManager(this);
-
-		//Bullet Manager
-		this.__bulletManager = new BulletManager(this);
-
 		//Sprite Manager
 		this.__spriteManager = new SpriteManager(this);
 
 		//manages all juice effects through a single central object
 		this.__juiceEventManager = new JuiceEventManager(this);
 
-		//Score Manager
-		this.__scoreManager = new ScoreManager(this);
-
 		//Object to store all current juice settings
-		this.__juiceSettings = new JuiceSettings();
+		this.__juiceSettings = this.createJuiceSettings();
 
 		//GUI Manager
 		this.__juiceGuiManager = new JuiceGuiManager(this);
@@ -86,6 +70,32 @@ export default class GameSession {
 
 		if (this.verbose === true) {
 			console.log("Session Created Successfully.");
+		}
+	}
+
+	// Override in subclass to provide a game-specific loop
+	createGameLoop() {
+		return new GameLoop(this);
+	}
+
+	// Override in subclass to provide game-specific juice settings
+	createJuiceSettings() {
+		return new JuiceSettings();
+	}
+
+	// Register a named manager on this session (used by subclasses to add game-specific managers)
+	registerManager(name, manager) {
+		const privateName = `__${name}`;
+		this[privateName] = manager;
+
+		// Define getter/setter if not already present
+		if (!Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), name)) {
+			Object.defineProperty(this, name, {
+				get() { return this[privateName]; },
+				set(value) { this[privateName] = value; },
+				configurable: true,
+				enumerable: true
+			});
 		}
 	}
 
@@ -171,12 +181,21 @@ export default class GameSession {
 		this.__flashColor = flashColor;
 	}
 
+	// gameUpdate getter/setter kept for backwards compatibility
 	get gameUpdate() {
-		return this.__gameUpdate;
+		return this.__gameLoop;
 	}
 
 	set gameUpdate(gameUpdate) {
-		this.__gameUpdate = gameUpdate;
+		this.__gameLoop = gameUpdate;
+	}
+
+	get gameLoop() {
+		return this.__gameLoop;
+	}
+
+	set gameLoop(gameLoop) {
+		this.__gameLoop = gameLoop;
 	}
 
 	set inputManager(inputManager) {
@@ -185,10 +204,6 @@ export default class GameSession {
 
 	get inputManager() {
 		return this.__inputManager;
-	}
-
-	set inputManager(inputManager) {
-		this.__inputManager = inputManager;
 	}
 
 	get soundManager() {
@@ -213,30 +228,6 @@ export default class GameSession {
 
 	set screenShakeManager(screenShakeManager) {
 		this.__screenShakeManager = screenShakeManager;
-	}
-
-	get asteroidManager() {
-		return this.__asteroidManager;
-	}
-
-	set shipManager(shipManager) {
-		this.__shipManager = shipManager;
-	}
-
-	get shipManager() {
-		return this.__shipManager;
-	}
-
-	set asteroidManager(asteroidManager) {
-		this.__asteroidManager = asteroidManager;
-	}
-
-	get bulletManager() {
-		return this.__bulletManager;
-	}
-
-	set bulletManager(bulletManager) {
-		this.__bulletManager = bulletManager;
 	}
 
 	get canvasHeight() {
@@ -281,14 +272,6 @@ export default class GameSession {
 
 	set juiceEventManager(juiceEventManager) {
 		this.__juiceEventManager = juiceEventManager;
-	}
-
-	get scoreManager() {
-		return this.__scoreManager;
-	}
-
-	set scoreManager(scoreManager) {
-		this.__scoreManager = scoreManager;
 	}
 
 	get juiceGuiManager() {

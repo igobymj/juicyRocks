@@ -3,14 +3,14 @@
 // Nothing inherits from this
 // Last modified by Eddie 5/7/22
 
-import Manager from "./Manager.js";
-import Asteroid from "../../game/Asteroid.js";
+import Manager from "../../engine/Managers/Manager.js";
+import Asteroid from "../Asteroid.js";
 import {
     LEVEL_START_ROCKS,
     LEVEL_RESET_DELAY,
     SAFE_SPAWN_DISTANCE,
     ASTEROID_SPAWN_RANGE
-} from "../../game/gameplayConstants.js";
+} from "../gameplayConstants.js";
 
 
 export default class AsteroidManager extends Manager{

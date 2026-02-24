@@ -1,4 +1,4 @@
-import SoundObject from './SoundObject.js';
+import SoundObject from "../../engine/sounds/SoundObject.js";
 /*
 	DefaultExplosion class
 

@@ -42,7 +42,7 @@ export default class HelperFunctions{
 
   // Convert a hue value (0-360) to an [r, g, b] array. Hue 0 returns null (meaning "default").
   static HueToRGB(hue) {
-    if (hue <= 0) return null;
+    if (hue === undefined || hue === null || hue <= 0) return null;
     const h = hue / 60;
     const c = 255;
     const x = c * (1 - Math.abs(h % 2 - 1));

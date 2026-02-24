@@ -13,6 +13,8 @@
 
 import Manager from "./Manager.js";
 import { DEFAULT_FRAME_RATE, DEFAULT_FIXED_RATE } from "../../game/gameplayConstants.js";
+// NOTE: DEFAULT_FRAME_RATE and DEFAULT_FIXED_RATE are engine-level constants
+// currently co-located with game constants for convenience
 
 
 export default class TimeManager extends Manager {

@@ -1,4 +1,4 @@
-import VectorGameObject from "../core/VectorGameObject.js";
+import VectorGameObject from "../engine/VectorGameObject.js";
 import { BULLET_DURATION } from "./gameplayConstants.js";
 
 

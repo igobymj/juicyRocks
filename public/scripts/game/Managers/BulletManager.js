@@ -2,9 +2,9 @@
 //Used to spawn and despawn bullets
 //Last modified 5/9/22 MJ
 
-import Manager from "./Manager.js";
-import Bullet from "../../game/Bullet.js";
-import { AMMO_LIMIT } from "../../game/gameplayConstants.js";
+import Manager from "../../engine/Managers/Manager.js";
+import Bullet from "../Bullet.js";
+import { AMMO_LIMIT } from "../gameplayConstants.js";
 
 export default class bulletManager extends Manager {
 

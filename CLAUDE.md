@@ -4,6 +4,8 @@
 
 JuiceCanvas is a web-based Asteroids clone built to demonstrate "juice" - the particles, screen shake, color flashes, and other effects that make games feel responsive and alive. It features an interactive UI for toggling and tweaking juice effects in real-time.
 
+The project separates a reusable **engine** (`engine/`) from the **Asteroids game** (`game/`). The engine provides generic managers, game object types, effects, and a plugin-friendly session/loop architecture. The Asteroids game extends the engine with game-specific managers, sounds, and juice settings.
+
 ## Tech Stack
 
 - **p5.js** - Canvas rendering, vector drawing, input handling
@@ -34,40 +36,55 @@ Effects/Juice (JuiceEventManager + Effectors)
 
 ### Entry Point
 
-`public/scripts/index.js` - p5.js sketch with setup() and draw() loop
+`public/scripts/index.js` - p5.js sketch with setup() and draw() loop. Creates an `AsteroidsSession` (extends engine `GameSession`).
 
-### Core Singletons
+### Engine Singletons (in `engine/`)
 
 | Class | File | Purpose |
 |-------|------|---------|
-| `GameSession` | `core/Managers/GameSession.js` | Central hub holding all manager references |
-| `GameUpdate` | `core/GameUpdate.js` | Orchestrates update/render cycle |
-| `JuiceSettings` | `core/JuiceSettings.js` | Configuration container for all juice effects |
-| `JuiceEventManager` | `core/Managers/JuiceEventManager.js` | Factory for creating/managing juice effects |
+| `GameSession` | `engine/GameSession.js` | Base session hub; creates engine-level managers; extensible via `registerManager()` |
+| `GameLoop` | `engine/GameLoop.js` | Base update/render loop with `addUpdateSystem()`/`addRenderSystem()` |
+| `JuiceSettings` | `engine/JuiceSettings.js` | Base juice config; extensible via `createDefaultContainer()`/`createDefaultParticleSystems()` |
+| `JuiceEventManager` | `engine/Managers/JuiceEventManager.js` | Factory for creating/managing juice effects |
 
-### Manager Classes (all in `core/Managers/`)
+### Game-Specific Classes (in `game/`)
+
+| Class | File | Purpose |
+|-------|------|---------|
+| `AsteroidsSession` | `game/AsteroidsSession.js` | Extends GameSession; registers game managers and sounds |
+| `AsteroidsGameLoop` | `game/AsteroidsGameLoop.js` | Extends GameLoop; registers systems, handles thrust trail and silly colors |
+| `AsteroidsJuiceSettings` | `game/AsteroidsJuiceSettings.js` | Extends JuiceSettings with Asteroids-specific events |
+
+### Engine Manager Classes (in `engine/Managers/`)
 
 All inherit from `Manager.js` base class:
 - `TimeManager` - Scaled/unscaled/fixed delta time
 - `InputManager` - Keyboard state
-- `ShipManager`, `AsteroidManager`, `BulletManager` - Entity management
-- `SoundManager` - Audio playback
+- `SoundManager` - Base mixer (mainMix, sfxMix, musicMix) with `registerSound()` API
+- `SpriteManager` - Sprite loading
+- `JuiceEventManager` - Effect factory and lifecycle
 - `JuiceGuiManager` - Schema-driven UI generation, bridges controls to JuiceSettings
 
-### Game Objects (in `game/`)
+### Game-Specific Managers (in `game/Managers/`)
+
+- `ShipManager` - Ship entity management
+- `AsteroidManager` - Asteroid spawning and lifecycle
+- `BulletManager` - Bullet spawning and lifecycle
+- `ScoreManager` - Score tracking and display
+
+### Game Objects (in `engine/`)
 
 ```
 GameObject (base - position, rotation, collision)
 ├── VectorGameObject (vector-drawn shapes)
-│   ├── Ship
-│   └── Asteroid
+│   ├── Ship (game/)
+│   ├── Asteroid (game/)
+│   └── Bullet (game/)
 ├── SpriteGameObject
 └── EllipseGameObject
 ```
 
-`Bullet` extends `GameObject` directly.
-
-### Particle Hierarchy (in `core/Effects/ParticleEffects/`)
+### Particle Hierarchy (in `engine/Effects/ParticleEffects/`)
 
 ```
 Particle (lightweight base — no GameObject inheritance)
@@ -75,23 +92,46 @@ Particle (lightweight base — no GameObject inheritance)
 └── SpriteParticle (draws sprite images via direct p5 calls)
 ```
 
-### Juice/Effects System (in `core/Effects/`)
+### Juice/Effects System (in `engine/Effects/`)
 
 ```
-core/Effects/
+engine/Effects/
 ├── ScreenShake/ScreenShakeEffector.js
 ├── ColorFlash/ColorFlashEffector.js, FlashColor.js
 ├── TimeEffects/TimeSlowEffector.js
 ├── Deconstruct/DeconstructEffector.js
+├── Score/FloatingScoreEffector.js
 └── ParticleEffects/ (Particle base, VectorParticle, SpriteParticle, VectorParticleEffect, ParticleSystem, ParticleSystemDefinitions)
 ```
 
 Effects are created via `JuiceEventManager.newEventFactory()` which reads from `JuiceSettings`.
 
+### Sound System
+
+```
+engine/sounds/
+├── SoundObject.js         # Base class (Tone.PanVol + Envelope)
+├── SoundClass.js          # Container for multiple SoundObjects
+└── SampleSoundObject.js   # Tone.Player wrapper
+
+game/sounds/
+├── BulletSound.js, DefaultBullet.js, AlternateBullet.js
+├── ExplosionSound.js, DefaultExplosion.js
+├── ThrusterSound.js, DefaultThruster.js
+├── HeartbeatSound.js
+└── MusicManager.js
+```
+
 ## Key Patterns
 
 ### Singleton Pattern
 Most managers use `if(ClassName.__instance) return ClassName.__instance` in constructor.
+
+### Extensible Session Pattern
+`GameSession` provides `registerManager(name, manager)` for games to add custom managers. `AsteroidsSession` uses this to register ShipManager, AsteroidManager, etc.
+
+### System Registration Pattern
+`GameLoop` provides `addUpdateSystem(name, system, priority)` and `addRenderSystem()` for games to define their update/render order.
 
 ### Factory Pattern
 - `JuiceEventManager.newEventFactory()` creates effect instances
@@ -104,26 +144,62 @@ All game objects and managers have separate `update()` and `render()` methods.
 
 ```
 public/scripts/
-├── index.js              # p5.js entry point
-├── core/
-│   ├── Managers/         # 11 manager classes
-│   ├── Effects/          # Juice effect implementations
-│   ├── sounds/           # Sound wrapper classes
-│   ├── GameObject.js     # Base game object
+├── index.js                 # p5.js entry point (creates AsteroidsSession)
+├── engine/                  # Reusable engine
+│   ├── Engine.js            # Barrel export
+│   ├── GameSession.js       # Extensible session hub
+│   ├── GameLoop.js          # Extensible update/render loop
+│   ├── JuiceSettings.js     # Extensible juice config
+│   ├── State.js             # Scene management
+│   ├── GameObject.js        # Base game object
 │   ├── VectorGameObject.js
 │   ├── SpriteGameObject.js
 │   ├── EllipseGameObject.js
-│   ├── State.js          # Scene management
-│   ├── Collision.js      # Collision utilities
-│   ├── JuiceSettings.js  # Effect configuration
-│   └── HelperFunctions.js
-├── game/
-│   ├── states/GameState.js
-│   ├── gameplayConstants.js  # Tuning constants (speeds, timers, limits)
+│   ├── NullGameObject.js
+│   ├── Collision.js
+│   ├── HelperFunctions.js
+│   ├── Managers/            # Engine managers
+│   │   ├── Manager.js
+│   │   ├── TimeManager.js
+│   │   ├── InputManager.js
+│   │   ├── SoundManager.js
+│   │   ├── SpriteManager.js
+│   │   ├── JuiceEventManager.js
+│   │   └── JuiceGuiManager.js
+│   ├── Effects/             # All effect implementations
+│   │   ├── ScreenShake/
+│   │   ├── ColorFlash/
+│   │   ├── TimeEffects/
+│   │   ├── Deconstruct/
+│   │   ├── Score/
+│   │   └── ParticleEffects/
+│   └── sounds/              # Base sound classes
+│       ├── SoundObject.js
+│       ├── SoundClass.js
+│       └── SampleSoundObject.js
+├── game/                    # Asteroids-specific code
+│   ├── AsteroidsSession.js  # Extends GameSession
+│   ├── AsteroidsGameLoop.js # Extends GameLoop
+│   ├── AsteroidsJuiceSettings.js
 │   ├── Ship.js
 │   ├── Asteroid.js
-│   └── Bullet.js
-└── libs/                 # p5.js, Bootstrap
+│   ├── Bullet.js
+│   ├── gameplayConstants.js
+│   ├── states/GameState.js
+│   ├── Managers/
+│   │   ├── ShipManager.js
+│   │   ├── AsteroidManager.js
+│   │   ├── BulletManager.js
+│   │   └── ScoreManager.js
+│   ├── sounds/
+│   │   ├── BulletSound.js, DefaultBullet.js, AlternateBullet.js
+│   │   ├── ExplosionSound.js, DefaultExplosion.js
+│   │   ├── ThrusterSound.js, DefaultThruster.js
+│   │   ├── HeartbeatSound.js
+│   │   └── MusicManager.js
+│   └── Effects/
+│       └── Eyeballs.js
+└── libs/                    # p5.js, Bootstrap
 ```
 
 ## Game Loop Flow
@@ -131,23 +207,27 @@ public/scripts/
 ```
 p5.draw()
 ├── TimeManager.update()
-├── GameUpdate.update()
+├── AsteroidsGameLoop.update()
 │   ├── InputManager.update()
 │   ├── BulletManager.update()
 │   ├── AsteroidManager.update()
 │   ├── Ship.update()
-│   └── JuiceEventManager.update()
+│   ├── Thrust Trail (particle spawning)
+│   ├── JuiceEventManager.update()
+│   └── ScoreManager.update()
 ├── p5.background()
-└── GameUpdate.render()
+└── AsteroidsGameLoop.render()
+    ├── Silly Colors (color overrides)
     ├── BulletManager.render()
     ├── Ship.render()
     ├── AsteroidManager.render()
-    └── JuiceEventManager.render()
+    ├── JuiceEventManager.render()
+    └── ScoreManager.render()
 ```
 
 ## Known Technical Debt
 
-1. **Circular dependencies** - GameSession ↔ GameUpdate create each other
+1. ~~**Circular dependencies** - GameSession ↔ GameUpdate create each other~~ (resolved: GameSession.createGameLoop() factory method)
 2. **Singleton overuse** - Most classes instantiate GameSession internally instead of DI
 3. ~~**JuiceManager bloat** - 200+ lines of manual DOM event binding~~ (deleted; replaced by JuiceGuiManager)
 4. ~~**Dead code** - `_old` suffix files, obsolete ParticleManager~~ (all removed)
@@ -156,13 +236,14 @@ p5.draw()
 7. ~~**Asteroid wrapping** - Wraps on center point, looks bad for large asteroids (`Asteroid.js`)~~ (margin-based wrapping using `diagonal/2`)
 8. **Ship render override** - Ship.render() redundantly overrides VectorGameObject.render() (`Ship.js:125`)
 9. **ColorFlash fade** - Missing exponential fade on color flash effector (`ColorFlashEffector.js:68`)
-10. ~~**Particle system abstraction** - ExplosionSystem and SmokeTrailSystem need a shared configurable base class~~ (lightweight `Particle` base class created; VectorParticle/SpriteParticle extend it directly; dead particle files deleted: PrimitiveParticle, Explosion, ExplosionSystem, ShipVectorParticle, ShipParticleSystem, JetSmoke, JetParticleSystem, SmokeTrail, SmokeTrailSystem)
+10. ~~**Particle system abstraction** - ExplosionSystem and SmokeTrailSystem need a shared configurable base class~~ (lightweight `Particle` base class created; VectorParticle/SpriteParticle extend it directly; dead particle files deleted)
 11. ~~**Sound system disabled** - All SoundManager references commented out; sound classes have unimplemented dispose methods~~ (bullet sound re-enabled; frequency clamp, print() calls, and singleton order fixed; explosion/thruster sounds still disabled)
 12. **SpriteManager brittleness** - No error handling for sprite loading (`SpriteManager.js:31`)
 13. **SpriteGameObject collision** - Size passed as 0,0; needs manual width/height support
 14. **GameSession state management** - `addState()` not safe for non-pre-existing states (`GameSession.js:99`)
 15. **Particle definitions inline** - ParticleSystemDefinitions defaults should move to external JSON (`ParticleSystemDefinitions.js:19`)
 16. ~~**`_old` suffix files** - Legacy VectorParticle_old.js still in codebase~~ (deleted VectorParticle_old.js and ParticleSystem_old.js)
+17. **TimeManager game dependency** - TimeManager imports DEFAULT_FRAME_RATE/DEFAULT_FIXED_RATE from game/gameplayConstants.js; these engine-level constants should live in engine/
 
 ## Controls
 
@@ -171,16 +252,25 @@ p5.draw()
 
 ### Debug Keys (in index.js)
 
-- `i` - Set time scale to 0.1
-- `o` - Reset time scale to 1
-- `q` - Set time scale to 2
+- `0` - Reset time scale to 1
+- `=` - Increase time scale by 0.1
+- `-` - Decrease time scale by 0.05
 
 ## Adding New Juice Effects
 
-1. Create effector class in `core/Effects/` with `update()`, `render()`, `finished()` methods
-2. Add configuration to `JuiceSettings.js`
-3. Add case to `JuiceEventManager.newEventFactory()`
+1. Create effector class in `engine/Effects/` with `update()`, `render()`, `finished()` methods
+2. Add configuration to your game's JuiceSettings subclass (e.g. `AsteroidsJuiceSettings.js`)
+3. Add case to `JuiceEventManager.newEventFactory()` (or register via the effectTypes map)
 4. Add schema entry in `JuiceGuiManager.js`
+
+## Building a New Game on the Engine
+
+1. Create a session class extending `GameSession` (see `AsteroidsSession.js`)
+2. Create a game loop extending `GameLoop` (see `AsteroidsGameLoop.js`)
+3. Create juice settings extending `JuiceSettings` (see `AsteroidsJuiceSettings.js`)
+4. Register your managers via `this.registerManager(name, manager)` in your session
+5. Register your systems via `addUpdateSystem()`/`addRenderSystem()` in your game loop
+6. Import your session class in `index.js` instead of `AsteroidsSession`
 
 ## Collision System
 

@@ -1,7 +1,7 @@
-import SoundClass from "./SoundClass.js";
+import SoundClass from "../../engine/sounds/SoundClass.js";
 import DefaultBullet from "./DefaultBullet.js";
 import AlternateBullet from "./AlternateBullet.js";
-import SampleSoundObject from "./SampleSoundObject.js";
+import SampleSoundObject from "../../engine/sounds/SampleSoundObject.js";
 /*
 	BulletSound class
 

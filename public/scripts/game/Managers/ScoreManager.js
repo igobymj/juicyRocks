@@ -8,7 +8,7 @@ and triggers juice events (flying score numbers, particles at score location).
 Created 2/10/26
 */
 
-import Manager from "./Manager.js";
+import Manager from "../../engine/Managers/Manager.js";
 
 export default class ScoreManager extends Manager {
 

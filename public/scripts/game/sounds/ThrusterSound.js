@@ -1,4 +1,4 @@
-import SoundClass from "./SoundClass.js";
+import SoundClass from "../../engine/sounds/SoundClass.js";
 import DefaultThruster from "./DefaultThruster.js";
 /*
 	ThrusterSound class

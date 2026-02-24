@@ -1,6 +1,6 @@
-import SoundClass from './SoundClass.js';
+import SoundClass from "../../engine/sounds/SoundClass.js";
 import DefaultExplosion from "./DefaultExplosion.js";
-import SampleSoundObject from "./SampleSoundObject.js";
+import SampleSoundObject from "../../engine/sounds/SampleSoundObject.js";
 
 /*
 	ExplosionSound class

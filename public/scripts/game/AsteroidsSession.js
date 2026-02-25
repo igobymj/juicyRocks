@@ -1,6 +1,7 @@
 import GameSession from "../engine/GameSession.js";
 import AsteroidsGameLoop from "./AsteroidsGameLoop.js";
 import AsteroidsJuiceSettings from "./AsteroidsJuiceSettings.js";
+import JuiceGuiManager from "./Managers/JuiceGuiManager.js";
 import ShipManager from "./Managers/ShipManager.js";
 import AsteroidManager from "./Managers/AsteroidManager.js";
 import BulletManager from "./Managers/BulletManager.js";
@@ -45,6 +46,10 @@ export default class AsteroidsSession extends GameSession {
 		return new AsteroidsJuiceSettings();
 	}
 
+	createJuiceGuiManager() {
+		return new JuiceGuiManager(this);
+	}
+
 	_setupSounds() {
 		const sm = this.soundManager;
 
@@ -81,6 +86,12 @@ export default class AsteroidsSession extends GameSession {
 		};
 		sm.playMusic = () => musicManager.playTrack();
 		sm.stopMusic = () => musicManager.stopTrack();
+		sm.loadTrack = (url) => musicManager.loadTrack(url);
+		sm.selectTrack = (url) => {
+			musicManager.stopHeartbeat();
+			musicManager.loadTrack(url);
+			if (url) musicManager.playTrack();
+		};
 
 		Object.defineProperty(sm, 'heartbeatPlaying', {
 			get: () => musicManager.heartbeat.playing

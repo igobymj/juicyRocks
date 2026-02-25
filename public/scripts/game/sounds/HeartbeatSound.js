@@ -16,11 +16,11 @@ export default class HeartbeatSound extends SoundObject {
 	constructor(gameSession) {
 		super(gameSession);
 
-		this.__output.set({ volume: 6 });
+		this.__output.set({ volume: 8 });
 
 		// Two square oscillators at different pitches
-		this.__oscLow = new Tone.Oscillator(48, "triangle");
-		this.__oscHigh = new Tone.Oscillator(60, "triangle");
+		this.__oscLow = new Tone.Oscillator(46, "triangle");
+		this.__oscHigh = new Tone.Oscillator(50, "triangle");
 
 		// ADSR 0.02, 0.1, 0.025, 0.2
 

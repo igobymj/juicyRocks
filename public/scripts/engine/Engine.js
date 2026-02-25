@@ -24,7 +24,6 @@ export { default as InputManager } from "./Managers/InputManager.js";
 export { default as SoundManager } from "./Managers/SoundManager.js";
 export { default as SpriteManager } from "./Managers/SpriteManager.js";
 export { default as JuiceEventManager } from "./Managers/JuiceEventManager.js";
-export { default as JuiceGuiManager } from "./Managers/JuiceGuiManager.js";
 
 // Sounds
 export { default as SoundObject } from "./sounds/SoundObject.js";

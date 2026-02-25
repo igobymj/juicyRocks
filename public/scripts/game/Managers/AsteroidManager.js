@@ -70,7 +70,7 @@ export default class AsteroidManager extends Manager{
 		}
 
 		// Update heartbeat tempo based on remaining asteroids
-		if( this.gameSession.juiceSettings.container.music.heartbeat
+		if( this.gameSession.juiceSettings.container.music.track === 'heartbeat'
 			&& this.gameSession.juiceSettings.container.cheats.juiceFx ) {
 			this.gameSession.soundManager.updateHeartbeatTempo(this.asteroids.length);
 		}

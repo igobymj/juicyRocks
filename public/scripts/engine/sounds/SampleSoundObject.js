@@ -27,7 +27,10 @@ export default class SampleSoundObject extends SoundObject {
 		this.__player = new Tone.Player({
 			url: url,
 			loop: options.loop ?? false,
-			onload: () => { this.__loaded = true; }
+			onload: () => {
+				this.__loaded = true;
+				if (options.onload) options.onload();
+			}
 		}).connect(this.__reverb ?? this.__output);
 
 		this.__loaded = false;

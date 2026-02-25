@@ -100,7 +100,7 @@ export default class AsteroidsJuiceSettings extends JuiceSettings {
 			},
 			music: {
 				volume: -12,
-				heartbeat: false
+				track: "heartbeat"
 			},
 			sillySounds: {
 				pewpewpew: false

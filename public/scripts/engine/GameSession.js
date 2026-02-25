@@ -4,7 +4,6 @@ import InputManager from "./Managers/InputManager.js";
 import SoundManager from "./Managers/SoundManager.js";
 import TimeManager from "./Managers/TimeManager.js";
 import SpriteManager from "./Managers/SpriteManager.js";
-import JuiceGuiManager from "./Managers/JuiceGuiManager.js";
 import JuiceEventManager from "./Managers/JuiceEventManager.js";
 import JuiceSettings from "./JuiceSettings.js";
 import ParticleSystemDefinitions from "./Effects/ParticleEffects/ParticleSystemDefinitions.js";
@@ -55,7 +54,7 @@ export default class GameSession {
 		this.__juiceSettings = this.createJuiceSettings();
 
 		//GUI Manager
-		this.__juiceGuiManager = new JuiceGuiManager(this);
+		this.__juiceGuiManager = this.createJuiceGuiManager();
 
 		// likely to be deprecated:
 
@@ -81,6 +80,11 @@ export default class GameSession {
 	// Override in subclass to provide game-specific juice settings
 	createJuiceSettings() {
 		return new JuiceSettings();
+	}
+
+	// Override in subclass to provide a game-specific GUI manager
+	createJuiceGuiManager() {
+		return null;
 	}
 
 	// Register a named manager on this session (used by subclasses to add game-specific managers)
